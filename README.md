@@ -79,8 +79,70 @@ git push --set-upstream origin my_awesome_task
 git commit -m "Submission for my_awesome_task"
 git push
 ```
+### Task
+GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
+
+It's worth noting that we offer complete flexibility in terms of how these examples are prepared and how the model's predictions are evaluated. This allows for the creation of diverse and varied benchmarking that can be tailored to the needs of specific generalization protocols.
+
+
 ### Task Types
 The submitted benchmark tasks can be one of the following three different types: Sequence Classification, Sequence Labeling, and Free-form Generation. The choice of type will dictate various parts of the submission, like the choice of evaluation metrics, dataset field mapping and model preparation (see the [config](#configjsonnet) section).
+In the following list we provide an examples of data instances for each task type.
+
+#### Addition (Free-form Generation)
+```json
+{
+    "input": "300 + 80", 
+    "target": "380"
+}
+```
+The `input` and `target` are both strings. Given the input the model has to generate an answer. The task creator can specify how the generation is performed (e.g. sampling method or stop string) in the config file. Note that encoder-only models such as RoBERTa do not support this task type.
+
+#### SNLI (Multi-choice Classification)
+```json
+{
+   "input": "P: A man inspects the uniform of a figure in some East Asian country. H: The man is sleeping",
+   "target": 1,
+   "target_options": ["Entailment", "Contradiction", "Neutral"]
+}
+```
+The `input` is a string and `target` is the label index.
+
+#### SNLI (Multi-choice Classification)
+```json
+{
+   "input": "P: A man inspects the uniform of a figure in some East Asian country. H: The man is sleeping",
+   "target": 1,
+   "target_options": ["Entailment", "Contradiction", "Neutral"]
+}
+```
+The `input` is a string and `target` is the label index.
+
+#### Knowledge QA (Multi-choice Classification)
+```json
+{
+   "input": "Who was the first president of the United States?",
+   "target": 0,
+   "target_options": [
+        "George Washington",
+        "Barack Obama",
+        "Michael Jackson",
+        "None of the above",
+   ]
+}
+```
+The `target_options` can change per each data instance.
+
+#### NER (Sequence Labeling)
+```json
+{
+    "input": ["Steve", "Jobs", "was", "a", "CEO", "at", "Apple."],
+    "target": ["B-person", "I-person", "O", "O", "O", "O", "B-corporation"],
+}
+```
+Both `input` and `target` are a list of strings with the same size.
+
+
 
 ### Task files
 The GenBench APIs are designed to reduce the burden of coding from task creators as much as possible but also allow a lot of flexibility. 
@@ -162,6 +224,7 @@ To this end, GenBench tasks exist as Python classes and are defined using two fi
     // Multiple-choice tasks:
     // - Input: string
     // - Output: index of choice (target)
+    // - Output Options: list of options (string) to choose from
 
     // Provide a mapping from the fields in the data source to the fields that the task ('input',
     // 'target') expects.
@@ -381,7 +444,7 @@ The dataset should licensed under: TBD
         },
     ],
     
-    model_prepation_strategies: {
+    preparation_strategies: {
         finetuning: {
             objective: 'maximum_likelihood',
         },
@@ -430,7 +493,7 @@ This is an example of a configuration for a prompt-based task (free-form generat
         }
     ],
 
-    model_prepation_strategies: {
+    preparation_strategies: {
         prompt_based_testing: {
             instruction: 'Add two numbers together',
             input_prefix: 'Q: ',
