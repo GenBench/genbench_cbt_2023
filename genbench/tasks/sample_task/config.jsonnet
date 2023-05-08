@@ -27,12 +27,12 @@
         }
     ],
 
-    model_prepation_strategies: {
+    prepation_strategies: {
         // A recipe for preparing the model to perform the task by configuring its prompt.
         // This recipe is suitable for generative LMs such as GPT-3, OPT, T5, etc.
         // We provide a few options for configuring the prompt. But, the task creator can
         // also provide a custom prompt preparation in the task's Python class.
-        in_context_learning: {
+        prompt_based_testing: {
             instruction: 'Add two numbers together',
             input_prefix: 'Q: ',
             output_prefix: 'A: ',

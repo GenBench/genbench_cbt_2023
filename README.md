@@ -80,9 +80,9 @@ git commit -m "Submission for my_awesome_task"
 git push
 ```
 ### Task
-GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
+A GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
 
-It's worth noting that we offer complete flexibility in terms of how these examples are prepared and how the model's predictions are evaluated. This allows for the creation of diverse and varied benchmarking that can be tailored to the needs of specific generalization protocols.
+We offer complete flexibility in terms of how these examples are prepared and how the model's predictions are evaluated. This allows for the creation of diverse and varied benchmarking that can be tailored to the needs of specific generalization protocols.
 
 
 ### Task Types
@@ -217,14 +217,14 @@ To this end, GenBench tasks exist as Python classes and are defined using two fi
     // are different based on the type of task defined above.
     // Free-form tasks:
     // - Input: string
-    // - Output: string
+    // - Target: string
     // Sequence-labeling tasks:
     // - Input: list of strings (sequence tokens)
-    // - Output: list of labels (matching the size of the input)
+    // - Target: list of labels (matching the size of the input)
     // Multiple-choice tasks:
     // - Input: string
-    // - Output: index of choice (target)
-    // - Output Options: list of options (string) to choose from
+    // - Target: index of choice (target)
+    // - Target Options: list of options (string) to choose from
 
     // Provide a mapping from the fields in the data source to the fields that the task ('input',
     // 'target') expects.
