@@ -433,7 +433,7 @@ The dataset should licensed under: TBD
     
     field_mapping: {
         input: 'sentence',
-        target_scores: 'label',
+        target: 'label',
     },
 
     split_file: 'split.jsonnet', 
@@ -548,7 +548,7 @@ class MyAwesomeQATask(Task):
         # Compute the exact match accuracy.
         em = 0
         for pred, gold in zip(predictions, gold):
-            if pred["predicted_target"] == gold["target"]:
+            if pred["target"] == gold["target"]:
                 em += 1
 
         em /= len(predictions)
