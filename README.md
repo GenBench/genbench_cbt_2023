@@ -5,22 +5,23 @@ Submissions are expected to open on June 7.**
 
 **Table of Contents**
 * [GenBench workshop and publication of tasks](#genbench-workshop-and-publication-of-tasks)
-* [How to submit a task to GenBench](#how-to-submit-a-task-to-genbench)
+* [How to submit a task to the GenBench CBT](#how-to-submit-a-task-to-the-genbench-cbt)
     * [Overview](#overview)
+    * [Task](#task)
     * [Task types](#task-types)
     * [Task files](#task-files)
         * [`config.jsonnet`](#configjsonnet)
         * [`task.py`](#taskpy)
         * [`split.jsonnet` (Optional)](#splitjsonnet)
         * [`doc.md`](#docmd)
-    * [GenBench Concepts](#genbench-concepts)
-* [FAQ](#faq)
+    * [Manual data source](#manual-data-sources)
 * [Most Common Use Cases (Examples)](#most-common-use-cases-examples)
-    * [Train/Test Finetuning](#train-test-finetuning)
-    * [In-Context Learning](#in-context-learning)
-    * [Custom Metric/Evaluation](#custom-metricevaluation-metric)
-    * [Custom Example Formatting/Pre-processing](#custom-example-formattingpre-processing)
-    * [Custom Dataset Preparation Loop](#custom-dataset-preparation-loop)
+    * [Train-Test (finetuning)](#train-test-finetuning)
+    * [Prompt-based testing](https://github.com/GenBench/genbench_cbt/tree/main#prompt-based-testing)
+    * [Custom Task Examples](https://github.com/GenBench/genbench_cbt/tree/main#custom-taskpy-examples)
+      * [Custom Metric/Evaluation](#custom-metricevaluation-metric)
+      * [Custom Example Formatting/Pre-processing](#custom-example-formattingpre-processing)
+      * [Custom Dataset Preparation Loop](#custom-dataset-preparation-loop)
 
 ## GenBench Workshop and Publication of Tasks
 The Genbench Collaborative Benchmarking Task (CBT) aims to develop a collaborative generalisation benchmark for NLP, hosted on a shared platform: GenBench.
