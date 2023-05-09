@@ -109,16 +109,6 @@ The `input` and `target` are both strings. Given the input the model has to gene
 ```
 The `input` is a string and `target` is the label index.
 
-#### SNLI (Multi-choice Classification)
-```json
-{
-   "input": "P: A man inspects the uniform of a figure in some East Asian country. H: The man is sleeping",
-   "target": 1,
-   "target_options": ["Entailment", "Contradiction", "Neutral"]
-}
-```
-The `input` is a string and `target` is the label index.
-
 #### Knowledge QA (Multi-choice Classification)
 ```json
 {
