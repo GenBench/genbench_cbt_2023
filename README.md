@@ -1,5 +1,20 @@
 # GenBench Collaborative Benchmarking Task
 
+## Implementation Status
+| Task | Status |
+| --- |--------|
+| CLI Create New Task | Done   |
+| Task Class Implementation | In Progress |
+
+### CLI Create New Task
+```bash
+pip install -e .
+```
+Use `genbench-cli` to create a new task. Use `genbench-cli create-task --help` for more information.
+```bash
+genbench-cli create-task --task-name "My Awesome Task"
+```
+
 **NB: This repository describes how tasks can be submitted, but submissions are not open yet.
 Submissions are expected to open on June 7.**
 
