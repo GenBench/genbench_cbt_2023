@@ -1,6 +1,6 @@
 {
     "task_name": "{{ cookiecutter.task_name }}",
-    "task_slug": "{{ cookiecutter.task_slug }}",
+    "task_id": "{{ cookiecutter.task_id }}",
     "task_class_name": "{{ cookiecutter.task_class_name }}",
     "task_author": "{{ cookiecutter.task_author }}"
 }
