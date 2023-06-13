@@ -1,9 +1,6 @@
 from genbench.utils.tasks import get_task_dir
 
 
-from genbench.utils.tasks import get_task_dir
-
-
 def test_contains_all_files(task_id):
     """Test case to verify if all the required files are present in the task directory"""
 
