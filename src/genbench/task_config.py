@@ -6,6 +6,7 @@ from typing import List, Literal, Optional, Union, Tuple, Dict
 import _jsonnet
 import dataclass_factory
 
+from genbench.api import TaskType
 from genbench.utils.validation import is_valid_url
 
 
@@ -67,7 +68,9 @@ class DataSourceConfig:
         if self.type == "hf":
             assert self.hf_id is not None
             assert self.git_commit_sha is not None
-            assert isinstance(self.hf_id, str) or isinstance(self.hf_id, tuple)
+            assert isinstance(self.hf_id, str) or (
+                isinstance(self.hf_id, tuple) and len(self.hf_id) == 2
+            )
         elif self.type == "manual":
             assert self.test is not None
             assert all(
@@ -87,6 +90,23 @@ class EvaluationMetricConfig:
     hf_id: Union[str, Tuple[str, str]] = field(
         metadata={"help": "HuggingFace metric id. e.g. 'accuracy'"}
     )
+    git_commit_sha: str = field(
+        metadata={"help": "Git commit sha of the metric. e.g. '070042b....'"}
+    )
+    best_value: float = field(metadata={"help": "Best value of the metric. e.g. 1.0"})
+    compute_extra_kwargs: Optional[Dict[str, str]] = field(
+        default=None,
+        metadata={"help": "Extra kwargs to pass to the metric's compute method."},
+    )
+
+    def __post_init__(self):
+        assert self.hf_id is not None
+        assert self.git_commit_sha is not None
+        assert isinstance(self.hf_id, str) or (
+            isinstance(self.hf_id, tuple) and len(self.hf_id) == 2
+        )
+
+        assert self.best_value is not None, "Best value must be specified."
 
 
 @dataclass
@@ -143,6 +163,26 @@ class PromptBuilderConfig:
     append_choices_to_input: bool = field(
         default=True,
         metadata={"help": "Whether to append the choices to the model's input."},
+    )
+    choices_prefix: str = field(
+        default="\n  choices: \n",
+        metadata={"help": "Prefix of the model's choice."},
+    )
+    choice_item_postfix: str = field(
+        default="\n",
+        metadata={"help": "Separator between the choices."},
+    )
+    choice_item_prefix: str = field(
+        default="- ",
+        metadata={"help": "Prefix of the model's choice item."},
+    )
+    sequence_labeling_separator: str = field(
+        default=",",
+        metadata={"help": "Separator between the sequence labeling tokens."},
+    )
+    permute_choices: bool = field(
+        default=False,
+        metadata={"help": "Whether to permute the choices."},
     )
     few_shot_example_separator: str = field(
         default="\n",
@@ -221,7 +261,7 @@ class TaskConfig:
         metadata={"help": "Data source configuration"},
     )
 
-    task_type: Literal["free_form", "multi_choice", "sequence_labeling"] = field(
+    task_type: TaskType = field(
         metadata={"help": "Type of the task. e.g. 'free_form'"},
     )
 
@@ -239,7 +279,7 @@ class TaskConfig:
         },
     )
 
-    evaluation_metric: Optional[List[EvaluationMetricConfig]] = field(
+    evaluation_metrics: Optional[List[EvaluationMetricConfig]] = field(
         default=None,
         metadata={"help": "Evaluation metric configuration"},
     )
@@ -268,6 +308,14 @@ class TaskConfig:
             raise ValueError(
                 "Task type is free_form but no free_form_output_regex is provided."
             )
+
+        if self.field_mapping is not None:
+            assert (
+                "input" in self.field_mapping
+            ), "Field mapping must contain 'input' field."
+            assert (
+                "target" in self.field_mapping
+            ), "Field mapping must contain 'target' field."
 
         assert (
             self.keywords is not None and len(self.keywords) > 0

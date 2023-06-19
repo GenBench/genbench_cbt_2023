@@ -8,7 +8,17 @@ REQUIRED_PKGS = [
     "jsonnet>=0.20",
 
     # dataclass_factory is used to convert jsonnet to dataclasses
-    "dataclass_factory>=2.16"
+    "dataclass_factory>=2.16",
+    
+    # We use datasets to load data from HuggingFace datasets
+    "datasets>=2.13",
+
+    # HuggingFace Evaluate is used for metrics
+    "evaluate>=0.4",
+    
+    "numpy>=1.24",
+
+    "typing_extensions>=4.6"
 ]
 
 
