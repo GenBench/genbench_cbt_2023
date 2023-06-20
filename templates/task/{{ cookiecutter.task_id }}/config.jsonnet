@@ -1,18 +1,23 @@
 {
-    name: 'Sample LLM  json task',
-    description: 'Sample LLM task with dummy data that works with only json, for illustration purposes',
+    name: '{{ cookiecutter.task_name }}',
 
+    // @TODO: Add a description of the task
+    description: '{{ cookiecutter.task_name }} aims to measure ...',
+
+    // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'sample_task',
+        'keyword1',
+        'keyword2',
     ],
 
     authors: [
-        'GenBench team',
+        {% for author in cookiecutter.task_authors.split(",") %}'{{ author }}',
+        {% endfor %}
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/genbench/dummy_data/LLM_test.jsonl', // NB we should host this elsewhere to avoid confusion
+        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/genbench/dummy_data/LLM_test.jsonl',
     },
 
     has_validation_set: false,

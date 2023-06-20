@@ -1,4 +1,5 @@
 import abc
+from collections import OrderedDict
 from enum import Enum
 from typing import Any, Mapping, List
 
@@ -104,7 +105,7 @@ class TaskInterface(abc.ABC):
 
     @abc.abstractmethod
     def get_prepared_datasets(
-        self, preparation_strategy: PreparationStrategies
+        self, preparation_strategy: PreparationStrategy
     ) -> Mapping[str, datasets.Dataset]:
         """Get the prepared dataset.
 
@@ -123,3 +124,6 @@ class TaskInterface(abc.ABC):
 class Formatter(typing_extensions.Protocol):
     def __call__(self, example: Mapping[str, Any], **kwargs) -> Mapping[str, Any]:
         """A callable that formats each example."""
+
+
+EvaluationResult = OrderedDict[str, float]

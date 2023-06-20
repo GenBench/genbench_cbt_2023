@@ -1,0 +1,7 @@
+{
+    "task_name": "{{ cookiecutter.task_name }}",
+    "task_id": "{{ cookiecutter.task_id }}",
+    "task_dict_class_name": "{{ cookiecutter.task_dict_class_name }}",
+    "task_authors": "{{ cookiecutter.task_authors }}",
+    "subtasks": "{{ cookiecutter.subtasks }}"
+}

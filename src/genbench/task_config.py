@@ -141,7 +141,7 @@ class PromptBuilderConfig:
 
     """
 
-    instruction: str = field(
+    instruction_zero_shot: str = field(
         default="",
         metadata={
             "help": (
@@ -150,11 +150,20 @@ class PromptBuilderConfig:
             )
         },
     )
+    instruction_few_shot: str = field(
+        default="",
+        metadata={
+            "help": (
+                "Instruction of the task. Will be prepended to the"
+                " model's input. e.g. 'Add two numbers. Here are some examples:'"
+            )
+        },
+    )
     input_prefix: str = field(
         default="Q: ", metadata={"help": "Prefix of the model's input."}
     )
     output_prefix: str = field(
-        default="A: ", metadata={"help": "Prefix of the model's output."}
+        default="\nA: ", metadata={"help": "Prefix of the model's output."}
     )
     choice_prefix: str = field(
         default="\n  choice: ",
@@ -185,7 +194,7 @@ class PromptBuilderConfig:
         metadata={"help": "Whether to permute the choices."},
     )
     few_shot_example_separator: str = field(
-        default="\n",
+        default="\n\n",
         metadata={"help": "Separator between the few-shot examples."},
     )
     stop_string: str = field(
@@ -206,7 +215,7 @@ class PreparationStrategiesConfig:
     finetuning: Optional[FinetuningStrategyConfig] = field(
         default=None, metadata={"help": "Finetuning strategy configuration."}
     )
-    prompt_base_testing: Optional[PromptBaseTestingConfig] = field(
+    prompt_based_testing: Optional[PromptBaseTestingConfig] = field(
         default=None, metadata={"help": "Prompt base testing configuration."}
     )
 
