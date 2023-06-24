@@ -77,7 +77,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
     2. Creating a task with subtasks:
 
-    > genbench-cli create-task --name "The addition task" --id "addition" --s "subtask_1" --s "subtask_2"
+    > genbench-cli create-task --name "The addition task" --id "addition" -s "subtask_1" -s "subtask_2"
     """
     # Check if cookiecutter is installed
     if not is_cookiecutter_installed():
