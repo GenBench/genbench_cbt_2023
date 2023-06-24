@@ -1,10 +1,7 @@
-from pathlib import Path
 from typing import List
 
 import click
-from cookiecutter.main import cookiecutter
 
-import genbench.tasks
 from genbench.utils.file import get_repo_dir
 from genbench.utils.logging import get_logger
 from genbench.utils.tasks import (
@@ -15,6 +12,16 @@ from genbench.utils.tasks import (
 )
 
 logger = get_logger(__name__)
+
+
+def is_cookiecutter_installed() -> bool:
+    """Check if cookiecutter is installed."""
+    try:
+        from cookiecutter.main import cookiecutter  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
 
 
 @click.group()
@@ -72,6 +79,12 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
     > genbench-cli create-task --name "The addition task" --id "addition" --s "subtask_1" --s "subtask_2"
     """
+    # Check if cookiecutter is installed
+    if not is_cookiecutter_installed():
+        raise click.UsageError(
+            "Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it."
+        )
+
     # Make sure `name` only contains ascii characters
     if not all(ord(c) < 128 for c in name):
         raise click.UsageError(
@@ -135,6 +148,8 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         click.echo(f"TaskDict name: {name}")
         click.echo(f"Task id: {id_}")
         click.echo(f"TaskDict class name: {task_dict_class_name}\n")
+
+        from cookiecutter.main import cookiecutter
 
         cookiecutter(
             str(get_repo_dir() / "templates" / "task_with_subtasks"),
