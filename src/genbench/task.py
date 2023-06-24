@@ -246,6 +246,22 @@ class Task(TaskInterface):
         else:
             return f"{self.root_task_id}:{self.subtask_id}"
 
+    @property
+    def name(self) -> str:
+        return self.config.name
+
+    @property
+    def description(self) -> str:
+        return self.config.description
+
+    @property
+    def authors(self) -> List[str]:
+        return self.config.authors
+
+    @property
+    def keywords(self) -> List[str]:
+        return self.config.keywords
+
     def get_prepared_datasets(
         self,
         preparation_strategy: PreparationStrategy,

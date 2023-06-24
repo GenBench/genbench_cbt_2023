@@ -101,19 +101,19 @@ def get_all_task_metadata() -> Dict[str, Union[str, Dict[str, str]]]:
     for task_id in task_ids:
         task = load_task(task_id)
         metadata = {
-            "name": task.config.name,
-            "description": task.config.description,
-            "keywords": task.config.keywords,
-            "authors": task.config.authors,
+            "name": task.name,
+            "description": task.description,
+            "keywords": task.keywords,
+            "authors": task.authors,
         }
         if isinstance(task, TaskDict):
             metadata["subtasks"] = {}
             for subtask_id, subtask in task.items():
                 metadata["subtasks"][subtask_id] = {
-                    "name": subtask.config.name,
-                    "description": subtask.config.description,
-                    "keywords": subtask.config.keywords,
-                    "authors": subtask.config.authors,
+                    "name": subtask.name,
+                    "description": subtask.description,
+                    "keywords": subtask.keywords,
+                    "authors": subtask.authors,
                 }
 
         task_metadata[task_id] = metadata
