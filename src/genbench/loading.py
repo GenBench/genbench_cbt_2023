@@ -8,7 +8,7 @@ from genbench.task_config import TaskConfig
 from genbench.task_dict import TaskDict
 from genbench.utils.file import load_jsonnet
 from genbench.utils.logging import get_logger
-from genbench.utils.tasks import get_task_dir, get_task_module_name
+from genbench.utils.tasks import get_task_dir, get_task_module_name, is_task_dict
 
 logger = get_logger(__name__)
 
@@ -31,7 +31,7 @@ def load_task(task_id: str) -> Union[Task, TaskDict]:
         task_obj = _load_task_class(task_dir, task_id, subtask_id=subtask_id)
     else:
         # Check if task_dir points to a TaskDict
-        if _is_task_dict(task_dir):
+        if is_task_dict(task_dir):
             task_obj = _load_task_dict(task_dir, task_id)
         else:
             task_obj = _load_task_class(task_dir, task_id)
@@ -65,20 +65,6 @@ def _load_task_class(
     task_obj = task_class(config, task_id, subtask_id=subtask_id)
 
     return task_obj
-
-
-def _is_task_dict(task_dir: Path) -> bool:
-    if (task_dir / "task.py").exists():
-        return False
-
-    # Load the module and check if it has a TaskDict class
-    task_dict_module_name = get_task_module_name(task_dir)
-    task_dict_module = importlib.import_module(task_dict_module_name)
-    for name, obj in inspect.getmembers(task_dict_module):
-        if inspect.isclass(obj) and issubclass(obj, TaskDict) and obj != TaskDict:
-            return True
-
-    return False
 
 
 def _load_task_dict(task_dir: Path, task_id: str) -> TaskDict:

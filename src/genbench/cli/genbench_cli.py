@@ -10,7 +10,7 @@ from genbench.utils.logging import get_logger
 from genbench.utils.tasks import (
     get_all_tasks_ids,
     is_valid_task_id,
-    create_task_from_template,
+    generate_task_from_template,
     get_tasks_dir,
 )
 
@@ -108,7 +108,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         click.echo(f"Task id: {id_}")
         click.echo(f"Task class name: {task_class_name}")
 
-        create_task_from_template(
+        generate_task_from_template(
             name=name,
             task_id=id_,
             task_class_name=task_class_name,
@@ -169,7 +169,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             click.echo(f"Subtask id: {id_}:{subtask_id}")
             click.echo(f"Subtask class name: {subtask_class_name}")
 
-            create_task_from_template(
+            generate_task_from_template(
                 name=subtask_name,
                 task_id=subtask_id,
                 task_class_name=subtask_class_name,
