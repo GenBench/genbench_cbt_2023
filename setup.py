@@ -1,24 +1,21 @@
+import os
+from pathlib import Path
+
 from setuptools import setup, find_packages
 
 REQUIRED_PKGS = [
     # We use Click to power our command line interface
     "Click>=8.1",
-
     # Jsonnet is used as a format for task configs
     "jsonnet>=0.20",
-
     # dataclass_factory is used to convert jsonnet to dataclasses
     "dataclass_factory>=2.16",
-    
     # We use datasets to load data from HuggingFace datasets
     "datasets>=2.13",
-
     # HuggingFace Evaluate is used for metrics
     "evaluate>=0.4",
-    
-    "numpy>=1.24",
-
-    "typing_extensions>=4.6"
+    "numpy",
+    "typing_extensions>=4.6",
 ]
 
 
@@ -42,11 +39,32 @@ EXTRAS_REQUIRE = {
 }
 
 
+def get_template_data_files():
+    data_files = []
+    start_point = Path("templates")
+    for root, dirs, files in os.walk(start_point):
+        root_files = [os.path.join(root, i) for i in files]
+        data_files.append((root, root_files))
+
+    print(data_files)
+    return data_files
+
+
+# get_template_data_files()
+# exit()
+
 setup(
     name="genbench",
     version="0.0.1",
     packages=find_packages("src"),
     package_dir={"": "src"},
+    package_data={
+        "genbench": [
+            "tasks/**/*.json",
+            "tasks/**/*.jsonnet",
+            "tasks/**/*.md",
+        ]
+    },
     include_package_data=True,
     install_requires=REQUIRED_PKGS,
     extras_require=EXTRAS_REQUIRE,
