@@ -16,9 +16,21 @@ def get_all_tasks_ids() -> List[str]:
         [
             d.name
             for d in tasks_dir.iterdir()
-            if d.is_dir() and not d.name.startswith("__")
+            if d.is_dir() and not d.name.startswith("__") and is_valid_task_id(d.name)
         ]
     )
+
+
+def get_all_tasks_and_subtasks_ids() -> List[str]:
+    """Get all tasks and subtasks slugs."""
+    task_ids = []
+    for task_id in get_all_tasks_ids():
+        task_dir = get_task_dir(task_id)
+        if is_task_dict(task_dir):
+            task_ids.extend(get_task_dict_subtasks(task_dir))
+        else:
+            task_ids.append(task_id)
+    return task_ids
 
 
 def get_tasks_dir() -> Path:
@@ -48,6 +60,17 @@ def is_valid_task_id(id_: str) -> bool:
     """Check if a task id is valid."""
     return all(
         (c.isalnum() and ord(c) < 128 and c.lower() == c) or c == "_" for c in id_
+    )
+
+
+def is_valid_task_module(task_dir: Path) -> bool:
+    """Check if a task module is valid."""
+    return all(
+        [
+            (task_dir / "__init__.py").exists(),
+            (task_dir / "task.py").exists(),
+            (task_dir / "config.jsonnet").exists(),
+        ]
     )
 
 
@@ -90,6 +113,20 @@ def is_task_dict(task_dir: Path) -> bool:
             return True
 
     return False
+
+
+def get_task_dict_subtasks(task_dir: Path) -> List[str]:
+    """Get the subtasks of a task dict based on the task directory."""
+    return sorted(
+        [
+            d.name
+            for d in task_dir.iterdir()
+            if d.is_dir()
+            and not d.name.startswith("__")
+            and is_valid_task_id(d.name)
+            and is_valid_task_module(d)
+        ]
+    )
 
 
 def get_all_task_metadata() -> Dict[str, Union[str, Dict[str, str]]]:

@@ -1,6 +1,7 @@
 from typing import List
 
 import click
+import pytest
 
 from genbench.utils.file import get_repo_dir
 from genbench.utils.logging import get_logger
@@ -9,6 +10,10 @@ from genbench.utils.tasks import (
     is_valid_task_id,
     generate_task_from_template,
     get_tasks_dir,
+    is_task_dict,
+    get_task_dir,
+    get_task_dict_subtasks,
+    get_all_tasks_and_subtasks_ids,
 )
 
 logger = get_logger(__name__)
@@ -97,6 +102,12 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         id_ = "_".join(name.lower().split())
 
     # Make sure `id` only contains alphanumeric characters and underscores and lower case
+    if ":" in id_:
+        raise click.UsageError(
+            "You cannot use ':' in task id. "
+            "Please use only alphanumeric characters (lower case) and underscores."
+        )
+
     if not is_valid_task_id(id_):
         raise click.UsageError(
             "Task id can only contain alphanumeric characters and underscores. "
@@ -215,14 +226,12 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 def test_task(ctx: click.Context, id_: str):
     """Run tests for a task."""
 
-    import pytest
-
     if id_ is None:
         raise click.UsageError(
             "Please specify the task id. e.g. 'genbench-cli test-task --id addition'"
         )
     # Make sure task exists
-    all_tasks_ids = get_all_tasks_ids()
+    all_tasks_ids = get_all_tasks_and_subtasks_ids()
     if id_ not in all_tasks_ids:
         raise click.UsageError(
             f"Task with id '{id_}' does not exist. Please specify a valid task id."
@@ -230,4 +239,10 @@ def test_task(ctx: click.Context, id_: str):
 
     task_test_path = get_repo_dir() / "tests" / "test_task.py"
 
-    return pytest.main(["-xrpP", task_test_path, f"--task-id={id_}"])
+    if ":" not in id_ and is_task_dict(get_task_dir(id_)):
+        # If task is a task dict, we need to run tests for each subtask
+        subtasks = get_task_dict_subtasks(get_task_dir(id_))
+        for subtask_id in subtasks:
+            ctx.invoke(test_task, id_=f"{id_}:{subtask_id}")
+    else:
+        return pytest.main(["-xrpP", task_test_path, f"--task-id={id_}"])
