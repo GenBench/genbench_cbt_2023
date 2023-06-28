@@ -11,3 +11,10 @@ def task_id(request):
     if task_id_value is None:
         pytest.skip()
     return task_id_value
+
+
+@pytest.fixture(scope="session")
+def task_obj(task_id):
+    from genbench import load_task
+
+    return load_task(task_id)

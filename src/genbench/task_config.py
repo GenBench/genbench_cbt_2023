@@ -1,5 +1,5 @@
 import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from pathlib import Path
 from typing import List, Literal, Optional, Union, Tuple, Dict
 
@@ -93,7 +93,7 @@ class EvaluationMetricConfig:
     git_commit_sha: str = field(
         metadata={"help": "Git commit sha of the metric. e.g. '070042b....'"}
     )
-    best_value: float = field(metadata={"help": "Best value of the metric. e.g. 1.0"})
+    best_score: float = field(metadata={"help": "Best value of the metric. e.g. 1.0"})
     compute_extra_kwargs: Optional[Dict[str, str]] = field(
         default=None,
         metadata={"help": "Extra kwargs to pass to the metric's compute method."},
@@ -106,7 +106,7 @@ class EvaluationMetricConfig:
             isinstance(self.hf_id, tuple) and len(self.hf_id) == 2
         )
 
-        assert self.best_value is not None, "Best value must be specified."
+        assert self.best_score is not None, "Best value must be specified."
 
 
 @dataclass
@@ -358,3 +358,6 @@ class TaskConfig:
         factory = dataclass_factory.Factory()
         config: TaskConfig = factory.load(json_dict, TaskConfig)
         return config
+
+    def to_json(self, path: Path) -> None:
+        path.write_text(json.dumps(asdict(self), indent=4))

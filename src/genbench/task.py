@@ -1,3 +1,4 @@
+from collections import OrderedDict
 from typing import Optional, Mapping, List, Any, Union, Callable
 
 import evaluate
@@ -348,7 +349,7 @@ class Task(TaskInterface):
         predictions: List[Mapping[str, Any]] = None,
         gold: Dataset = None,
     ) -> EvaluationResult:
-        result = {}
+        result = OrderedDict()
         for metric_config in self.config.evaluation_metrics:
             hf_id = metric_config.hf_id
             if isinstance(hf_id, str):
@@ -403,6 +404,16 @@ class Task(TaskInterface):
                 data_files["validation"] = self.config.data_source.validation
             if self.config.data_source.train is not None:
                 data_files["train"] = self.config.data_source.train
+
+            # Remove the "file:///" prefix if present
+            for split, split_url in data_files.items():
+                if split_url.startswith("file://"):
+                    logger.warning(
+                        f"Loading a local dataset from {split_url}. "
+                        f"This is not a intended use case. "
+                        f"Data should be loaded from a remote location."
+                    )
+                    data_files[split] = split_url[len("file://") :]
 
             return load_dataset("json", data_files=data_files, field=None)
         elif self.config.data_source.type == "hf":
