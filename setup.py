@@ -14,6 +14,11 @@ REQUIRED_PKGS = [
     "datasets>=2.13",
     # HuggingFace Evaluate is used for metrics
     "evaluate>=0.4",
+
+    # Scikit-learn is needed for some of HF's metrics
+    "scikit-learn",
+
+    # Numpy is needed for some of HF's metrics
     "numpy",
     "typing_extensions>=4.6",
 ]

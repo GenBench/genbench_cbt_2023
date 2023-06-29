@@ -358,10 +358,14 @@ class Task(TaskInterface):
             metric = evaluate.load(*hf_id, revision=metric_config.git_commit_sha)
 
             preds_lst = [pred["target"] for pred in predictions]
-            gold_lst = [g["target"] for g in gold]
+            if self.config.task_type == TaskType.MULTIPLE_CHOICE:
+                refs_lst = [g["original_target"] for g in gold]
+            else:
+                refs_lst = [g["target"] for g in gold]
+
             extra_kwargs = metric_config.compute_extra_kwargs or {}
             output: dict = metric.compute(
-                predictions=preds_lst, references=gold_lst, **extra_kwargs
+                predictions=preds_lst, references=refs_lst, **extra_kwargs
             )
 
             if output is None:
@@ -445,7 +449,7 @@ class Task(TaskInterface):
                     input_choices = rng.permutation(sorted(input_choices))
                 formatted_input += prompt_config.choices_prefix + "".join(
                     [
-                        f"{prompt_config.choice_item_prefix}{c}{prompt_config.choice_item_postfix}"
+                        f"{prompt_config.choice_item_prefix}{str(c)}{prompt_config.choice_item_postfix}"
                         for c in input_choices
                     ]
                 )

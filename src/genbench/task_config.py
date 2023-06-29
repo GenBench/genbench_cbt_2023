@@ -165,16 +165,12 @@ class PromptBuilderConfig:
     output_prefix: str = field(
         default="\nA: ", metadata={"help": "Prefix of the model's output."}
     )
-    choice_prefix: str = field(
-        default="\n  choice: ",
-        metadata={"help": "Prefix of the model's choice."},
-    )
     append_choices_to_input: bool = field(
         default=True,
         metadata={"help": "Whether to append the choices to the model's input."},
     )
     choices_prefix: str = field(
-        default="\n  choices: \n",
+        default="\nchoices: \n",
         metadata={"help": "Prefix of the model's choice."},
     )
     choice_item_postfix: str = field(
