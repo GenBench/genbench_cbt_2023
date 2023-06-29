@@ -3,13 +3,12 @@ import inspect
 from pathlib import Path
 from typing import List, Optional, Dict, Union
 
-import genbench
-from genbench import tasks
-from genbench.task_dict import TaskDict
-from genbench.utils.file import get_repo_dir
+from .file import get_repo_dir
 
 
 def get_all_tasks_ids() -> List[str]:
+    from genbench import tasks
+
     """Get all tasks slugs."""
     tasks_dir = Path(tasks.__file__).parent
     return list(
@@ -35,13 +34,15 @@ def get_all_tasks_and_subtasks_ids() -> List[str]:
 
 def get_tasks_dir() -> Path:
     """Get the path to the `tasks` directory."""
+    from genbench import tasks
+
     tasks_dir = Path(tasks.__file__).parent
     return tasks_dir
 
 
 def get_task_dir(task_id: str, subtask_id: Optional[str] = None) -> Path:
     """Get the path to the task directory."""
-    tasks_dir = Path(tasks.__file__).parent
+    tasks_dir = get_tasks_dir()
     if subtask_id is not None:
         return tasks_dir / task_id / subtask_id
     else:
@@ -50,6 +51,8 @@ def get_task_dir(task_id: str, subtask_id: Optional[str] = None) -> Path:
 
 def get_task_module_name(task_dir: Path) -> str:
     """Get the name of the task module from the task directory."""
+    import genbench
+
     start_path = Path(genbench.__file__).parent
     rel_task_dir = task_dir.relative_to(start_path)
     task_module_name = f"genbench.{rel_task_dir.as_posix().replace('/', '.')}"
@@ -105,6 +108,8 @@ def is_task_dict(task_dir: Path) -> bool:
     if (task_dir / "task.py").exists():
         return False
 
+    from genbench import TaskDict
+
     # Load the module and check if it has a TaskDict class
     task_dict_module_name = get_task_module_name(task_dir)
     task_dict_module = importlib.import_module(task_dict_module_name)
@@ -132,6 +137,7 @@ def get_task_dict_subtasks(task_dir: Path) -> List[str]:
 def get_all_task_metadata() -> Dict[str, Union[str, Dict[str, str]]]:
     """Get metadata for all tasks."""
     from genbench.loading import load_task
+    from genbench import TaskDict
 
     task_ids = get_all_tasks_ids()
     task_metadata = {}

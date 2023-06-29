@@ -22,6 +22,7 @@ from genbench.api import (
 from genbench.task_config import PromptBuilderConfig
 from genbench.utils.file import load_jsonnet
 from genbench.utils.logging import get_logger
+from genbench.utils.tasks import get_task_dir
 
 logger = get_logger(__name__)
 
@@ -78,7 +79,8 @@ def resplit_data_source(
                 orig_split, orig_id = sid.split(":")
                 orig_split = orig_split.split(".")[0]
                 orig_split = get_data_split_name(orig_split)
-                yield from orig_datasets[orig_split][int(orig_id)]
+                orig_id = int(orig_id)
+                yield from orig_datasets[orig_split][orig_id]
 
         return generator_fn
 
@@ -296,7 +298,11 @@ class Task(TaskInterface):
         data_source = self._load_data_source()
 
         if self.config.split_file is not None:
-            splitting_info = load_jsonnet(self.config.split_file)
+            split_file_path = (
+                get_task_dir(self.root_task_id, self.subtask_id)
+                / self.config.split_file
+            )
+            splitting_info = load_jsonnet(split_file_path)
             data_source = resplit_data_source(data_source, splitting_info)
 
         output = {}
