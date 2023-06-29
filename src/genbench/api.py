@@ -71,9 +71,6 @@ class TaskInterface(abc.ABC):
     ) -> Mapping[str, float]:
         """Evaluate the predictions of the model against the gold data.
 
-        By default, this method applies the metric specified in the task's
-        config.jsonnet.
-
         Args:
             predictions: A list of dictionaries, where each dictionary contains the predicted
                          values for an example. The keys are strings and the values can be any type.
@@ -83,6 +80,9 @@ class TaskInterface(abc.ABC):
             A dictionary containing key-value pairs for the evaluation metric(s) computed on the predicted
             values. The keys are strings representing the name of the evaluation metric and the values are
             floating-point numbers.
+
+        Raises:
+            ValueError: If a metric returns None.
         """
         ...
 

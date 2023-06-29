@@ -104,6 +104,33 @@ def make_nshot_dataset(
     repeat_samples: int = 1,
     num_proc: int = 4,
 ) -> Dataset:
+    """
+    Create an n-shot dataset for few-shot learning tasks.
+
+    Args:
+        formatted_dataset (Mapping[DatasetSplit, Dataset]):
+            A mapping of dataset splits (Train, Validation, Test) to datasets.
+        prompt_builder_config (PromptBuilderConfig):
+            A configuration object containing instructions and separators for formatting prompts.
+        shot_formatter (Callable[[Mapping[str, Any], int], Mapping[str, Any]]):
+            A callable function to format the examples.
+        num_shots (int):
+            The number of examples to use as the context for each query in the n-shot dataset.
+        random_seed (int):
+            The seed used for randomization.
+        repeat_samples (int, optional):
+            Number of times to repeat each sample. Defaults to 1.
+        num_proc (int, optional):
+            The number of processes to use for parallel processing. Defaults to 4.
+
+    Returns:
+        Dataset: The formatted n-shot dataset.
+
+    Raises:
+        AssertionError: If the test set is not present in the formatted_dataset.
+        ValueError: If there are not enough examples for the number of shots requested.
+
+    """
     test_set = formatted_dataset[DatasetSplit.TEST.value]
     assert (
         test_set is not None
@@ -440,7 +467,19 @@ class Task(TaskInterface):
     def _format_example_for_in_context_learning(
         self, example: Mapping[str, Any], random_seed: int
     ) -> Mapping[str, Any]:
-        rng = np.random.RandomState(seed=random_seed + example["_genbench_idx"])
+        """
+        Format a given example for in-context learning.
+
+        Parameters:
+            example (Mapping[str, Any]): The input example to be formatted.
+            random_seed (int): The random seed for any randomness in the formatting process.
+
+        Returns:
+            Mapping[str, Any]: A dictionary containing the formatted input and target.
+
+        Raises:
+            ValueError: If the specified task type is not supported.
+        """
         prompt_config = (
             self.config.preparation_strategies.prompt_based_testing.prompt_builder
         )
@@ -449,10 +488,17 @@ class Task(TaskInterface):
 
         if self.config.task_type == TaskType.MULTIPLE_CHOICE:
             choices = example["target_options"]
+
+            # Append permuted choices to input if specified in config
             if prompt_config.append_choices_to_input:
                 input_choices = choices[:]
                 if prompt_config.permute_choices:
+                    # Initialize a random number generator for handling permutations if needed
+                    rng = np.random.RandomState(
+                        seed=random_seed + example["_genbench_idx"]
+                    )
                     input_choices = rng.permutation(sorted(input_choices))
+
                 formatted_input += prompt_config.choices_prefix + "".join(
                     [
                         f"{prompt_config.choice_item_prefix}{str(c)}{prompt_config.choice_item_postfix}"
