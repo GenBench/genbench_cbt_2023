@@ -1,10 +1,11 @@
 import abc
 from collections import OrderedDict
 from enum import Enum
-from typing import Any, Mapping, List
+from typing import Any, Mapping, List, Optional, Union
 
 import datasets
 import typing_extensions
+from datasets import Dataset
 
 
 # PreparationStrategies = Literal["finetuning", "prompt_based_testing"]
@@ -27,6 +28,9 @@ class TaskType(Enum):
 class PreparationStrategy(Enum):
     FINETUNING = "finetuning"
     PROMPT_BASED_TESTING = "prompt_based_testing"
+
+
+EvaluationResult = OrderedDict[str, float]
 
 
 class TaskInterface(abc.ABC):
@@ -68,7 +72,7 @@ class TaskInterface(abc.ABC):
         *,
         predictions: List[Mapping[str, Any]] = None,
         gold: datasets.Dataset = None,
-    ) -> Mapping[str, float]:
+    ) -> EvaluationResult:
         """Evaluate the predictions of the model against the gold data.
 
         Args:
@@ -105,25 +109,38 @@ class TaskInterface(abc.ABC):
 
     @abc.abstractmethod
     def get_prepared_datasets(
-        self, preparation_strategy: PreparationStrategy
-    ) -> Mapping[str, datasets.Dataset]:
-        """Get the prepared dataset.
+        self,
+        preparation_strategy: PreparationStrategy,
+        shot_list: Optional[List[int]] = None,
+        random_seed: int = 42,
+    ) -> Union[Mapping[DatasetSplit, Dataset], Mapping[int, Dataset]]:
+        """
+        Get the prepared datasets based on the specified preparation strategy.
 
-        By default, this method uses `get_dataset_raw` to load the dataset
-        and it then prepares the dataset based on the preparation strategy.
+        This method typically relies on `get_dataset_raw` to load the raw dataset and then
+        applies the given preparation strategy to prepare the datasets.
+
+        Args:
+            preparation_strategy (PreparationStrategy):
+                The strategy to be used for dataset preparation.
+            shot_list (Optional[List[int]]):
+                A list of integers representing the number of shots to be used
+                in few-shot learning tasks. If None, all data is used. Defaults to None.
+            random_seed (int, optional):
+                Seed for random number generation, used for reproducibility. Defaults to 42.
 
         Returns:
-            A dictionary containing key-value pairs for the prepared datasets.
-            The keys are strings representing the name of the dataset split
-            (e.g., "train", "validation", "test") and the values are
-            HuggingFace `datasets.Dataset` objects containing the prepared data for the corresponding split.
+            Union[Mapping[DatasetSplit, Dataset], Mapping[int, Dataset]]:
+                A dictionary containing key-value pairs for the prepared datasets.
+                If shot_list is provided, the keys are integers representing the number of shots,
+                otherwise, they are of type DatasetSplit representing the dataset split (e.g., "train", "validation",
+                "test"). The values are HuggingFace `datasets.Dataset` objects containing the prepared data for the
+                corresponding split or number of shots.
         """
+
         raise NotImplementedError()
 
 
 class Formatter(typing_extensions.Protocol):
     def __call__(self, example: Mapping[str, Any], **kwargs) -> Mapping[str, Any]:
         """A callable that formats each example."""
-
-
-EvaluationResult = OrderedDict[str, float]
