@@ -123,7 +123,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         task_class_name = "".join([w.capitalize() for w in id_.split("_")])
         task_class_name = f"{task_class_name}Task"
 
-        click.echo(f"Creating task...")
+        click.echo("Creating task...")
         click.echo(f"Task name: {name}")
         click.echo(f"Task id: {id_}")
         click.echo(f"Task class name: {task_class_name}")
@@ -135,7 +135,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             task_authors=task_authors,
         )
 
-        click.echo(f"\n\nTask created successfully.")
+        click.echo("\n\nTask created successfully.")
         click.echo(f"View the task at {get_repo_dir() / 'genbench' / 'tasks' / id_}")
     else:
         # Make sure subtask ids are valid
@@ -151,12 +151,10 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
         task_dict_class_name = "".join([w.capitalize() for w in id_.split("_")])
 
-        click.echo(f"Creating task dict...")
+        click.echo("Creating task dict...")
         click.echo(f"TaskDict name: {name}")
         click.echo(f"Task id: {id_}")
         click.echo(f"TaskDict class name: {task_dict_class_name}\n")
-
-        from cookiecutter.main import cookiecutter
 
         cookiecutter(
             str(get_repo_dir() / "templates" / "task_with_subtasks"),
@@ -173,7 +171,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         )
 
         # Then create the subtasks
-        click.echo(f"Creating subtasks...\n\n")
+        click.echo("Creating subtasks...\n\n")
         for subtask_id in subtask_ids:
             subtask_name = f"{name} ({subtask_id})"
 
@@ -197,7 +195,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
                 output_dir=output_dir,
             )
 
-            click.echo(f"Done!")
+            click.echo("Done!")
             click.echo(f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n")
 
         click.echo(f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}")

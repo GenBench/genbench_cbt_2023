@@ -7,26 +7,16 @@ TASK_CONFIG_SKELETON = """\
 {{
     name: 'My Awesome Task',
     description: 'Some short description of it',
-
     keywords: {keywords},
-
     authors: {authors},
-    
     data_source: {data_source},
-    
     has_validation_set: true,
     has_train_set: true,
-    
     task_type: {task_type},
-    
     free_form_output_regex: '',
-
     field_mapping: {field_mapping},
-
     split_file: {split_file},
-    
     evaluation_metrics: {evaluation_metrics},
-
     preparation_strategies: {preparation_strategies},
 }}
 """
