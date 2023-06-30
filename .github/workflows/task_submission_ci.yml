@@ -18,6 +18,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+          cache: 'pip'
+          cache-dependency-path: setup.py
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -37,6 +39,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+          cache: 'pip'
+          cache-dependency-path: setup.py
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
       - name: Install dependencies
@@ -44,7 +48,7 @@ jobs:
           pip install .[tests]
       - name: Test with pytest
         run: |
-          python -m pytest -n 2 -sv ./tests/ --ignore=./tests/test_task.py
+          pytest -xrpP tests/ --ignore=./tests/test_task.py
 
   test_task:
     needs: test_genbench_impl
@@ -53,10 +57,14 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
       - name: Set up Python 3.9
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
       - name: Upgrade pip
         run: python -m pip install --upgrade pip
       - name: Install dependencies
