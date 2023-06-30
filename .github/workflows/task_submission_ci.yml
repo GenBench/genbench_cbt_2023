@@ -7,8 +7,6 @@ on:
       - labeled
     branches:
       - main
-    paths:
-      - "src/genbench/tasks/*"
 
 jobs:
   check_code_quality:
