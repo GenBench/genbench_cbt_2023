@@ -1,46 +1,21 @@
----
-name: Submit splits
-about: Creating an issue with this template will put the specified splits on the queue
-  of experiments.
-title: "[Split Submission] <split_version> <model>"
-labels: automatic-new-split-submission
-assignees: ''
----
-# Description
+# [Task Name]
+...description of the task...
 
-Please include a summary of the changes and the related issue. Please also include relevant motivation and context. List any dependencies that are required for this change.
+## Examples
 
-Fixes # (issue)
+### Example 1
+...
+### Example 2
+...
 
-## Type of change
+## GenBench Card
 
-Please delete options that are not relevant.
+## Authors
+- Author 1 `author1@example.com`
+- ...
 
-- [ ] Bug fix (non-breaking change which fixes an issue)
-- [ ] New feature (non-breaking change which adds functionality)
-- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] This change requires a documentation update
+## Checklist:
 
-# How Has This Been Tested?
-
-Please describe the tests that you ran to verify your changes. Provide instructions so we can reproduce. Please also list any relevant details for your test configuration
-
-- [ ] Test A
-- [ ] Test B
-
-**Test Configuration**:
-* Firmware version:
-* Hardware:
-* Toolchain:
-* SDK:
-
-# Checklist:
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
+- [ ] Checklist 1
+- [ ] Checklist 2
+- [ ] Checklist 3
