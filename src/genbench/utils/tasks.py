@@ -26,7 +26,8 @@ def get_all_tasks_and_subtasks_ids() -> List[str]:
     for task_id in get_all_tasks_ids():
         task_dir = get_task_dir(task_id)
         if is_task_dict(task_dir):
-            task_ids.extend(get_task_dict_subtasks(task_dir))
+            task_ids.append(task_id)
+            task_ids.extend([f"{task_id}:{s}" for s in get_task_dict_subtasks(task_dir)])
         else:
             task_ids.append(task_id)
     return task_ids
@@ -42,6 +43,9 @@ def get_tasks_dir() -> Path:
 
 def get_task_dir(task_id: str, subtask_id: Optional[str] = None) -> Path:
     """Get the path to the task directory."""
+    if ":" in task_id:
+        task_id, subtask_id = task_id.split(":")
+
     tasks_dir = get_tasks_dir()
     if subtask_id is not None:
         return tasks_dir / task_id / subtask_id

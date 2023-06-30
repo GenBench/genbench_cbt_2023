@@ -1,3 +1,4 @@
+import sys
 from typing import List
 
 import click
@@ -91,9 +92,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
     # Make sure `name` only contains ascii characters
     if not all(ord(c) < 128 for c in name):
-        raise click.UsageError(
-            "Task name can only contain ascii characters. " "Please use only alphanumeric characters."
-        )
+        raise click.UsageError("Task name can only contain ascii characters. Please use only alphanumeric characters.")
 
     # If `id_` is not provided, use `name` to create `id_`
     if id_ is None:
@@ -102,7 +101,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     # Make sure `id` only contains alphanumeric characters and underscores and lower case
     if ":" in id_:
         raise click.UsageError(
-            "You cannot use ':' in task id. " "Please use only alphanumeric characters (lower case) and underscores."
+            "You cannot use ':' in task id. Please use only alphanumeric characters (lower case) and underscores."
         )
 
     if not is_valid_task_id(id_):
@@ -114,7 +113,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     all_tasks_ids = get_all_tasks_ids()
     if id_ in all_tasks_ids:
         raise click.UsageError(
-            f"Task with id '{id_}' already exists. " "Please either specify a different id or use a different name."
+            f"Task with id '{id_}' already exists. Please either specify a different id or use a different name."
         )
 
     task_authors = click.prompt("Task authors (e.g John Doe). Split with ','", type=str)
@@ -229,4 +228,6 @@ def test_task(ctx: click.Context, id_: str):
         for subtask_id in subtasks:
             ctx.invoke(test_task, id_=f"{id_}:{subtask_id}")
     else:
-        return pytest.main(["-xrpP", task_test_path, f"--task-id={id_}"])
+        exit_code = pytest.main(["-xrpP", task_test_path, f"--task-id={id_}"])
+        if exit_code != 0:
+            sys.exit(exit_code)
