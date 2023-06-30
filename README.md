@@ -1,11 +1,5 @@
 # GenBench Collaborative Benchmarking Task
 
-## Implementation Status
-| Task | Status |
-| --- |--------|
-| CLI Create New Task | Done   |
-| Task Class Implementation | In Progress |
-
 ### CLI Create New Task
 ```bash
 pip install -e .
