@@ -1,0 +1,122 @@
+name: Leaderboard submission
+description: Submit a model to the leaderboard
+title: "[Leaderboard Submission]: "
+labels: ["leaderboard-submission", "request-submission-evaluation"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Submission Info
+        Make sure you have read the [[submission guidelines]]() before submitting a model to the leaderboard. Note that this form does not automatically submit your model to the leaderboard. It first validates your submission and computes the metrics for your model. If all validations are passed then you will have the option to submit your model to the leaderboard.  
+  - type: input
+    id: submission-name
+    attributes:
+      label: Submission name
+      description: Name of your submission as it will appear on the leaderboard.
+      placeholder: "R&D Team at Company X"
+    validations:
+      required: true
+  - type: input
+    id: model-name
+    attributes:
+      label: Model name
+      description: Name of your model as it will appear on the leaderboard.
+      placeholder: "Model X"
+    validations:
+      required: false
+  - type: textarea
+    id: model-description
+    attributes:
+      label: Model description
+      description: Description of your model
+      placeholder: "This model is trained on a dataset of XYZ and the model architecture is based on the paper by ABC... The hyperparameters are..."
+    validations:
+      required: false
+  - type: input
+    id: model-parameter-count
+    attributes:
+      label: Model parameter count
+      description: Number of parameters in your model
+      placeholder: "125M"
+    validations:
+      required: true
+  - type: input
+    id: paper-url
+    attributes:
+      label: Paper 
+      description: Link to the paper of your model
+      placeholder: "https://arxiv.org/abs/..."
+    validations:
+      required: false
+  - type: input
+    id: code-url
+    attributes:
+      label: Code 
+      description: Link to the publicly available code of your model
+      placeholder: "https://github.com/..."
+    validations:
+      required: false
+  - type: input
+    id: hf-model-id
+    attributes:
+      label: HuggingFace model ID
+      description: HuggingFace model ID of your model 
+      placeholder: "bert-base-cased"
+    validations:
+      required: false
+  - id: contact-email
+    type: input
+    attributes:
+      label: Contact email
+      description: Email address to contact you in case of any issues with your submission
+      placeholder: "example@example.com"
+    validations:
+      required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Submission Checklist
+        All submissions to Genbench must follow the checklists:
+  - type: checkboxes
+    id: training-checklist
+    attributes:
+      label: Training Checklist
+      options:
+        - label: The model is only fine-tuned on the train split and not on any other data
+          required: true
+        - label: The hyperparams should be reported explicitly in this submission
+          required: true
+        - label: The predictions must be submitted on the provided test split
+          required: true
+  - type: checkboxes
+    id: metadata-checklist
+    attributes:
+      label: Metadata Checklist
+      options:
+        - label: Details on the model architecture is added.
+          required: true
+        - label: If applicable, details on the datasets used for pre-training the model is added.
+          required: true
+        - label: If applicable, link to the paper of the model is added.
+          required: true
+        - label: If applicable, link to the publicly available code of the model is added.
+          required: true
+        - label: If applicable, Huggingface model identifier of the model is added
+          required: true
+  - type: markdown
+    attributes:
+      value: |
+        ## Submission File
+        Please upload the submission file here. The submission file should be a CSV file with the following format:
+        ```csv
+        split_id,idx,prediction
+        0,0,0.5
+        ```
+  - type: textarea
+    id: submission-file
+    attributes:
+      label: Submission file
+      description: Upload the submission file here
+    validations:
+      required: true

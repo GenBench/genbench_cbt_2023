@@ -45,7 +45,6 @@ EXTRAS_REQUIRE = {
     "dev": TESTS_REQUIRE + QUALITY_REQUIRE + TEMPLATE_REQUIRE,
     "tests": TESTS_REQUIRE,
     "quality": QUALITY_REQUIRE,
-    "template": TEMPLATE_REQUIRE,
 }
 
 
