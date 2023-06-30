@@ -14,17 +14,22 @@ REQUIRED_PKGS = [
     "datasets>=2.13",
     # HuggingFace Evaluate is used for metrics
     "evaluate>=0.4",
-
     # Scikit-learn is needed for some of HF's metrics
     "scikit-learn",
-
     # Numpy is needed for some of HF's metrics
     "numpy",
     "typing_extensions>=4.6",
 ]
 
 
-QUALITY_REQUIRE = []
+QUALITY_REQUIRE = [
+    # We use black to format our code
+    "black~=23.3",
+    # We use isort to sort our imports
+    "isort~=5.12",
+    # We use flake8 to lint our code
+    "flake8~=6.0",
+]
 
 TEMPLATE_REQUIRE = [
     # We use cookiecutter to generate task templates
@@ -55,27 +60,21 @@ def get_template_data_files():
     return data_files
 
 
-# get_template_data_files()
-# exit()
-
 setup(
     name="genbench",
-    version="0.0.1",
+    version="0.0.1.dev0",
+    description="A collaborative generalisation benchmark for NLP",
+    long_description=open("README.md", encoding="utf-8").read(),
+    author="The GenBench Team",
+    author_email="genbench@googlegroups.com",
     packages=find_packages("src"),
     package_dir={"": "src"},
     package_data={
-        "genbench": [
-            "tasks/**/*.json",
-            "tasks/**/*.jsonnet",
-            "tasks/**/*.md",
-        ]
+        "genbench": ["tasks/**/*.json", "tasks/**/*.jsonnet", "tasks/**/*.md"]
     },
     include_package_data=True,
     install_requires=REQUIRED_PKGS,
     extras_require=EXTRAS_REQUIRE,
-    entry_points={
-        "console_scripts": [
-            "genbench-cli = genbench.cli.genbench_cli:cli",
-        ],
-    },
+    python_requires=">=3.8.0",
+    entry_points={"console_scripts": ["genbench-cli = genbench.cli.genbench_cli:cli"]},
 )
