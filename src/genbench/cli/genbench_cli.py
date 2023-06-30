@@ -88,16 +88,11 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     """
     # Check if cookiecutter is installed
     if not is_cookiecutter_installed():
-        raise click.UsageError(
-            "Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it."
-        )
+        raise click.UsageError("Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it.")
 
     # Make sure `name` only contains ascii characters
     if not all(ord(c) < 128 for c in name):
-        raise click.UsageError(
-            "Task name can only contain ascii characters. "
-            "Please use only alphanumeric characters."
-        )
+        raise click.UsageError("Task name can only contain ascii characters. Please use only alphanumeric characters.")
 
     # If `id_` is not provided, use `name` to create `id_`
     if id_ is None:
@@ -106,8 +101,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     # Make sure `id` only contains alphanumeric characters and underscores and lower case
     if ":" in id_:
         raise click.UsageError(
-            "You cannot use ':' in task id. "
-            "Please use only alphanumeric characters (lower case) and underscores."
+            "You cannot use ':' in task id. Please use only alphanumeric characters (lower case) and underscores."
         )
 
     if not is_valid_task_id(id_):
@@ -119,8 +113,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     all_tasks_ids = get_all_tasks_ids()
     if id_ in all_tasks_ids:
         raise click.UsageError(
-            f"Task with id '{id_}' already exists. "
-            "Please either specify a different id or use a different name."
+            f"Task with id '{id_}' already exists. Please either specify a different id or use a different name."
         )
 
     task_authors = click.prompt("Task authors (e.g John Doe). Split with ','", type=str)
@@ -183,9 +176,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
             # We use the following naming convention for subtasks:
             # TaskDictClassnameSubtaskClassname
-            subtask_class_name = "".join(
-                [w.capitalize() for w in subtask_id.split("_")]
-            )
+            subtask_class_name = "".join([w.capitalize() for w in subtask_id.split("_")])
             subtask_class_name = f"{task_dict_class_name}{subtask_class_name}"
 
             # Subtasks are created in a subfolder in the task_dict folder
@@ -204,13 +195,9 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             )
 
             click.echo("Done!")
-            click.echo(
-                f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n"
-            )
+            click.echo(f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n")
 
-        click.echo(
-            f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}"
-        )
+        click.echo(f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}")
 
 
 @cli.command()
@@ -227,15 +214,11 @@ def test_task(ctx: click.Context, id_: str):
     """Run tests for a task."""
 
     if id_ is None:
-        raise click.UsageError(
-            "Please specify the task id. e.g. 'genbench-cli test-task --id addition'"
-        )
+        raise click.UsageError("Please specify the task id. e.g. 'genbench-cli test-task --id addition'")
     # Make sure task exists
     all_tasks_ids = get_all_tasks_and_subtasks_ids()
     if id_ not in all_tasks_ids:
-        raise click.UsageError(
-            f"Task with id '{id_}' does not exist. Please specify a valid task id."
-        )
+        raise click.UsageError(f"Task with id '{id_}' does not exist. Please specify a valid task id.")
 
     task_test_path = get_repo_dir() / "tests" / "test_task.py"
 

@@ -1,5 +1,5 @@
 # Adapted from https://github.com/huggingface/evaluate/blob/main/.github/workflows/ci.yml
-name: CI (Run tests and check code quality)
+name: CI
 
 on:
   pull_request:
