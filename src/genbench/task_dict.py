@@ -12,9 +12,7 @@ class TaskDict(OrderedDict, Mapping[str, Task]):
     """A TaskDict is a task with subtasks."""
 
     @classmethod
-    def from_config(
-        cls, subtasks_dict: dict, config: Mapping[str, Any], task_id: str
-    ) -> "TaskDict":
+    def from_config(cls, subtasks_dict: dict, config: Mapping[str, Any], task_id: str) -> "TaskDict":
         """Construct a TaskDict from a config dict."""
         obj = cls(subtasks_dict)
         obj._config = config
@@ -79,9 +77,7 @@ class TaskDict(OrderedDict, Mapping[str, Task]):
         descriptions from subtasks and compile them into a single description
         using a template.
         """
-        if "description" in self._config and isinstance(
-            self._config["description"], str
-        ):
+        if "description" in self._config and isinstance(self._config["description"], str):
             return self._config["description"]
         else:
             self._check_values_type()
@@ -89,15 +85,11 @@ class TaskDict(OrderedDict, Mapping[str, Task]):
             for task in self.values():
                 task_description = task.config.description
                 # Add subtask name and id to the description
-                task_description = (
-                    f"## {task.name} ({task.subtask_id})\n{task_description}"
-                )
+                task_description = f"## {task.name} ({task.subtask_id})\n{task_description}"
                 descriptions.append(task_description)
             return "\n\n".join(descriptions)
 
-    def merge_evaluation_results(
-        self, results: OrderedDict[str, EvaluationResult]
-    ) -> EvaluationResult:
+    def merge_evaluation_results(self, results: OrderedDict[str, EvaluationResult]) -> EvaluationResult:
         """Merge evaluation results from subtasks.
 
         The default implementation is to merge the results into a single
@@ -119,9 +111,7 @@ class TaskDict(OrderedDict, Mapping[str, Task]):
     def _check_values_type(self):
         for task in self.values():
             if not isinstance(task, Task):
-                raise TypeError(
-                    f"Expected value of type `Task` but got {type(task)} instead."
-                )
+                raise TypeError(f"Expected value of type `Task` but got {type(task)} instead.")
 
     def __getitem__(self, k) -> Task:
         return super().__getitem__(k)

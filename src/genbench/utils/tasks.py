@@ -61,9 +61,7 @@ def get_task_module_name(task_dir: Path) -> str:
 
 def is_valid_task_id(id_: str) -> bool:
     """Check if a task id is valid."""
-    return all(
-        (c.isalnum() and ord(c) < 128 and c.lower() == c) or c == "_" for c in id_
-    )
+    return all((c.isalnum() and ord(c) < 128 and c.lower() == c) or c == "_" for c in id_)
 
 
 def is_valid_task_module(task_dir: Path) -> bool:
@@ -126,10 +124,7 @@ def get_task_dict_subtasks(task_dir: Path) -> List[str]:
         [
             d.name
             for d in task_dir.iterdir()
-            if d.is_dir()
-            and not d.name.startswith("__")
-            and is_valid_task_id(d.name)
-            and is_valid_task_module(d)
+            if d.is_dir() and not d.name.startswith("__") and is_valid_task_id(d.name) and is_valid_task_module(d)
         ]
     )
 

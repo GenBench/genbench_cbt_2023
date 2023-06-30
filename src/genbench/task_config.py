@@ -41,9 +41,7 @@ class DataSourceConfig:
         AssertionError: If the data source type is "manual" and any of the URLs provided is invalid.
     """
 
-    type: Literal["hf", "manual"] = field(
-        metadata={"help": "Type of the data source. e.g. 'hf'"}
-    )
+    type: Literal["hf", "manual"] = field(metadata={"help": "Type of the data source. e.g. 'hf'"})
     hf_id: Optional[Union[str, Tuple[str, str]]] = field(
         default=None, metadata={"help": "HuggingFace dataset id. e.g. 'glue'"}
     )
@@ -68,31 +66,18 @@ class DataSourceConfig:
         if self.type == "hf":
             assert self.hf_id is not None
             assert self.git_commit_sha is not None
-            assert isinstance(self.hf_id, str) or (
-                isinstance(self.hf_id, tuple) and len(self.hf_id) == 2
-            )
+            assert isinstance(self.hf_id, str) or (isinstance(self.hf_id, tuple) and len(self.hf_id) == 2)
         elif self.type == "manual":
             assert self.test is not None
-            assert all(
-                [
-                    (url is None) or (is_valid_url(url))
-                    for url in [self.test, self.train, self.validation]
-                ]
-            )
+            assert all([(url is None) or (is_valid_url(url)) for url in [self.test, self.train, self.validation]])
         else:
-            raise ValueError(
-                f"Invalid value for data source type: {self.type}. Must be one of ['hf', 'manual']"
-            )
+            raise ValueError(f"Invalid value for data source type: {self.type}. Must be one of ['hf', 'manual']")
 
 
 @dataclass
 class EvaluationMetricConfig:
-    hf_id: Union[str, Tuple[str, str]] = field(
-        metadata={"help": "HuggingFace metric id. e.g. 'accuracy'"}
-    )
-    git_commit_sha: str = field(
-        metadata={"help": "Git commit sha of the metric. e.g. '070042b....'"}
-    )
+    hf_id: Union[str, Tuple[str, str]] = field(metadata={"help": "HuggingFace metric id. e.g. 'accuracy'"})
+    git_commit_sha: str = field(metadata={"help": "Git commit sha of the metric. e.g. '070042b....'"})
     best_score: float = field(metadata={"help": "Best value of the metric. e.g. 1.0"})
     compute_extra_kwargs: Optional[Dict[str, str]] = field(
         default=None,
@@ -102,18 +87,14 @@ class EvaluationMetricConfig:
     def __post_init__(self):
         assert self.hf_id is not None
         assert self.git_commit_sha is not None
-        assert isinstance(self.hf_id, str) or (
-            isinstance(self.hf_id, tuple) and len(self.hf_id) == 2
-        )
+        assert isinstance(self.hf_id, str) or (isinstance(self.hf_id, tuple) and len(self.hf_id) == 2)
 
         assert self.best_score is not None, "Best value must be specified."
 
 
 @dataclass
 class FinetuningStrategyConfig:
-    objective: Literal["maximum_likelihood"] = field(
-        metadata={"help": "Objective of the finetuning strategy."}
-    )
+    objective: Literal["maximum_likelihood"] = field(metadata={"help": "Objective of the finetuning strategy."})
 
 
 @dataclass
@@ -144,10 +125,7 @@ class PromptBuilderConfig:
     instruction_zero_shot: str = field(
         default="",
         metadata={
-            "help": (
-                "Instruction of the task. Will be prepended to the"
-                " model's input. e.g. 'Add two numbers:'"
-            )
+            "help": ("Instruction of the task. Will be prepended to the" " model's input. e.g. 'Add two numbers:'")
         },
     )
     instruction_few_shot: str = field(
@@ -159,12 +137,8 @@ class PromptBuilderConfig:
             )
         },
     )
-    input_prefix: str = field(
-        default="Q: ", metadata={"help": "Prefix of the model's input."}
-    )
-    output_prefix: str = field(
-        default="\nA: ", metadata={"help": "Prefix of the model's output."}
-    )
+    input_prefix: str = field(default="Q: ", metadata={"help": "Prefix of the model's input."})
+    output_prefix: str = field(default="\nA: ", metadata={"help": "Prefix of the model's output."})
     append_choices_to_input: bool = field(
         default=True,
         metadata={"help": "Whether to append the choices to the model's input."},
@@ -201,9 +175,7 @@ class PromptBuilderConfig:
 
 @dataclass
 class PromptBaseTestingConfig:
-    prompt_builder: PromptBuilderConfig = field(
-        metadata={"help": "Prompt builder configuration."}
-    )
+    prompt_builder: PromptBuilderConfig = field(metadata={"help": "Prompt builder configuration."})
 
 
 @dataclass
@@ -252,9 +224,7 @@ class TaskConfig:
     """
 
     name: str = field(metadata={"help": "Name of the task. e.g. 'Addition'"})
-    description: str = field(
-        metadata={"help": "Description of the task. e.g. 'Addition of two numbers'"}
-    )
+    description: str = field(metadata={"help": "Description of the task. e.g. 'Addition of two numbers'"})
     keywords: List[str] = field(
         metadata={"help": "Keywords of the task"},
     )
@@ -278,8 +248,7 @@ class TaskConfig:
         default=None,
         metadata={
             "help": (
-                "Mapping from the fields in the data source "
-                "to the fields that the task ('input','target') expects."
+                "Mapping from the fields in the data source " "to the fields that the task ('input','target') expects."
             )
         },
     )
@@ -310,40 +279,24 @@ class TaskConfig:
 
     def __post_init__(self):
         if self.task_type == "free_form" and self.free_form_output_regex is None:
-            raise ValueError(
-                "Task type is free_form but no free_form_output_regex is provided."
-            )
+            raise ValueError("Task type is free_form but no free_form_output_regex is provided.")
 
         if self.field_mapping is not None:
-            assert (
-                "input" in self.field_mapping
-            ), "Field mapping must contain 'input' field."
-            assert (
-                "target" in self.field_mapping
-            ), "Field mapping must contain 'target' field."
+            assert "input" in self.field_mapping, "Field mapping must contain 'input' field."
+            assert "target" in self.field_mapping, "Field mapping must contain 'target' field."
 
-        assert (
-            self.keywords is not None and len(self.keywords) > 0
-        ), "Keywords must be provided for the task."
+        assert self.keywords is not None and len(self.keywords) > 0, "Keywords must be provided for the task."
 
-        assert (
-            self.authors is not None and len(self.authors) > 0
-        ), "Authors must be provided for the task."
+        assert self.authors is not None and len(self.authors) > 0, "Authors must be provided for the task."
 
-        assert (
-            self.preparation_strategies is not None
-        ), "Preparation strategies must be provided for the task."
+        assert self.preparation_strategies is not None, "Preparation strategies must be provided for the task."
 
     @staticmethod
-    def from_jsonnet(
-        jsonnet_str: Optional[str] = None, jsonnet_path: Optional[Path] = None
-    ) -> "TaskConfig":
+    def from_jsonnet(jsonnet_str: Optional[str] = None, jsonnet_path: Optional[Path] = None) -> "TaskConfig":
         if jsonnet_str is None and jsonnet_path is None:
             raise ValueError("Either jsonnet_str or jsonnet_path must be provided.")
         elif jsonnet_str is not None and jsonnet_path is not None:
-            raise ValueError(
-                "Only one of jsonnet_str or jsonnet_path must be provided."
-            )
+            raise ValueError("Only one of jsonnet_str or jsonnet_path must be provided.")
 
         if jsonnet_str is None:
             jsonnet_str = jsonnet_path.read_text()

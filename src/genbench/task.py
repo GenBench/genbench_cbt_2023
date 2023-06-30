@@ -46,9 +46,7 @@ def get_data_split_name(split: str) -> str:
         return split.split(".")[0]
 
 
-def resplit_data_source(
-    orig_datasets: DatasetDict, splitting_info: Mapping[str, List[str]]
-) -> DatasetDict:
+def resplit_data_source(orig_datasets: DatasetDict, splitting_info: Mapping[str, List[str]]) -> DatasetDict:
     """
     Resplits an original dataset according to provided split information.
 
@@ -132,9 +130,7 @@ def make_nshot_dataset(
 
     """
     test_set = formatted_dataset[DatasetSplit.TEST.value]
-    assert (
-        test_set is not None
-    ), "Test set is required for creating fewshot-shot dataset"
+    assert test_set is not None, "Test set is required for creating fewshot-shot dataset"
 
     if num_shots == 0:
 
@@ -146,9 +142,7 @@ def make_nshot_dataset(
             assert isinstance(formatted_input, str)
             assert isinstance(formatted_target, str)
 
-            formatted_input = (
-                prompt_builder_config.instruction_zero_shot + formatted_input
-            )
+            formatted_input = prompt_builder_config.instruction_zero_shot + formatted_input
 
             return {
                 "input": formatted_input,
@@ -193,12 +187,8 @@ def make_nshot_dataset(
     queries = test_set
     if repeat_samples != 1:
 
-        def repeat_examples(
-            example_dict: Mapping[str, List[Any]]
-        ) -> Mapping[str, List[Any]]:
-            return {
-                key: [value] * repeat_samples for key, value in example_dict.items()
-            }
+        def repeat_examples(example_dict: Mapping[str, List[Any]]) -> Mapping[str, List[Any]]:
+            return {key: [value] * repeat_samples for key, value in example_dict.items()}
 
         queries = queries.map(
             repeat_examples,
@@ -209,20 +199,13 @@ def make_nshot_dataset(
     def create_fewshot_query(query, idx):
         rng = np.random.RandomState(random_seed + idx)
 
-        in_context_example_ids = rng.choice(
-            len(fewshot_example_source), num_shots + 1, replace=False
-        ).tolist()
+        in_context_example_ids = rng.choice(len(fewshot_example_source), num_shots + 1, replace=False).tolist()
         in_context_examples = [
-            fewshot_example_source[i]
-            for i in in_context_example_ids
-            if fewshot_example_source[i] != query
+            fewshot_example_source[i] for i in in_context_example_ids if fewshot_example_source[i] != query
         ]
 
         context = prompt_builder_config.few_shot_example_separator.join(
-            [
-                example["formatted_input"] + example["formatted_target"]
-                for example in in_context_examples
-            ]
+            [example["formatted_input"] + example["formatted_target"] for example in in_context_examples]
         )
 
         formatted_input = (
@@ -325,10 +308,7 @@ class Task(TaskInterface):
         data_source = self._load_data_source()
 
         if self.config.split_file is not None:
-            split_file_path = (
-                get_task_dir(self.root_task_id, self.subtask_id)
-                / self.config.split_file
-            )
+            split_file_path = get_task_dir(self.root_task_id, self.subtask_id) / self.config.split_file
             splitting_info = load_jsonnet(split_file_path)
             data_source = resplit_data_source(data_source, splitting_info)
 
@@ -370,9 +350,7 @@ class Task(TaskInterface):
             }
 
             if "target_options" in self.config.field_mapping:
-                output["target_options"] = example[
-                    self.config.field_mapping["target_options"]
-                ]
+                output["target_options"] = example[self.config.field_mapping["target_options"]]
 
         return output
 
@@ -397,14 +375,11 @@ class Task(TaskInterface):
                 refs_lst = [g["target"] for g in gold]
 
             extra_kwargs = metric_config.compute_extra_kwargs or {}
-            output: dict = metric.compute(
-                predictions=preds_lst, references=refs_lst, **extra_kwargs
-            )
+            output: dict = metric.compute(predictions=preds_lst, references=refs_lst, **extra_kwargs)
 
             if output is None:
                 raise ValueError(
-                    f"Metric {metric_config.hf_id} returned None. "
-                    f"Please check the metric implementation."
+                    f"Metric {metric_config.hf_id} returned None. " f"Please check the metric implementation."
                 )
 
             # Update output keys to include the metric id
@@ -460,9 +435,7 @@ class Task(TaskInterface):
 
             return load_dataset(*hf_id, revision=self.config.data_source.git_commit_sha)
         else:
-            raise ValueError(
-                f"Unsupported data source type: {self.config.data_source.type}"
-            )
+            raise ValueError(f"Unsupported data source type: {self.config.data_source.type}")
 
     def _format_example_for_in_context_learning(
         self, example: Mapping[str, Any], random_seed: int
@@ -480,9 +453,7 @@ class Task(TaskInterface):
         Raises:
             ValueError: If the specified task type is not supported.
         """
-        prompt_config = (
-            self.config.preparation_strategies.prompt_based_testing.prompt_builder
-        )
+        prompt_config = self.config.preparation_strategies.prompt_based_testing.prompt_builder
 
         formatted_input = prompt_config.input_prefix + example["input"]
 
@@ -494,9 +465,7 @@ class Task(TaskInterface):
                 input_choices = choices[:]
                 if prompt_config.permute_choices:
                     # Initialize a random number generator for handling permutations if needed
-                    rng = np.random.RandomState(
-                        seed=random_seed + example["_genbench_idx"]
-                    )
+                    rng = np.random.RandomState(seed=random_seed + example["_genbench_idx"])
                     input_choices = rng.permutation(sorted(input_choices))
 
                 formatted_input += prompt_config.choices_prefix + "".join(

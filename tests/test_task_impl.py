@@ -10,9 +10,7 @@ from genbench.api import PreparationStrategy
 FREE_FORM_EXAMPLE_INPUT_TEMPLATE = "{input_prefix}{input}{output_prefix}"
 FREE_FORM_EXAMPLE_TARGET_TEMPLATE = "{output}"
 
-MULTI_CHOICE_EXAMPLE_INPUT_TEMPLATE = (
-    "{input_prefix}{input}{choice_prefix}{choices}{output_prefix}"
-)
+MULTI_CHOICE_EXAMPLE_INPUT_TEMPLATE = "{input_prefix}{input}{choice_prefix}{choices}{output_prefix}"
 MULTI_CHOICE_EXAMPLE_TARGET_TEMPLATE = "{target}"
 
 ZERO_SHOT_ICL_TEMPLATE = "{instruction}{example_input}"
@@ -80,9 +78,7 @@ def generate_multi_choice_task_data(num_examples):
     data = []
     for _ in range(num_examples):
         input_str = generate_random_string(rng.randint(20, 100), rng)
-        target_options = [
-            generate_random_string(rng.randint(20, 100), rng) for _ in range(4)
-        ]
+        target_options = [generate_random_string(rng.randint(20, 100), rng) for _ in range(4)]
         target = rng.randint(0, len(target_options) - 1)
         data.append(
             {
@@ -121,15 +117,7 @@ def free_form_task_dir(tmpdir: Path) -> Path:
     # Add the Python class
     task_file = Path(tmpdir / "task.py")
     with task_file.open("w") as f:
-        f.write(
-            (
-                "from genbench import Task\n"
-                "\n"
-                "\n"
-                "class FreeFormTask(Task):\n"
-                "\tpass\n"
-            )
-        )
+        f.write(("from genbench import Task\n" "\n" "\n" "class FreeFormTask(Task):\n" "\tpass\n"))
 
     return tmpdir
 
@@ -157,12 +145,12 @@ def multi_choice_task_dir(tmpdir: Path) -> Path:
             "best_score": 1.0,
         }
     ]
-    config["preparation_strategies"]["prompt_based_testing"]["prompt_builder"][
-        "instruction_zero_shot"
-    ] = (generate_random_string(rng.randint(20, 100), rng) + "\n\n")
-    config["preparation_strategies"]["prompt_based_testing"]["prompt_builder"][
-        "instruction_few_shot"
-    ] = (generate_random_string(rng.randint(20, 100), rng) + "\n\n")
+    config["preparation_strategies"]["prompt_based_testing"]["prompt_builder"]["instruction_zero_shot"] = (
+        generate_random_string(rng.randint(20, 100), rng) + "\n\n"
+    )
+    config["preparation_strategies"]["prompt_based_testing"]["prompt_builder"]["instruction_few_shot"] = (
+        generate_random_string(rng.randint(20, 100), rng) + "\n\n"
+    )
 
     config_file = Path(tmpdir / "config.jsonnet")
     with config_file.open("w") as f:
@@ -175,15 +163,7 @@ def multi_choice_task_dir(tmpdir: Path) -> Path:
     # Add the Python class
     task_file = Path(tmpdir / "task.py")
     with task_file.open("w") as f:
-        f.write(
-            (
-                "from genbench import Task\n"
-                "\n"
-                "\n"
-                "class FreeFormTask(Task):\n"
-                "\tpass\n"
-            )
-        )
+        f.write(("from genbench import Task\n" "\n" "\n" "class FreeFormTask(Task):\n" "\tpass\n"))
 
     return tmpdir
 
@@ -233,9 +213,7 @@ def multi_choice_task(multi_choice_task_dir) -> Task:
 
 
 def test_free_form_task(free_form_task: Task):
-    prompt_builder = (
-        free_form_task.config.preparation_strategies.prompt_based_testing.prompt_builder
-    )
+    prompt_builder = free_form_task.config.preparation_strategies.prompt_based_testing.prompt_builder
 
     # Check all the examples follow the correct format
     # Load the original data
@@ -258,9 +236,7 @@ def test_free_form_task(free_form_task: Task):
             instruction=prompt_builder.instruction_zero_shot,
             example_input=formatted_input,
         )
-        formatted_target = FREE_FORM_EXAMPLE_TARGET_TEMPLATE.format(
-            output=orig_exm["target"]
-        )
+        formatted_target = FREE_FORM_EXAMPLE_TARGET_TEMPLATE.format(output=orig_exm["target"])
 
         assert exm["input"] == formatted_input
         assert exm["target"] == formatted_target
@@ -271,19 +247,14 @@ def test_free_form_task(free_form_task: Task):
         for exm in original_data[: len(original_data) // 2]
     ]
 
-    predictions += [
-        {"target": f"{exm['target']}"}
-        for exm in original_data[len(original_data) // 2 :]
-    ]
+    predictions += [{"target": f"{exm['target']}"} for exm in original_data[len(original_data) // 2 :]]
 
     eval_result = free_form_task.evaluate_predictions(predictions=predictions, gold=ds)
     assert eval_result["hf_exact_match__exact_match"] == 0.5
 
 
 def test_multi_choice_task(multi_choice_task):
-    prompt_builder = (
-        multi_choice_task.config.preparation_strategies.prompt_based_testing.prompt_builder
-    )
+    prompt_builder = multi_choice_task.config.preparation_strategies.prompt_based_testing.prompt_builder
 
     # Check all the examples follow the correct format
     # Load the original data
@@ -322,19 +293,10 @@ def test_multi_choice_task(multi_choice_task):
 
     # Check the evaluation works
     predictions = [
-        {
-            "target": [
-                i for i in range(len(exm["target_options"])) if i != exm["target"]
-            ][0]
-        }
+        {"target": [i for i in range(len(exm["target_options"])) if i != exm["target"]][0]}
         for exm in original_data[: len(original_data) // 2]
     ]
-    predictions += [
-        {"target": f"{exm['target']}"}
-        for exm in original_data[len(original_data) // 2 :]
-    ]
+    predictions += [{"target": f"{exm['target']}"} for exm in original_data[len(original_data) // 2 :]]
 
-    eval_result = multi_choice_task.evaluate_predictions(
-        predictions=predictions, gold=ds
-    )
+    eval_result = multi_choice_task.evaluate_predictions(predictions=predictions, gold=ds)
     assert eval_result["hf_accuracy__accuracy"] == 0.5
