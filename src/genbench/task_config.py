@@ -1,7 +1,7 @@
 import json
-from dataclasses import dataclass, field, asdict
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import List, Literal, Optional, Union, Tuple, Dict
+from typing import Dict, List, Literal, Optional, Tuple, Union
 
 import _jsonnet
 import dataclass_factory

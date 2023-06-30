@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from typing import Union, Mapping, Any, List
+from typing import Any, List, Mapping, Union
 
 
 def get_repo_dir() -> Path:

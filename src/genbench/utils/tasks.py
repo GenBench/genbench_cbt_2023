@@ -1,7 +1,7 @@
 import importlib
 import inspect
 from pathlib import Path
-from typing import List, Optional, Dict, Union
+from typing import Dict, List, Optional, Union
 
 from .file import get_repo_dir
 
@@ -131,8 +131,8 @@ def get_task_dict_subtasks(task_dir: Path) -> List[str]:
 
 def get_all_task_metadata() -> Dict[str, Union[str, Dict[str, str]]]:
     """Get metadata for all tasks."""
-    from genbench.loading import load_task
     from genbench import TaskDict
+    from genbench.loading import load_task
 
     task_ids = get_all_tasks_ids()
     task_metadata = {}

@@ -4,10 +4,11 @@ import re
 import pytest
 from datasets import IterableDataset
 
-from genbench.api import DatasetSplit, TaskType, PreparationStrategy, EvaluationResult
+from genbench.api import DatasetSplit, EvaluationResult, PreparationStrategy, TaskType
 from genbench.task import Task
 from genbench.utils.file import load_jsonnet
 from genbench.utils.tasks import get_task_dir
+
 
 SPLIT_FILE_ITEM_PATTERN = re.compile(r"^.+:\d+$")
 

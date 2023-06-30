@@ -1,28 +1,16 @@
 from collections import OrderedDict
-from typing import Optional, Mapping, List, Any, Union, Callable
+from typing import Any, Callable, List, Mapping, Optional, Union
 
 import evaluate
 import numpy as np
-from datasets import (
-    IterableDataset,
-    IterableDatasetDict,
-    Dataset,
-    DatasetDict,
-    load_dataset,
-)
+from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict, load_dataset
 
-from genbench.task_config import TaskConfig
-from genbench.api import (
-    TaskInterface,
-    DatasetSplit,
-    TaskType,
-    PreparationStrategy,
-    EvaluationResult,
-)
-from genbench.task_config import PromptBuilderConfig
+from genbench.api import DatasetSplit, EvaluationResult, PreparationStrategy, TaskInterface, TaskType
+from genbench.task_config import PromptBuilderConfig, TaskConfig
 from genbench.utils.file import load_jsonnet
 from genbench.utils.logging import get_logger
 from genbench.utils.tasks import get_task_dir
+
 
 logger = get_logger(__name__)
 

@@ -1,7 +1,7 @@
 import importlib
 import inspect
 from pathlib import Path
-from typing import Union, Optional, List
+from typing import List, Optional, Union
 
 from genbench.task import Task
 from genbench.task_config import TaskConfig
@@ -9,6 +9,7 @@ from genbench.task_dict import TaskDict
 from genbench.utils.file import load_jsonnet
 from genbench.utils.logging import get_logger
 from genbench.utils.tasks import get_task_dir, get_task_module_name, is_task_dict
+
 
 logger = get_logger(__name__)
 

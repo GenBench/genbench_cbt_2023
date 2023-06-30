@@ -1,9 +1,10 @@
 from collections import OrderedDict
-from typing import Mapping, Any, List
+from typing import Any, List, Mapping
 
 from genbench.api import EvaluationResult
 from genbench.task import Task
 from genbench.utils.logging import get_logger
+
 
 logger = get_logger(__name__)
 

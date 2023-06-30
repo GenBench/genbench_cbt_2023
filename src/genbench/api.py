@@ -1,7 +1,7 @@
 import abc
 from collections import OrderedDict
 from enum import Enum
-from typing import Any, Mapping, List, Optional, Union
+from typing import Any, List, Mapping, Optional, Union
 
 import datasets
 import typing_extensions

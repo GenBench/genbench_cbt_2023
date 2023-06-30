@@ -7,6 +7,7 @@ import pytest
 from genbench import Task
 from genbench.api import PreparationStrategy
 
+
 FREE_FORM_EXAMPLE_INPUT_TEMPLATE = "{input_prefix}{input}{output_prefix}"
 FREE_FORM_EXAMPLE_TARGET_TEMPLATE = "{output}"
 
@@ -169,9 +170,10 @@ def multi_choice_task_dir(tmpdir: Path) -> Path:
 
 
 def _load_task(task_dir: Path, task_id) -> Task:
-    from genbench import TaskConfig
-    import inspect
     import importlib.util
+    import inspect
+
+    from genbench import TaskConfig
 
     # Load task config
     config_path = task_dir / "config.jsonnet"
