@@ -1,3 +1,11 @@
+---
+name: Submit splits
+about: Creating an issue with this template will put the specified splits on the queue
+  of experiments.
+title: "[Split Submission] <split_version> <model>"
+labels: automatic-new-split-submission
+assignees: ''
+---
 # Description
 
 Please include a summary of the changes and the related issue. Please also include relevant motivation and context. List any dependencies that are required for this change.
