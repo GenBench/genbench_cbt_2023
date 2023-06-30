@@ -10,6 +10,6 @@ check-quality:
 
 # Format source code automatically
 
-style:
+fix-style:
 	black --line-length 119 --target-version py38 tests src
 	isort tests src

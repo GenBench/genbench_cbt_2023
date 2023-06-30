@@ -38,10 +38,9 @@ def default_jsonnet_config() -> str:
     evaluation_metrics = """[
         {
             hf_id: 'accuracy',
+            git_commit_sha: "758135da6a37ce962b7bc38c6dd5eab672d2b742",
+            best_score: 1.0,
         },
-        {
-            hf_id: 'f1',
-        }
     ]"""
 
     preparation_strategies = """{
@@ -50,7 +49,7 @@ def default_jsonnet_config() -> str:
                 instruction: 'Add two numbers together',
                 input_prefix: 'Q: ',
                 output_prefix: 'A: ',
-                choice_prefix: '\\n  choice: ',
+                choices_prefix: '\\n  choice: ',
                 append_choices_to_input: true,
                 few_shot_example_separator: '\\n',
                 stop_string: '\\n\\n',
