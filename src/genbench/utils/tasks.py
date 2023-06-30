@@ -26,7 +26,10 @@ def get_all_tasks_and_subtasks_ids() -> List[str]:
     for task_id in get_all_tasks_ids():
         task_dir = get_task_dir(task_id)
         if is_task_dict(task_dir):
-            task_ids.extend(get_task_dict_subtasks(task_dir))
+            task_ids.append(task_id)
+            task_ids.extend(
+                [f"{task_id}:{s}" for s in get_task_dict_subtasks(task_dir)]
+            )
         else:
             task_ids.append(task_id)
     return task_ids
@@ -42,6 +45,9 @@ def get_tasks_dir() -> Path:
 
 def get_task_dir(task_id: str, subtask_id: Optional[str] = None) -> Path:
     """Get the path to the task directory."""
+    if ":" in task_id:
+        task_id, subtask_id = task_id.split(":")
+
     tasks_dir = get_tasks_dir()
     if subtask_id is not None:
         return tasks_dir / task_id / subtask_id
@@ -61,7 +67,9 @@ def get_task_module_name(task_dir: Path) -> str:
 
 def is_valid_task_id(id_: str) -> bool:
     """Check if a task id is valid."""
-    return all((c.isalnum() and ord(c) < 128 and c.lower() == c) or c == "_" for c in id_)
+    return all(
+        (c.isalnum() and ord(c) < 128 and c.lower() == c) or c == "_" for c in id_
+    )
 
 
 def is_valid_task_module(task_dir: Path) -> bool:
@@ -124,7 +132,10 @@ def get_task_dict_subtasks(task_dir: Path) -> List[str]:
         [
             d.name
             for d in task_dir.iterdir()
-            if d.is_dir() and not d.name.startswith("__") and is_valid_task_id(d.name) and is_valid_task_module(d)
+            if d.is_dir()
+            and not d.name.startswith("__")
+            and is_valid_task_id(d.name)
+            and is_valid_task_module(d)
         ]
     )
 

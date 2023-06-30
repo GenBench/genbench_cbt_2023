@@ -1,17 +1,18 @@
 # Adapted from https://github.com/huggingface/evaluate/blob/main/.github/workflows/ci.yml
 name: CI (Run tests and check code quality)
 
-#on:
-#  pull_request:
-#    branches:
-#      - main
-#  push:
-#    branches:
-#      - main
+on:
+  pull_request:
+    types:
+      - labeled
+    branches:
+      - main
+    paths:
+      - "src/genbench/tasks/*"
 
 jobs:
-
   check_code_quality:
+    if: github.event.label.name == 'task-submission'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -44,7 +45,6 @@ jobs:
         run: |
           pip install .[tests]
       - name: Test with pytest
-        if: ${{ matrix.test == 'unit' }}
         run: |
           python -m pytest -n 2 -sv ./tests/ --ignore=./tests/test_task.py
 
@@ -64,6 +64,16 @@ jobs:
       - name: Install dependencies
         run: |
           pip install .[tests]
-      - name: Test with pytest
+        
+
+      - name: Detect New Task ID
+        id: task_id
+        # Get the most recent modified task directory and extract the task ID
         run: |
-          python -m pytest -n 2 -sv ./tests/ --ignore=./tests/test_task.py
+            task_id=$(ls -td src/genbench/tasks/*/ | head -n 1 | cut -d'/' -f4)
+            echo "Task ID: $task_id"
+            echo "::set-output name=task_id::$task_id"
+
+      - name: Test Task
+        run: |
+          genbench-cli test-task -i ${{ steps.task_id.outputs.task_id }}
