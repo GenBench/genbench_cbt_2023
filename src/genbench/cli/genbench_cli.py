@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from typing import List
 
 import click
@@ -88,11 +89,15 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     """
     # Check if cookiecutter is installed
     if not is_cookiecutter_installed():
-        raise click.UsageError("Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it.")
+        raise click.UsageError(
+            "Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it."
+        )
 
     # Make sure `name` only contains ascii characters
     if not all(ord(c) < 128 for c in name):
-        raise click.UsageError("Task name can only contain ascii characters. Please use only alphanumeric characters.")
+        raise click.UsageError(
+            "Task name can only contain ascii characters. Please use only alphanumeric characters."
+        )
 
     # If `id_` is not provided, use `name` to create `id_`
     if id_ is None:
@@ -176,7 +181,9 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
             # We use the following naming convention for subtasks:
             # TaskDictClassnameSubtaskClassname
-            subtask_class_name = "".join([w.capitalize() for w in subtask_id.split("_")])
+            subtask_class_name = "".join(
+                [w.capitalize() for w in subtask_id.split("_")]
+            )
             subtask_class_name = f"{task_dict_class_name}{subtask_class_name}"
 
             # Subtasks are created in a subfolder in the task_dict folder
@@ -195,9 +202,13 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             )
 
             click.echo("Done!")
-            click.echo(f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n")
+            click.echo(
+                f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n"
+            )
 
-        click.echo(f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}")
+        click.echo(
+            f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}"
+        )
 
 
 @cli.command()
@@ -209,18 +220,34 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     metavar="ID",
     help="Id of the task to run tests for. e.g. 'addition'.",
 )
+@click.option(
+    "--tests-dir",
+    "tests_dir",
+    type=click.Path(exists=True),
+    metavar="DIR",
+    help="Path to the directory containing the tests. Defaults to 'tests'.",
+    default=None,
+)
 @click.pass_context
-def test_task(ctx: click.Context, id_: str):
+def test_task(ctx: click.Context, id_: str, tests_dir: str = None):
     """Run tests for a task."""
 
     if id_ is None:
-        raise click.UsageError("Please specify the task id. e.g. 'genbench-cli test-task --id addition'")
+        raise click.UsageError(
+            "Please specify the task id. e.g. 'genbench-cli test-task --id addition'"
+        )
     # Make sure task exists
     all_tasks_ids = get_all_tasks_and_subtasks_ids()
     if id_ not in all_tasks_ids:
-        raise click.UsageError(f"Task with id '{id_}' does not exist. Please specify a valid task id.")
+        raise click.UsageError(
+            f"Task with id '{id_}' does not exist. Please specify a valid task id."
+        )
 
-    task_test_path = get_repo_dir() / "tests" / "test_task.py"
+    if tests_dir is None:
+        task_test_path = get_repo_dir() / "tests" / "test_task.py"
+    else:
+        click.echo(f"Using tests directory: {tests_dir}")
+        task_test_path = Path(tests_dir) / "test_task.py"
 
     if ":" not in id_ and is_task_dict(get_task_dir(id_)):
         # If task is a task dict, we need to run tests for each subtask

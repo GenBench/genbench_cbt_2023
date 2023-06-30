@@ -70,16 +70,17 @@ jobs:
       - name: Install dependencies
         run: |
           pip install .[tests]
-        
+
 
       - name: Detect New Task ID
         id: task_id
         # Get the most recent modified task directory and extract the task ID
         run: |
-            task_id=$(ls -td src/genbench/tasks/*/ | head -n 1 | cut -d'/' -f4)
-            echo "Task ID: $task_id"
-            echo "::set-output name=task_id::$task_id"
+          task_id=$(ls -td src/genbench/tasks/*/ | head -n 1 | cut -d'/' -f4)
+          echo "Task ID: $task_id"
+          echo "::set-output name=task_id::$task_id"
+          echo "task_id=$task_id" >> $GITHUB_OUTPUT
 
       - name: Test Task
         run: |
-          genbench-cli test-task -i ${{ steps.task_id.outputs.task_id }}
+          genbench-cli test-task -i ${{ steps.task_id.outputs.task_id }} --tests-dir ./tests
