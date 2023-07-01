@@ -1,17 +1,5 @@
 # GenBench Collaborative Benchmarking Task
 
-### CLI Create New Task
-```bash
-pip install -e .
-```
-Use `genbench-cli` to create a new task. Use `genbench-cli create-task --help` for more information.
-```bash
-genbench-cli create-task --task-name "My Awesome Task"
-```
-
-**NB: This repository describes how tasks can be submitted, but submissions are not open yet.
-Submissions are expected to open on June 7.**
-
 **Table of Contents**
 * [GenBench workshop and publication of tasks](#genbench-workshop-and-publication-of-tasks)
 * [How to submit a task to the GenBench CBT](#how-to-submit-a-task-to-the-genbench-cbt)
@@ -40,9 +28,6 @@ Submissions to the CBT consist of a data/task artefact (submitted via this repos
 You can find more details about the GenBench program, the workshop and the task, on our website https://genbench.org/workshop.
 
 ## How to submit a task to the GenBench CBT
-**NB:** We are currently working on a CLI tool that will automate a lot of the steps in the submssions process, including stub generation, formatting, validation, testing, and model evaluation. 
-Once the tool is publicly available, we will update the following instructions.
-
 ### Overview
 1. **Fork the [genbench/genbench_cbt](https://github.com/GenBench/genbench_cbt) repository** by clicking the "Fork" button on the top right of the page. This will create a copy of this repository in your GitHub account.
 
@@ -57,9 +42,10 @@ git remote add upstream https://github.com/GenBench/genbench_cbt.git
 git checkout -b my_awesome_task
 ```
 **Do not** work on the main branch.
-4. **Install the genbench package in editable mode**.
 
-_Optionally, create a virtual environment for your task._
+4. **Install the `genbench` package in editable mode**.
+
+Create a virtual environment for your task.
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -83,14 +69,12 @@ Task class name: MyAwesomeTaskTask
 
 
 Task created successfully.
-View the task at /private/tmp/genbench_cbt/src/genbench/tasks/my_awesome_task
+View the task at src/genbench/tasks/my_awesome_task
 Instruction to fill and submit the task at https://github.com/GenBench/genbench_cbt
 ```
 If we look at the task directory, we can see that the task has been created.
-```bash
-tree genbench/tasks/my_awesome_task
-```
 ```text
+$ tree genbench/tasks/my_awesome_task
 src/genbench/tasks/my_awesome_task
 ├── __init__.py
 ├── config.jsonnet
@@ -122,7 +106,7 @@ print(ds[0])
 #   ...
 #  }
 ```
-Alternatively, you can use [GenbenchTaskViewer](https://github.com/GenBench/genbench_cbt/blob/main/notebooks/GenBenchTaskViewer.ipynb) notebook to visualize your task.
+Alternatively, you can use [GenbenchTaskViewer.ipynb](https://colab.sandbox.google.com/github/GenBench/genbench_cbt/blob/backend_dev/notebooks/GenBenchTaskViewer.ipynb) on Google Colab to view your task.
 
 8. **Run tests to validate your task.**
 ```bash
