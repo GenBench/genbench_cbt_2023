@@ -51,7 +51,7 @@ jobs:
           pytest -xrpP tests/ --ignore=./tests/test_task.py
 
   test_task:
-#    needs: check_code_quality
+    #    needs: test_genbench_impl
     runs-on: ubuntu-latest
     steps:
       # Pattern: '[Task Submission] Task Name (`task_id`) with optional description'
@@ -59,36 +59,23 @@ jobs:
       - name: Parse the Task ID from PR's title
         id: pr_task_id
         run: |
-            task_id=$(echo '${{ github.event.pull_request.title }}' | sed -n -e 's/^\[Task Submission\][[:alnum:][:space:]()]\+[[:space:]]*(`\([^`]*\)`)[[:space:]]*.*/\1/p')
-            echo "Task ID: $task_id"
-            echo "task_id=$task_id" >> $GITHUB_OUTPUT
+          task_id=$(echo '${{ github.event.pull_request.title }}' | sed -n -e 's/^\[Task Submission\][[:alnum:][:space:]()]\+[[:space:]]*(`\([^`]*\)`)[[:space:]]*.*/\1/p')
+          echo "Task ID: $task_id"
+          echo "task_id=$task_id" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Check if the Task ID is valid
         id: check_task_id
         run: |
-            if [[ -z "${{ steps.pr_task_id.outputs.task_id }}" ]]; then
-                echo "Could not parse the Task ID from the PR title."
-                exit 1
-            fi
+          if [[ -z "${{ steps.pr_task_id.outputs.task_id }}" ]]; then
+              echo "Could not parse the Task ID from the PR title."
+              exit 1
+          fi
         shell: bash
 
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-          cache: 'pip'
-          cache-dependency-path: setup.py
-
-      - name: Upgrade pip
-        run: python -m pip install --upgrade pip
-      - name: Install dependencies
-        run: |
-          pip install .[tests]
 
       - name: Detect New Task ID
         id: task_id
@@ -107,6 +94,20 @@ jobs:
             echo "Most Recent Task ID: ${{ steps.task_id.outputs.task_id }}"
             echo "Continuing with the PR Task ID..."
           fi
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install dependencies
+        run: |
+          pip install .[tests]
 
       - name: Test Task
         run: |
