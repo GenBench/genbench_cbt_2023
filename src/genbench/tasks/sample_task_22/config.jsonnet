@@ -12,7 +12,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/genbench/dummy_data/LLM_test.jsonl', // NB we should host this elsewhere to avoid confusion
+        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl', // NB we should host this elsewhere to avoid confusion
     },
 
     has_validation_set: false,
