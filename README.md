@@ -13,6 +13,7 @@
         * [`doc.md`](#docmd)
     * [Task Creation Options](#task-creation-options)
     * [Manual data source](#manual-data-sources)
+    * [Task with Subtasks](#task-with-subtasks)
 * [Most Common Use Cases (Examples)](#most-common-use-cases-examples)
     * [Train-Test (finetuning)](#train-test-finetuning)
     * [Prompt-based testing](https://github.com/GenBench/genbench_cbt/tree/main#prompt-based-testing)
@@ -106,7 +107,7 @@ print(ds[0])
 #   ...
 #  }
 ```
-Alternatively, you can use [GenbenchTaskViewer.ipynb](https://colab.sandbox.google.com/github/GenBench/genbench_cbt/blob/backend_dev/notebooks/GenBenchTaskViewer.ipynb) on Google Colab to view your task.
+Alternatively, you can use [GenbenchTaskViewer.ipynb](https://colab.sandbox.google.com/github/GenBench/genbench_cbt/blob/main/notebooks/GenBenchTaskViewer.ipynb) on Google Colab to view your task.
 
 8. **Run tests to validate your task.**
 ```bash
@@ -321,10 +322,10 @@ To this end, GenBench tasks exist as Python classes and are defined using two fi
             prompt_builder: {
                 // Currently, we follow BIG-bench options for prompt construction: 
                 // https://github.com/google/BIG-bench/blob/main/docs/doc.md#optional-fields
-                instruction: 'Add two numbers together',
+                instruction_zero_shot: 'Add two numbers together',
                 input_prefix: 'Q: ',
                 output_prefix: 'A: ',
-                choice_prefix: '\n  choice: ',
+                choices_prefix: '\n  choice: ',
                 append_choices_to_input: true,
                 few_shot_example_separator: '\n',
                 stop_string: '\n\n',
@@ -333,17 +334,12 @@ To this end, GenBench tasks exist as Python classes and are defined using two fi
     },
 }
 ```
+Look at [task_config.py](https://github.com/GenBench/genbench_cbt/blob/main/src/genbench/task_config.py) for a more detailed explanation.
 
 #### `task.py`
 ```python
-from typing import Any, Dict, List
+from genbench import Task
 
-import datasets
-
-from genbench.tasks import Task
-
-
-@Task.register("my_awesome_task")
 class MyAwesomeTask(Task):
     """Python implementation of the MyAwesomeTask task.
 
@@ -353,21 +349,21 @@ class MyAwesomeTask(Task):
     methods:
     """
 
-    def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
+    def format_example(self, example: Mapping[str, Any]) -> Mapping[str, Any]:
         """Perform preprocessing/formatting on an example-level.
-        
+
         By default, this method does nothing more than mapping original data source
         fields to the expected fields.
-        
+
         `example` directly comes from the data source (e.g. downloaded HF dataset),
-        and it may contain fields such as `question` or `answer`. This method should 
-        prepare the example used in the task. i.e. should create fields `input`, 
+        and it may contain fields such as `question` or `answer`. This method should
+        prepare the example used in the task. i.e. should create fields `input`,
         `target`, `target_scores`, or `target_labels` depending on the task type.
-        
+
         Args:
             example: A dictionary containing key-value pairs for an example from the source dataset.
-                     
-                     
+
+
         Returns:
             A dictionary containing key-value pairs for the preprocessed/formatted example.
             The dictionary should contain keys `input`, `target`, `target_scores`, or `target_label`
@@ -378,45 +374,74 @@ class MyAwesomeTask(Task):
     def evaluate_predictions(
         self,
         *,
-        predictions: List[Dict[str, Any]] = None,
+        predictions: List[Mapping[str, Any]] = None,
         gold: datasets.Dataset = None,
-    ) -> Dict[str, float]:
+    ) -> EvaluationResult:
         """Evaluate the predictions of the model against the gold data.
-        
-        By default, this method applies the metric specified in the task's
-        config.jsonnet.
-        
+
         Args:
             predictions: A list of dictionaries, where each dictionary contains the predicted
                          values for an example. The keys are strings and the values can be any type.
             gold: A HuggingFace `datasets.Dataset` object containing the ground truth data for the task.
-            
+
         Returns:
             A dictionary containing key-value pairs for the evaluation metric(s) computed on the predicted
             values. The keys are strings representing the name of the evaluation metric and the values are
             floating-point numbers.
+
+        Raises:
+            ValueError: If a metric returns None.
         """
         ...
 
-    def get_dataset_raw(self) -> Dict[str, datasets.Dataset]:
+    def get_datasets_raw(self) -> Mapping[str, datasets.Dataset]:
         """Get the raw dataset.
-        
+
         By default, this method loads the dataset specified in the task's
         config.jsonnet, and re-split it based on split.json if it exists.
         If the task creator wishes to mix and match data points, they can
         override this method.
-        
-        Args:
-            None
-            
+
         Returns:
-            A dictionary containing key-value pairs for the raw datasets. 
-            The keys are strings representing the name of the dataset split 
+            A dictionary containing key-value pairs for the raw datasets.
+            The keys are strings representing the name of the dataset split
             (e.g., "train", "validation", "test") and the values are
             HuggingFace `datasets.Dataset` objects containing the raw data for the corresponding split.
         """
         ...
+
+    def get_prepared_datasets(
+        self,
+        preparation_strategy: PreparationStrategy,
+        shot_list: Optional[List[int]] = None,
+        random_seed: int = 42,
+    ) -> Union[Mapping[DatasetSplit, Dataset], Mapping[int, Dataset]]:
+        """
+        Get the prepared datasets based on the specified preparation strategy.
+
+        This method typically relies on `get_dataset_raw` to load the raw dataset and then
+        applies the given preparation strategy to prepare the datasets.
+
+        Args:
+            preparation_strategy (PreparationStrategy):
+                The strategy to be used for dataset preparation.
+            shot_list (Optional[List[int]]):
+                A list of integers representing the number of shots to be used
+                in few-shot learning tasks. If None, all data is used. Defaults to None.
+            random_seed (int, optional):
+                Seed for random number generation, used for reproducibility. Defaults to 42.
+
+        Returns:
+            Union[Mapping[DatasetSplit, Dataset], Mapping[int, Dataset]]:
+                A dictionary containing key-value pairs for the prepared datasets.
+                If shot_list is provided, the keys are integers representing the number of shots,
+                otherwise, they are of type DatasetSplit representing the dataset split (e.g., "train", "validation",
+                "test"). The values are HuggingFace `datasets.Dataset` objects containing the prepared data for the
+                corresponding split or number of shots.
+        """
+        ...
 ```
+Look at [api.py](https://github.com/GenBench/genbench_cbt/blob/main/src/genbench/api.py) for a more detailed explanation.
 
 #### `split.jsonnet`
 If you are resplitting the original data source, create a `split.jsonnet` file inside the task's directory, and use it to re-distribute examples. The format is as follows:
@@ -476,6 +501,54 @@ The files should be accessible via a single URI per split file (train, test, val
 
 #### License
 The dataset should licensed under: TBD
+
+### Task with Subtasks
+GenBench also supports specifying subtasks. In order to create those, use the following syntax for `genbench-cli`
+```bash
+genbench-cli create-task --name "My Awesome TaskDict" -s subtask_1 -s subtask_2
+```
+This will create a task with two subtasks, `subtask_1` and `subtask_2`. The task will be created in the following directory structure:
+```text
+src/genbench/tasks/my_awesome_task_dict
+├── __init__.py
+├── config.jsonnet
+├── doc.md
+├── subtask_1
+│   ├── __init__.py
+│   ├── config.jsonnet
+│   ├── doc.md
+│   └── task.py
+└── subtask_2
+    ├── __init__.py
+    ├── config.jsonnet
+    ├── doc.md
+    └── task.py
+```
+Each subtask will have its own `config.jsonnet` and `doc.md` files, and a `task.py` file that 
+contains the task class and is treated as a separate GenBench task.
+The main task contains a `config.jsonnet` and `doc.md` files as well, 
+but it does not include a `task.py` file, since it doesn't define a task on its own. 
+Instead, an `__init__.py` file is present, which is responsible for generating a TaskDict object.
+
+Currently, GenBench allows you to override the following method within the TaskDict class:
+```python
+from genbench import TaskDict
+
+class MyAwesomeTaskDict(TaskDict):
+    def merge_evaluation_results(self, results: OrderedDict[str, EvaluationResult]) -> EvaluationResult:
+        """Merge evaluation results from subtasks.
+
+        The default implementation is to merge the results into a single
+        EvaluationResult object, where keys are prefixed with subtask ids.
+
+        Args:
+            results (OrderedDict[str, EvaluationResult]): Evaluation results from subtasks.
+
+        Returns:
+            EvaluationResult: Merged evaluation results.
+        """
+        ...
+```
 
 ## Most Common Use Cases (Examples)
 ### Train-Test (finetuning)
