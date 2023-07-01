@@ -54,6 +54,25 @@ jobs:
     needs: test_genbench_impl
     runs-on: ubuntu-latest
     steps:
+      # Pattern: '[Task Submission] Task Name (`task_id`) with optional description'
+      # Fail if the PR title does not match the pattern
+      - name: Parse the Task ID from PR's title
+        id: pr_task_id
+        run: |
+            task_id=$(echo ${{ github.event.pull_request.title }} | sed -n -e 's/^\[Task Submission\][[:alnum:][:space:]()]\+[[:space:]]*(`\([^`]*\)`)[[:space:]]*.*/\1/p'
+            echo "Task ID: $task_id"
+            echo "task_id=$task_id" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Check if the Task ID is valid
+        id: check_task_id
+        run: |
+            if [[ -z "${{ steps.pr_task_id.outputs.task_id }}" ]]; then
+                echo "Could not parse the Task ID from the PR title."
+                exit 1
+            fi
+        shell: bash
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
@@ -71,16 +90,24 @@ jobs:
         run: |
           pip install .[tests]
 
-
       - name: Detect New Task ID
         id: task_id
         # Get the most recent modified task directory and extract the task ID
         run: |
           task_id=$(ls -td src/genbench/tasks/*/ | head -n 1 | cut -d'/' -f4)
           echo "Task ID: $task_id"
-          echo "::set-output name=task_id::$task_id"
           echo "task_id=$task_id" >> $GITHUB_OUTPUT
+
+      - name: Check if PR task ID matches
+        id: check_pr_task_id
+        run: |
+          if [[ "${{ steps.pr_task_id.outputs.task_id }}" != "${{ steps.task_id.outputs.task_id }}" ]]; then
+            echo "Task ID in PR title does not match the most recent task ID."
+            echo "PR Task ID: ${{ steps.pr_task_id.outputs.task_id }}"
+            echo "Most Recent Task ID: ${{ steps.task_id.outputs.task_id }}"
+            echo "Continuing with the PR Task ID..."
+          fi
 
       - name: Test Task
         run: |
-          genbench-cli test-task -i ${{ steps.task_id.outputs.task_id }} --tests-dir ./tests
+          genbench-cli test-task -i ${{ steps.pr_task_id.outputs.task_id }} --tests-dir ./tests
