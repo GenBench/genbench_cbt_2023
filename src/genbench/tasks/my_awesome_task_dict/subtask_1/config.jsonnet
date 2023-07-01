@@ -17,7 +17,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/genbench/dummy_data/LLM_test.jsonl',
+        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl',
     },
 
     has_validation_set: false,
