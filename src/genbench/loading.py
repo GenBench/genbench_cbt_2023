@@ -1,7 +1,7 @@
 import importlib
 import inspect
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from genbench.task import Task
 from genbench.task_config import TaskConfig
@@ -40,7 +40,7 @@ def load_task(task_id: str) -> Union[Task, TaskDict]:
     return task_obj
 
 
-def load_config(task_id: str) -> TaskConfig:
+def load_config(task_id: str) -> Union[TaskConfig, Dict[str, Any]]:
     orig_task_id = task_id
 
     if ":" in task_id:
@@ -54,12 +54,17 @@ def load_config(task_id: str) -> TaskConfig:
     if not task_dir.exists():
         raise ValueError(f"Task `{orig_task_id}` does not exist.")
 
-    return TaskConfig.from_jsonnet(jsonnet_path=task_dir / "config.jsonnet")
+    if subtask_id is not None:
+        return TaskConfig.from_jsonnet(jsonnet_path=task_dir / "config.jsonnet")
+    else:
+        # Check if task_dir points to a TaskDict
+        if is_task_dict(task_dir):
+            return load_jsonnet(task_dir / "config.jsonnet")
+        else:
+            return TaskConfig.from_jsonnet(jsonnet_path=task_dir / "config.jsonnet")
 
 
-def _load_task_class(
-    task_dir: Path, task_id: str, subtask_id: Optional[str] = None
-) -> Task:
+def _load_task_class(task_dir: Path, task_id: str, subtask_id: Optional[str] = None) -> Task:
     # Load task config
     config_path = task_dir / "config.jsonnet"
     config = TaskConfig.from_jsonnet(jsonnet_path=config_path)
@@ -100,23 +105,16 @@ def _load_task_dict(task_dir: Path, task_id: str) -> TaskDict:
             break
 
     if task_dict_class is None:
-        logger.info(
-            f"`{task_id}.__init__.py` does not have a `TaskDict` subclass."
-            f"Using default `TaskDict`."
-        )
+        logger.info(f"`{task_id}.__init__.py` does not have a `TaskDict` subclass." f"Using default `TaskDict`.")
         task_dict_class = TaskDict
 
     # We load the subtasks in order specified in the config.
     # if the order is not specified, we load them in alphabetical order.
-    subtask_ids: List[str] = config.get(
-        "subtasks_order", sorted([d.name for d in task_dir.iterdir()])
-    )
+    subtask_ids: List[str] = config.get("subtasks_order", sorted([d.name for d in task_dir.iterdir()]))
 
     # Load subtasks
     subtasks_dict = {
-        subtask_id: _load_task_class(
-            task_dir / subtask_id, task_id, subtask_id=subtask_id
-        )
+        subtask_id: _load_task_class(task_dir / subtask_id, task_id, subtask_id=subtask_id)
         for subtask_id in subtask_ids
     }
     task_dict = task_dict_class.from_config(

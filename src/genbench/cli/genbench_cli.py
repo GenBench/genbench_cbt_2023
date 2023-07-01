@@ -31,6 +31,7 @@ def is_cookiecutter_installed() -> bool:
     except ImportError:
         return False
 
+
 def is_git_python_installed() -> bool:
     """Check if git-python is installed."""
     try:
@@ -98,12 +99,15 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     """
     # Check for extra dependencies
     if not is_cookiecutter_installed():
-        raise click.UsageError("Cookiecutter is not installed. Please use `pip install -e genbench[dev]` to install it.")
+        raise click.UsageError(
+            "Cookiecutter is not installed. Please use `pip install -e genbench[dev]` to install it."
+        )
     if not is_git_python_installed():
         raise click.UsageError("GitPython is not installed. Please use `pip install -e genbench[dev]` to install it.")
 
     # Make sure we are not on the main branch
     import git
+
     repo = git.Repo(get_repo_dir())
     current_branch = repo.active_branch.name
     if current_branch == "main":
@@ -289,7 +293,9 @@ def test_task(ctx: click.Context, id_: str, tests_dir: str = None):
 def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, check_unpushed_changes: bool):
     """Create a pull request for a task."""
     if ":" in id_:
-        raise click.UsageError(f"Please specify a task_dict id. e.g. 'genbench-cli submit-task --id {id_.split(':')[0]}'")
+        raise click.UsageError(
+            f"Please specify a task_dict id. e.g. 'genbench-cli submit-task --id {id_.split(':')[0]}'"
+        )
 
     # Make sure task exists
     all_tasks_ids = get_all_tasks_and_subtasks_ids()
@@ -300,20 +306,26 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
         raise click.UsageError("Please install gitpython to use this command. e.g. 'pip install -e genbench[dev]'")
 
     import git
+
     repo = git.Repo(get_repo_dir())
     current_branch = repo.active_branch.name
 
-    if current_branch == "main":
-        raise click.UsageError("Please create a new branch before creating a task.")
+    # if current_branch == "main":
+    #     raise click.UsageError("Please submit your task from a branch other than 'main'.")
 
     # Make sure there are no uncommitted changes
     if check_uncommitted_changes and repo.is_dirty():
-        raise click.UsageError("Please commit your changes before submitting a task. Use --no-check-uncommitted-changes to ignore this check.")
+        raise click.UsageError(
+            "Please commit your changes before submitting a task. "
+            "Use --no-check-uncommitted-changes to ignore this check."
+        )
 
     # Make sure there are no unpushed commits
-    unpushed_commits = list(repo.iter_commits(f'{current_branch}@{{u}}..{current_branch}'))
+    unpushed_commits = list(repo.iter_commits(f"{current_branch}@{{u}}..{current_branch}"))
     if check_unpushed_changes and unpushed_commits:
-        raise click.UsageError("Please push your commits before submitting a task. Use --no-check-unpushed-changes to ignore this check.")
+        raise click.UsageError(
+            "Please push your commits before submitting a task. Use --no-check-unpushed-changes to ignore this check."
+        )
 
     # Extract the username and repo name from the remote url
     remote_url = repo.config_reader().get_value('remote "origin"', "url")
@@ -325,8 +337,9 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
 
     # Construct the PR URL
     from genbench import load_config
+
     task_config = load_config(id_)
-    title = f"[Task Submission] {task_config.name} (`{id_}`)"
+    title = f"[Task Submission] {task_config['name']} (`{id_}`)"
     "quick_pull=1&template=task_submission.md&labels=task-submission&title=[Task Submission] Sample Task 2"
     pr_url = f"https://github.com/GenBench/genbench_cbt/compare/main...{username}:{repo_name}"
     query_params = {
@@ -337,10 +350,10 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     }
 
     from urllib.parse import urlencode
+
     pr_url += "?" + urlencode(query_params)
 
     click.echo("\n" + "-" * 80)
-    click.echo(f"Click the link below to create a pull request for the task:")
+    click.echo("Click the link below to create a pull request for the task:")
     click.echo(pr_url)
     click.echo("-" * 80 + "\n")
-
