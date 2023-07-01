@@ -1,17 +1,5 @@
 # GenBench Collaborative Benchmarking Task
 
-### CLI Create New Task
-```bash
-pip install -e .
-```
-Use `genbench-cli` to create a new task. Use `genbench-cli create-task --help` for more information.
-```bash
-genbench-cli create-task --task-name "My Awesome Task"
-```
-
-**NB: This repository describes how tasks can be submitted, but submissions are not open yet.
-Submissions are expected to open on June 7.**
-
 **Table of Contents**
 * [GenBench workshop and publication of tasks](#genbench-workshop-and-publication-of-tasks)
 * [How to submit a task to the GenBench CBT](#how-to-submit-a-task-to-the-genbench-cbt)
@@ -23,6 +11,7 @@ Submissions are expected to open on June 7.**
         * [`task.py`](#taskpy)
         * [`split.jsonnet` (Optional)](#splitjsonnet)
         * [`doc.md`](#docmd)
+    * [Task Creation Options](#task-creation-options)
     * [Manual data source](#manual-data-sources)
 * [Most Common Use Cases (Examples)](#most-common-use-cases-examples)
     * [Train-Test (finetuning)](#train-test-finetuning)
@@ -39,25 +28,24 @@ Submissions to the CBT consist of a data/task artefact (submitted via this repos
 You can find more details about the GenBench program, the workshop and the task, on our website https://genbench.org/workshop.
 
 ## How to submit a task to the GenBench CBT
-**NB:** We are currently working on a CLI tool that will automate a lot of the steps in the submssions process, including stub generation, formatting, validation, testing, and model evaluation. 
-Once the tool is publicly available, we will update the following instructions.
-
 ### Overview
-1. Fork the [genbench/genbench_cbt](https://github.com/GenBench/genbench_cbt) repository by clicking the "Fork" button on the top right of the page. This will create a copy of this repository in your GitHub account.
+1. **Fork the [genbench/genbench_cbt](https://github.com/GenBench/genbench_cbt) repository** by clicking the "Fork" button on the top right of the page. This will create a copy of this repository in your GitHub account.
 
-2. Clone your fork, and link the original repository as upstream.
+2. **Clone your fork**, and link the original repository as upstream.
 ```bash
 git clone https://github.com/awesome-task-creator/genbench_cbt
 cd genbench
 git remote add upstream https://github.com/GenBench/genbench_cbt.git
 ```
-3. Create a new branch for your task.
+3. **Create a new branch for your task**.
 ```bash
 git checkout -b my_awesome_task
 ```
-4. Install the genbench package in editable mode.
+**Do not** work on the main branch.
 
-_Optionally, create a virtual environment for your task._
+4. **Install the `genbench` package in editable mode**.
+
+Create a virtual environment for your task.
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -67,58 +55,84 @@ Install the package
 pip install -e ".[dev]"
 ```
 
-5. Create a new task using the `genbench-cli` :
+5. **Create a new task using the `genbench-cli`**:
 ```bash
 genbench-cli create-task --name "My Awesome Task"
 ```
-
-Here is a full list of the available options:
+Example output:
 ```text
-Usage: genbench-cli create-task [OPTIONS]
+Task authors (e.g John Doe). Split with ',': John Doe
+Creating task...
+Task name: My Awesome Task
+Task id: my_awesome_task
+Task class name: MyAwesomeTaskTask
 
-  Create a new task with the provided name, id, and optional subtask ids.
 
-  Usage Examples:
-
-  1. Basic usage:
-
-  > genbench-cli create-task --name "The addition task" --id "addition"
-
-  2. Creating a task with subtasks:
-
-  > genbench-cli create-task --name "The addition task" --id "addition" -s
-  "subtask_1" -s "subtask_2"
-
-Options:
-  -n, --name TEXT               Name of the task. e.g. 'The addition task'
-                                [required]
-  -i, --id ID                   Unique id of the task. e.g. 'addition'. No
-                                spaces allowed. Use only alphanumeric
-                                characters (lower case) and underscores
-  -s, --subtask_ids SUBTASK_ID  Unique id of the subtask. e.g. '-s subtask_1
-                                -s subtask_2'. No spaces allowed. Use only
-                                alphanumeric characters (lower case) and
-                                underscores.
-  --help                        Show this message and exit.
+Task created successfully.
+View the task at src/genbench/tasks/my_awesome_task
+Instruction to fill and submit the task at https://github.com/GenBench/genbench_cbt
 ```
+If we look at the task directory, we can see that the task has been created.
+```text
+$ tree genbench/tasks/my_awesome_task
+src/genbench/tasks/my_awesome_task
+├── __init__.py
+├── config.jsonnet
+├── doc.md
+└── task.py
+```
+See [below](#task-creation-options) for the full list of `genbench-cli create-task` options.
 
+6. **Configure your task.**
 
-6. **Configure your task**
 You will need to fill in `config.jsonnet`, and if necessary `task.py`.
 See below for further instructions and details about these two files.
 
-7. **Push the new changes to your fork**
+7. **View your task**
+```python
+from genbench import load_task
+from genbench.api import PreparationStrategy
+
+task = load_task("my_awesome_task")
+ds = task.get_prepared_datasets(
+    PreparationStrategy.PROMPT_BASED_TESTING, 
+    shot_list=[0]
+)[0]
+print(ds[0])
+# {
+#   'input': 'Add two numbers together\n\nQ: 300 + 80\nA: ', 
+#   'target': '380', 
+#   '_genbench_idx': 0, 
+#   ...
+#  }
+```
+Alternatively, you can use [GenbenchTaskViewer.ipynb](https://colab.sandbox.google.com/github/GenBench/genbench_cbt/blob/backend_dev/notebooks/GenBenchTaskViewer.ipynb) on Google Colab to view your task.
+
+8. **Run tests to validate your task.**
+```bash
+genbench-cli test-task --id my_awesome_task
+```
+Fix styling issues if any:
+```bash
+make fix-style
+```
+Make sure your submission passes all quality checks:
+```bash
+make check-quality
+```
+
+9. **Push the new changes to your fork**
 ```bash
 git add genbench/tasks/my_awesome_task/*
 git commit -m "Add My Awesome Task"
-git push --set-upstream origin my_awesome_task
+git push -u origin my_awesome_task
 ```
 
-8. **Commit, Push and Submit a pull request to GenBench**
+10. **Submit the task to GenBench for review**
 ```
-git commit -m "Submission for my_awesome_task"
-git push
+genbench-cli submit-task --id my_awesome_task
 ```
+
 ### Task
 A GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
 
@@ -416,6 +430,37 @@ If you are resplitting the original data source, create a `split.jsonnet` file i
 
 #### `doc.md`
 A brief explaination of the task, its motivation and a description of the submssion data. Minimally, this should include: what generalisation property(ies) the task is testing for (GenBench taxonomy values); what assumptions are made about the training data; the size of the dataset; baseline scores. If it already contains this information, feel free to copy the abstract of the accompanying paper.
+
+### Task Creation Options
+Here is a full list of the available options:
+```text
+Usage: genbench-cli create-task [OPTIONS]
+
+  Create a new task with the provided name, id, and optional subtask ids.
+
+  Usage Examples:
+
+  1. Basic usage:
+
+  > genbench-cli create-task --name "The addition task" --id "addition"
+
+  2. Creating a task with subtasks:
+
+  > genbench-cli create-task --name "The addition task" --id "addition" -s
+  "subtask_1" -s "subtask_2"
+
+Options:
+  -n, --name TEXT               Name of the task. e.g. 'The addition task'
+                                [required]
+  -i, --id ID                   Unique id of the task. e.g. 'addition'. No
+                                spaces allowed. Use only alphanumeric
+                                characters (lower case) and underscores
+  -s, --subtask_ids SUBTASK_ID  Unique id of the subtask. e.g. '-s subtask_1
+                                -s subtask_2'. No spaces allowed. Use only
+                                alphanumeric characters (lower case) and
+                                underscores.
+  --help                        Show this message and exit.
+```
 
 ### Manual data sources
 #### File format

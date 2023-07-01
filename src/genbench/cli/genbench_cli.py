@@ -220,7 +220,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             click.echo("Done!")
             click.echo(f"View the subtask at {get_repo_dir() / 'src' / 'genbench' / 'tasks' / id_ / subtask_id}\n")
 
-    click.echo(f"Instruction to fill and submit the task at https://github.com/GenBench/genbench_cbt")
+    click.echo("Instruction to fill and submit the task at https://github.com/GenBench/genbench_cbt")
 
 
 @cli.command()
@@ -340,6 +340,7 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
 
     task_config = load_config(id_)
     from genbench import TaskConfig
+
     if isinstance(task_config, TaskConfig):
         task_name = task_config.name
     else:
@@ -361,4 +362,5 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     click.echo("\n" + "-" * 80)
     click.echo("Click the link below to create a pull request for the task:")
     click.echo(pr_url)
+    click.echo("\nPlease do not change the title of the pull request.")
     click.echo("-" * 80 + "\n")

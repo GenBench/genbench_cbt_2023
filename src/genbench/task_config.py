@@ -76,6 +76,27 @@ class DataSourceConfig:
 
 @dataclass
 class EvaluationMetricConfig:
+    """
+    Represents the configuration for specifying an evaluation metric.
+
+    Attributes:
+        hf_id (`Union[str, Tuple[str, str]]`):
+            The HuggingFace metric identifier. It can be a single string (e.g. 'accuracy') or
+            a tuple of two strings.
+        git_commit_sha (`str`):
+            The git commit SHA hash corresponding to the specific version of the metric (e.g. '070042b....').
+        best_score (`float`):
+            The highest possible value that can be achieved by the metric, typically used
+            for reference (e.g. 1.0).
+        compute_extra_kwargs (`Optional[Dict[str, str]]`, optional):
+            Additional keyword arguments to be passed to the metric's compute method (default is None).
+
+    Raises:
+        AssertionError: If `hf_id` or `git_commit_sha` is None.
+        AssertionError: If `hf_id` is not a string or a tuple of two strings.
+        AssertionError: If `best_score` is None.
+    """
+
     hf_id: Union[str, Tuple[str, str]] = field(metadata={"help": "HuggingFace metric id. e.g. 'accuracy'"})
     git_commit_sha: str = field(metadata={"help": "Git commit sha of the metric. e.g. '070042b....'"})
     best_score: float = field(metadata={"help": "Best value of the metric. e.g. 1.0"})
@@ -100,32 +121,41 @@ class FinetuningStrategyConfig:
 @dataclass
 class PromptBuilderConfig:
     """
-    Configuration class for prompt generation.
-    Currently, we follow BIG-bench options for prompt construction:
+    Configuration class for building prompts for generative tasks.
+    This configuration follows the options for prompt construction as defined in BIG-bench:
     https://github.com/google/BIG-bench/blob/main/docs/doc.md#optional-fields
 
-    Parameters:
-        instruction (str, optional):
-            Instruction of the task. Will be prepended to the model's input. e.g. 'Add two numbers:'
-        input_prefix (str, optional):
-            Prefix of the model's input. Defaults to 'Q: '.
-        output_prefix (str, optional):
-            Prefix of the model's output. Defaults to 'A: '.
-        choice_prefix (str, optional):
-            Prefix of the model's choice. Defaults to '\n  choice: '.
-        append_choices_to_input (bool, optional):
+    Attributes:
+        instruction_zero_shot (`str`, optional):
+            Instruction to be prepended to the model's input in zero-shot setting. Defaults to an empty string.
+        instruction_few_shot (`str`, optional):
+            Instruction to be prepended to the model's input in few-shot setting. Defaults to an empty string.
+        input_prefix (`str`, optional):
+            Prefix to be added before the input in the model's prompt. Defaults to "Q: ".
+        output_prefix (`str`, optional):
+            Prefix to be added before the output in the model's prompt. Defaults to "\nA: ".
+        append_choices_to_input (`bool`, optional):
             Whether to append the choices to the model's input. Defaults to True.
-        few_shot_example_separator (str, optional):
-            Separator between the few-shot examples. Defaults to '\n'.
-        stop_string (str, optional):
-            Stop string to indicate the end of the input. Defaults to '\n\n'.
-
+        choices_prefix (`str`, optional):
+            Prefix to be added before the choices in the model's prompt. Defaults to "\nchoices: \n".
+        choice_item_postfix (`str`, optional):
+            Separator to be added between choice items. Defaults to "\n".
+        choice_item_prefix (`str`, optional):
+            Prefix to be added before each choice item. Defaults to "- ".
+        sequence_labeling_separator (`str`, optional):
+            Separator between tokens in sequence labeling tasks. Defaults to ",".
+        permute_choices (`bool`, optional):
+            Whether to permute the order of choices. Defaults to False.
+        few_shot_example_separator (`str`, optional):
+            Separator between few-shot examples. Defaults to "\n\n".
+        stop_string (`str`, optional):
+            String to indicate the end of the generation. Defaults to "\n\n".
     """
 
     instruction_zero_shot: str = field(
         default="",
         metadata={
-            "help": ("Instruction of the task. Will be prepended to the" " model's input. e.g. 'Add two numbers:'")
+            "help": "Instruction of the task. Will be prepended to the model's input. e.g. 'Add two numbers:'"
         },
     )
     instruction_few_shot: str = field(
@@ -169,7 +199,7 @@ class PromptBuilderConfig:
     )
     stop_string: str = field(
         default="\n\n",
-        metadata={"help": "Stop string to indicate the end of the input."},
+        metadata={"help": "Stop string to indicate the end of the generation."},
     )
 
 
@@ -217,7 +247,7 @@ class TaskConfig:
             Regex to extract the output from the free form answer. Defaults to None.
         split_file (Optional[str], optional):
             Path to the split file. Defaults to None.
-        evaluation_metric (Optional[List[EvaluationMetricConfig]], optional):
+        evaluation_metrics (Optional[List[EvaluationMetricConfig]], optional):
             Evaluation metric configuration. Defaults to None.
         preparation_strategies (PreparationStrategiesConfig):
             Preparation strategies configuration.
