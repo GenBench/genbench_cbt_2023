@@ -158,7 +158,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
         )
 
         click.echo("\n\nTask created successfully.")
-        click.echo(f"View the task at {get_repo_dir() / 'genbench' / 'tasks' / id_}")
+        click.echo(f"View the task at {get_repo_dir() / 'src' / 'genbench' / 'tasks' / id_}")
     else:
         # Make sure subtask ids are valid
         for subtask_id in subtask_ids:
@@ -218,9 +218,9 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
             )
 
             click.echo("Done!")
-            click.echo(f"View the subtask at {get_repo_dir() / 'genbench' / 'tasks' / id_ / subtask_id}\n")
+            click.echo(f"View the subtask at {get_repo_dir() / 'src' / 'genbench' / 'tasks' / id_ / subtask_id}\n")
 
-        click.echo(f"Instruction to fill and submit the task at {get_repo_dir() / 'README.md'}")
+    click.echo(f"Instruction to fill and submit the task at https://github.com/GenBench/genbench_cbt")
 
 
 @cli.command()
