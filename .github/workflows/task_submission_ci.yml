@@ -51,7 +51,7 @@ jobs:
           pytest -xrpP tests/ --ignore=./tests/test_task.py
 
   test_task:
-    needs: test_genbench_impl
+#    needs: check_code_quality
     runs-on: ubuntu-latest
     steps:
       # Pattern: '[Task Submission] Task Name (`task_id`) with optional description'
@@ -59,7 +59,7 @@ jobs:
       - name: Parse the Task ID from PR's title
         id: pr_task_id
         run: |
-            task_id=$(echo ${{ github.event.pull_request.title }} | sed -n -e 's/^\[Task Submission\][[:alnum:][:space:]()]\+[[:space:]]*(`\([^`]*\)`)[[:space:]]*.*/\1/p')
+            task_id=$(echo '${{ github.event.pull_request.title }}' | sed -n -e 's/^\[Task Submission\][[:alnum:][:space:]()]\+[[:space:]]*(`\([^`]*\)`)[[:space:]]*.*/\1/p')
             echo "Task ID: $task_id"
             echo "task_id=$task_id" >> $GITHUB_OUTPUT
         shell: bash
