@@ -346,7 +346,7 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
         task_name = task_config["name"]
     title = f"[Task Submission] {task_name} (`{id_}`)"
     "quick_pull=1&template=task_submission.md&labels=task-submission&title=[Task Submission] Sample Task 2"
-    pr_url = f"https://github.com/GenBench/genbench_cbt/compare/main...{username}:{repo_name}"
+    pr_url = f"https://github.com/GenBench/genbench_cbt/compare/main...{username}:{repo_name}:{current_branch}"
     query_params = {
         "quick_pull": 1,
         "template": "task_submission.md",
