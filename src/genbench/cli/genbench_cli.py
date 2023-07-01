@@ -361,4 +361,5 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     click.echo("\n" + "-" * 80)
     click.echo("Click the link below to create a pull request for the task:")
     click.echo(pr_url)
+    click.echo("\nPlease do not change the title of the pull request.")
     click.echo("-" * 80 + "\n")
