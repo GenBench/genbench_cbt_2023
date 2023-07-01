@@ -51,7 +51,7 @@ jobs:
           pytest -xrpP tests/ --ignore=./tests/test_task.py
 
   test_task:
-    #    needs: test_genbench_impl
+    needs: test_genbench_impl
     runs-on: ubuntu-latest
     steps:
       # Pattern: '[Task Submission] Task Name (`task_id`) with optional description'
