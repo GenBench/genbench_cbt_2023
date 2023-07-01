@@ -154,9 +154,7 @@ class PromptBuilderConfig:
 
     instruction_zero_shot: str = field(
         default="",
-        metadata={
-            "help": "Instruction of the task. Will be prepended to the model's input. e.g. 'Add two numbers:'"
-        },
+        metadata={"help": "Instruction of the task. Will be prepended to the model's input. e.g. 'Add two numbers:'"},
     )
     instruction_few_shot: str = field(
         default="",
