@@ -1,7 +1,7 @@
 import importlib
 import inspect
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, List, Mapping, Optional, Union
 
 from genbench.task import Task
 from genbench.task_config import TaskConfig
@@ -15,6 +15,27 @@ logger = get_logger(__name__)
 
 
 def load_task(task_id: str) -> Union[Task, TaskDict]:
+    """
+    Loads a task by its ID, and optionally a subtask by its ID.
+
+    Args:
+        task_id (`str`): The identifier for the task. It can also include the subtask
+        ID separated by a colon, e.g., 'task_id:subtask_id'.
+
+    Returns:
+        `Union[Task, TaskDict]`: An object representing the loaded task.
+        It could be an instance of Task class or TaskDict depending on the task structure.
+
+    Raises:
+        ValueError: If the specified task does not exist.
+
+    Notes:
+        The function first checks if a subtask ID is provided (separated by ':').
+        It then loads the task from the appropriate directory.
+        If a subtask ID is provided, it tries to load the task as a Task class.
+        If no subtask ID is provided, it checks if the directory points to a TaskDict,
+        in which case it loads it as a TaskDict, otherwise it loads it as a Task class.
+    """
     orig_task_id = task_id
 
     if ":" in task_id:
@@ -40,7 +61,29 @@ def load_task(task_id: str) -> Union[Task, TaskDict]:
     return task_obj
 
 
-def load_config(task_id: str) -> Union[TaskConfig, Dict[str, Any]]:
+def load_config(task_id: str) -> Union[TaskConfig, Mapping[str, Any]]:
+    """
+    Loads the configuration for a task by its ID, and optionally a subtask by its ID.
+
+    Args:
+        task_id (`str`): The identifier for the task.
+        It can also include the subtask ID separated by a colon, e.g., 'task_id:subtask_id'.
+
+    Returns:
+        `Union[TaskConfig, Mapping[str, Any]]`: If a subtask ID is provided or the task directory doesn't point
+        to a TaskDict, an instance of TaskConfig is returned.
+        Otherwise, a dictionary mapping configuration keys to values is returned.
+
+    Raises:
+        ValueError: If the specified task does not exist.
+
+    Notes:
+        The function first checks if a subtask ID is provided (separated by ':').
+        It then loads the task configuration from the appropriate directory.
+        If a subtask ID is provided or the task directory doesn't point to a TaskDict,
+        it loads the configuration as a TaskConfig.
+        Otherwise, it loads the configuration as a dictionary.
+    """
     orig_task_id = task_id
 
     if ":" in task_id:
