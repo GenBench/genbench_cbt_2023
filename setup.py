@@ -31,9 +31,11 @@ QUALITY_REQUIRE = [
     "flake8~=6.0",
 ]
 
-TEMPLATE_REQUIRE = [
+TASK_SUBMISSION_REQUIRE = [
     # We use cookiecutter to generate task templates
     "cookiecutter>=2.1"
+    # We use GitPython to get the branch name
+    "GitPython>=3.1"
 ]
 
 TESTS_REQUIRE = [
@@ -42,7 +44,7 @@ TESTS_REQUIRE = [
 ]
 
 EXTRAS_REQUIRE = {
-    "dev": TESTS_REQUIRE + QUALITY_REQUIRE + TEMPLATE_REQUIRE,
+    "dev": TESTS_REQUIRE + QUALITY_REQUIRE + TASK_SUBMISSION_REQUIRE,
     "tests": TESTS_REQUIRE,
     "quality": QUALITY_REQUIRE,
 }

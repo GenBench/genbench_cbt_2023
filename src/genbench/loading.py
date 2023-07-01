@@ -40,7 +40,26 @@ def load_task(task_id: str) -> Union[Task, TaskDict]:
     return task_obj
 
 
-def _load_task_class(task_dir: Path, task_id: str, subtask_id: Optional[str] = None) -> Task:
+def load_config(task_id: str) -> TaskConfig:
+    orig_task_id = task_id
+
+    if ":" in task_id:
+        task_id, subtask_id = task_id.split(":")
+    else:
+        subtask_id = None
+
+    task_dir = get_task_dir(task_id, subtask_id=subtask_id)
+
+    # Check if task exists
+    if not task_dir.exists():
+        raise ValueError(f"Task `{orig_task_id}` does not exist.")
+
+    return TaskConfig.from_jsonnet(jsonnet_path=task_dir / "config.jsonnet")
+
+
+def _load_task_class(
+    task_dir: Path, task_id: str, subtask_id: Optional[str] = None
+) -> Task:
     # Load task config
     config_path = task_dir / "config.jsonnet"
     config = TaskConfig.from_jsonnet(jsonnet_path=config_path)
@@ -81,16 +100,23 @@ def _load_task_dict(task_dir: Path, task_id: str) -> TaskDict:
             break
 
     if task_dict_class is None:
-        logger.info(f"`{task_id}.__init__.py` does not have a `TaskDict` subclass." f"Using default `TaskDict`.")
+        logger.info(
+            f"`{task_id}.__init__.py` does not have a `TaskDict` subclass."
+            f"Using default `TaskDict`."
+        )
         task_dict_class = TaskDict
 
     # We load the subtasks in order specified in the config.
     # if the order is not specified, we load them in alphabetical order.
-    subtask_ids: List[str] = config.get("subtasks_order", sorted([d.name for d in task_dir.iterdir()]))
+    subtask_ids: List[str] = config.get(
+        "subtasks_order", sorted([d.name for d in task_dir.iterdir()])
+    )
 
     # Load subtasks
     subtasks_dict = {
-        subtask_id: _load_task_class(task_dir / subtask_id, task_id, subtask_id=subtask_id)
+        subtask_id: _load_task_class(
+            task_dir / subtask_id, task_id, subtask_id=subtask_id
+        )
         for subtask_id in subtask_ids
     }
     task_dict = task_dict_class.from_config(

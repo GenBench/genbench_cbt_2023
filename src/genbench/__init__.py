@@ -1,4 +1,4 @@
-from .loading import load_task
+from .loading import load_task, load_config
 from .task import Task
 from .task_config import TaskConfig
 from .task_dict import TaskDict

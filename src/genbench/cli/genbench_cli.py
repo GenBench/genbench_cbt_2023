@@ -31,6 +31,15 @@ def is_cookiecutter_installed() -> bool:
     except ImportError:
         return False
 
+def is_git_python_installed() -> bool:
+    """Check if git-python is installed."""
+    try:
+        import git  # noqa: F401
+
+        return True
+    except ImportError:
+        return False
+
 
 @click.group()
 @click.pass_context
@@ -87,9 +96,18 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
 
     > genbench-cli create-task --name "The addition task" --id "addition" -s "subtask_1" -s "subtask_2"
     """
-    # Check if cookiecutter is installed
+    # Check for extra dependencies
     if not is_cookiecutter_installed():
-        raise click.UsageError("Cookiecutter is not installed. Please use `pip install genbench[dev]` to install it.")
+        raise click.UsageError("Cookiecutter is not installed. Please use `pip install -e genbench[dev]` to install it.")
+    if not is_git_python_installed():
+        raise click.UsageError("GitPython is not installed. Please use `pip install -e genbench[dev]` to install it.")
+
+    # Make sure we are not on the main branch
+    import git
+    repo = git.Repo(get_repo_dir())
+    current_branch = repo.active_branch.name
+    if current_branch == "main":
+        raise click.UsageError("Please create a new branch before creating a task.")
 
     # Make sure `name` only contains ascii characters
     if not all(ord(c) < 128 for c in name):
@@ -207,6 +225,7 @@ def create_task(ctx: click.Context, name: str, id_: str, subtask_ids: List[str])
     "--id",
     "id_",  # `id` is a reserved keyword in Python
     type=str,
+    required=True,
     metavar="ID",
     help="Id of the task to run tests for. e.g. 'addition'.",
 )
@@ -239,8 +258,89 @@ def test_task(ctx: click.Context, id_: str, tests_dir: str = None):
         # If task is a task dict, we need to run tests for each subtask
         subtasks = get_task_dict_subtasks(get_task_dir(id_))
         for subtask_id in subtasks:
-            ctx.invoke(test_task, id_=f"{id_}:{subtask_id}")
+            ctx.invoke(test_task, id_=f"{id_}:{subtask_id}", tests_dir=tests_dir)
     else:
         exit_code = pytest.main(["-xrpP", task_test_path, f"--task-id={id_}"])
         if exit_code != 0:
             sys.exit(exit_code)
+
+
+@cli.command()
+@click.option(
+    "-i",
+    "--id",
+    "id_",  # `id` is a reserved keyword in Python
+    type=str,
+    required=True,
+    metavar="ID",
+    help="Id of the task. e.g. 'addition'.",
+)
+@click.option(
+    "--check-uncommitted-changes/--no-check-uncommitted-changes",
+    default=True,
+    help="Check for uncommitted changes before submitting the task. Defaults to True.",
+)
+@click.option(
+    "--check-unpushed-changes/--no-check-unpushed-changes",
+    default=True,
+    help="Check for unpushed changes before submitting the task. Defaults to True.",
+)
+@click.pass_context
+def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, check_unpushed_changes: bool):
+    """Create a pull request for a task."""
+    if ":" in id_:
+        raise click.UsageError(f"Please specify a task_dict id. e.g. 'genbench-cli submit-task --id {id_.split(':')[0]}'")
+
+    # Make sure task exists
+    all_tasks_ids = get_all_tasks_and_subtasks_ids()
+    if id_ not in all_tasks_ids:
+        raise click.UsageError(f"Task with id '{id_}' does not exist. Please specify a valid task id.")
+
+    if not is_git_python_installed():
+        raise click.UsageError("Please install gitpython to use this command. e.g. 'pip install -e genbench[dev]'")
+
+    import git
+    repo = git.Repo(get_repo_dir())
+    current_branch = repo.active_branch.name
+
+    if current_branch == "main":
+        raise click.UsageError("Please create a new branch before creating a task.")
+
+    # Make sure there are no uncommitted changes
+    if check_uncommitted_changes and repo.is_dirty():
+        raise click.UsageError("Please commit your changes before submitting a task. Use --no-check-uncommitted-changes to ignore this check.")
+
+    # Make sure there are no unpushed commits
+    unpushed_commits = list(repo.iter_commits(f'{current_branch}@{{u}}..{current_branch}'))
+    if check_unpushed_changes and unpushed_commits:
+        raise click.UsageError("Please push your commits before submitting a task. Use --no-check-unpushed-changes to ignore this check.")
+
+    # Extract the username and repo name from the remote url
+    remote_url = repo.config_reader().get_value('remote "origin"', "url")
+    assert "github.com" in remote_url, "Only GitHub is supported for now."
+
+    username, repo_name = remote_url.split("github.com/")[1].split("/")[:2]
+    repo_name = repo_name.replace(".git", "")
+    click.echo(f"Fork Repo: {username}/{repo_name}")
+
+    # Construct the PR URL
+    from genbench import load_config
+    task_config = load_config(id_)
+    title = f"[Task Submission] {task_config.name} (`{id_}`)"
+    "quick_pull=1&template=task_submission.md&labels=task-submission&title=[Task Submission] Sample Task 2"
+    pr_url = f"https://github.com/GenBench/genbench_cbt/compare/main...{username}:{repo_name}"
+    query_params = {
+        "quick_pull": 1,
+        "template": "task_submission.md",
+        "labels": "task-submission",
+        "title": title,
+    }
+
+    from urllib.parse import urlencode
+    pr_url += "?" + urlencode(query_params)
+
+    click.echo("\n" + "-" * 80)
+    click.echo(f"Click the link below to create a pull request for the task:")
+    click.echo(pr_url)
+    click.echo("-" * 80 + "\n")
+
