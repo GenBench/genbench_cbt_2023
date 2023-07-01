@@ -340,6 +340,7 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
 
     task_config = load_config(id_)
     from genbench import TaskConfig
+
     if isinstance(task_config, TaskConfig):
         task_name = task_config.name
     else:
