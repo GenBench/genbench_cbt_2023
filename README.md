@@ -43,35 +43,65 @@ You can find more details about the GenBench program, the workshop and the task,
 Once the tool is publicly available, we will update the following instructions.
 
 ### Overview
-1. **Fork the [`genbench/genbench_cbt`](https://github.com/GenBench/genbench) repository.**
+1. Fork the [genbench/genbench_cbt](https://github.com/GenBench/genbench_cbt) repository by clicking the "Fork" button on the top right of the page. This will create a copy of this repository in your GitHub account.
 
-2. **Create a branch on the forked repo, e.g. `my_awesome_task`.**
-
-3. **Clone the repo**
+2. Clone your fork, and link the original repository as upstream.
 ```bash
 git clone https://github.com/awesome-task-creator/genbench_cbt
 cd genbench
+git remote add upstream https://github.com/GenBench/genbench_cbt.git
+```
+3. Create a new branch for your task.
+```bash
 git checkout -b my_awesome_task
 ```
-Your clone repo will contain the following files:
+4. Install the genbench package in editable mode.
+
+_Optionally, create a virtual environment for your task._
+```bash
+python -m venv venv
+source venv/bin/activate
+``` 
+Install the package
+```bash
+pip install -e ".[dev]"
 ```
-- repo/
-  - genbench/
-    - tasks/
-      - sample_task/
-        - __init__.py
-        - config.jsonnet
-        - task.py
-        - doc.md
-      ...
+
+5. Create a new task using the `genbench-cli` :
+```bash
+genbench-cli create-task --name "My Awesome Task"
 ```
-5. **Create a new task from the sample**
-Copy the `sample_task` directory to a new one with your task's name:
+
+Here is a full list of the available options:
+```text
+Usage: genbench-cli create-task [OPTIONS]
+
+  Create a new task with the provided name, id, and optional subtask ids.
+
+  Usage Examples:
+
+  1. Basic usage:
+
+  > genbench-cli create-task --name "The addition task" --id "addition"
+
+  2. Creating a task with subtasks:
+
+  > genbench-cli create-task --name "The addition task" --id "addition" -s
+  "subtask_1" -s "subtask_2"
+
+Options:
+  -n, --name TEXT               Name of the task. e.g. 'The addition task'
+                                [required]
+  -i, --id ID                   Unique id of the task. e.g. 'addition'. No
+                                spaces allowed. Use only alphanumeric
+                                characters (lower case) and underscores
+  -s, --subtask_ids SUBTASK_ID  Unique id of the subtask. e.g. '-s subtask_1
+                                -s subtask_2'. No spaces allowed. Use only
+                                alphanumeric characters (lower case) and
+                                underscores.
+  --help                        Show this message and exit.
 ```
-cd genbench/tasks
-cp -r sample_task my_awesome_task
-```
-Alternatively, simply create a new directory with two files: `config.jsonnet`, and `doc.md`.
+
 
 6. **Configure your task**
 You will need to fill in `config.jsonnet`, and if necessary `task.py`.
