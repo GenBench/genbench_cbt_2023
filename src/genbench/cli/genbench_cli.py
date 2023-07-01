@@ -339,7 +339,12 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     from genbench import load_config
 
     task_config = load_config(id_)
-    title = f"[Task Submission] {task_config['name']} (`{id_}`)"
+    from genbench import TaskConfig
+    if isinstance(task_config, TaskConfig):
+        task_name = task_config.name
+    else:
+        task_name = task_config["name"]
+    title = f"[Task Submission] {task_name} (`{id_}`)"
     "quick_pull=1&template=task_submission.md&labels=task-submission&title=[Task Submission] Sample Task 2"
     pr_url = f"https://github.com/GenBench/genbench_cbt/compare/main...{username}:{repo_name}"
     query_params = {
