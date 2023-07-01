@@ -33,7 +33,7 @@ QUALITY_REQUIRE = [
 
 TASK_SUBMISSION_REQUIRE = [
     # We use cookiecutter to generate task templates
-    "cookiecutter>=2.1"
+    "cookiecutter>=2.1",
     # We use GitPython to get the branch name
     "GitPython>=3.1"
 ]
