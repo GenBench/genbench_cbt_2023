@@ -500,7 +500,7 @@ Here is an example:
 The files should be accessible via a single URI per split file (train, test, validation).
 
 #### License
-The dataset should licensed under: TBD
+If you are hosting your own data, we recommend using permissively licensed datasets, including, but not limited to, CC-BY, CC0, Apache, MIT, BSD, to make sure others are allowed to report results on your dataset.
 
 ### Task with Subtasks
 GenBench also supports specifying subtasks. In order to create those, use the following syntax for `genbench-cli`
