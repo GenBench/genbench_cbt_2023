@@ -40,7 +40,7 @@ git remote add upstream https://github.com/GenBench/genbench_cbt.git
 ```
 3. **Create a new branch for your task**.
 ```bash
-git checkout -b <a-descriptive-name-for-my-task>
+git checkout -b <a-descriptive-branch-for-my-task>
 ```
 Please use a branch name that is informative of your task. (In this exampled, we used `my_awesome_task`)
 
@@ -63,7 +63,7 @@ pip install -e ".[dev]"
 ```bash
 genbench-cli create-task --name "<Task Name>"
 ```
-Use a descriptive name in the place of "<Task Name>" for your task. (In this example, we used `"My Awesome Task"`)
+Use a descriptive name in place of `"\<Task Name\>"` for your task. (In this example, we used `"My Awesome Task"`)
 Example output:
 ```text
 Task authors (e.g John Doe). Split with ',': John Doe
