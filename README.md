@@ -63,7 +63,7 @@ pip install -e ".[dev]"
 ```bash
 genbench-cli create-task --name "<Task Name>"
 ```
-Use a descriptive name in place of `"\<Task Name\>"` for your task. (In this example, we used `"My Awesome Task"`)
+Use a descriptive name in place of `"<Task Name>"` for your task. (In this example, we used `"My Awesome Task"`)
 Example output:
 ```text
 Task authors (e.g John Doe). Split with ',': John Doe
