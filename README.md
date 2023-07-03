@@ -79,7 +79,7 @@ Instruction to fill and submit the task at https://github.com/GenBench/genbench_
 ```
 If we look at the task directory, we can see that the task has been created.
 ```text
-$ tree genbench/tasks/my_awesome_task
+$ tree src/genbench/tasks/my_awesome_task
 src/genbench/tasks/my_awesome_task
 ├── __init__.py
 ├── config.jsonnet
