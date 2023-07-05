@@ -68,7 +68,7 @@ def resplit_data_source(orig_datasets: DatasetDict, splitting_info: Mapping[str,
                 orig_split = orig_split.split(".")[0]
                 orig_split = get_data_split_name(orig_split)
                 orig_id = int(orig_id)
-                yield from orig_datasets[orig_split][orig_id]
+                yield orig_datasets[orig_split][orig_id]
 
         return generator_fn
 
