@@ -332,8 +332,13 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     assert "github.com" in remote_url, "Only GitHub is supported for now."
 
     github_domain = "github.com/" if remote_url.startswith("https://") else "github.com:"
-    username, repo_name = remote_url.split(github_domain)[1].split("/")[:2]
-    repo_name = repo_name.replace(".git", "")
+    try:
+        username, repo_name = remote_url.split(github_domain)[1].split("/")[:2]
+        repo_name = repo_name.replace(".git", "")
+    except IndexError:
+        raise click.UsageError(
+            f"Could not extract username and repo name from the remote url. Remote URL: {remote_url}"
+        )
     click.echo(f"Fork Repo: {username}/{repo_name}")
 
     # Construct the PR URL
