@@ -331,7 +331,8 @@ def submit_task(ctx: click.Context, id_: str, check_uncommitted_changes: bool, c
     remote_url = repo.config_reader().get_value('remote "origin"', "url")
     assert "github.com" in remote_url, "Only GitHub is supported for now."
 
-    username, repo_name = remote_url.split("github.com/")[1].split("/")[:2]
+    github_domain = "github.com/" if remote_url.startswith("https://") else "github.com:"
+    username, repo_name = remote_url.split(github_domain)[1].split("/")[:2]
     repo_name = repo_name.replace(".git", "")
     click.echo(f"Fork Repo: {username}/{repo_name}")
 
