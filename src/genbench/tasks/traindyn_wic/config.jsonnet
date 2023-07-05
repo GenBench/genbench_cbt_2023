@@ -20,9 +20,9 @@
 
     has_validation_set: true,
     has_train_set: true,
-    task_type: 'multi_choice',
+    task_type: 'multiple_choice',
     field_mapping: {
-        input1: 'word',
+        input: 'word',
         input2: 'sentence1',
         input3: 'sentence2',
         target: 'label',
@@ -32,6 +32,8 @@
     evaluation_metrics: [
         {
             hf_id: 'accuracy',
+            git_commit_sha: 'af3c30561d840b83e54fc5f7150ea58046d6af69',
+            best_score: 1.0
         },
     ],
 
