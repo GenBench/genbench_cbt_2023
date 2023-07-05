@@ -1,9 +1,9 @@
-from genbench import Task
 from typing import Any, Dict
+
+from genbench import Task
 
 
 class TraindynWicTask(Task):
-
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
         """Perform preprocessing/formatting on an example-level.
 
@@ -26,5 +26,5 @@ class TraindynWicTask(Task):
         """
         return {
             "input": f"{example['word']} </s> {example['sentence1']} </s> {example['sentence2']}",
-            "target": example['label']
+            "target": example["label"],
         }
