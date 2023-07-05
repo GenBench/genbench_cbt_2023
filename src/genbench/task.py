@@ -274,10 +274,16 @@ class Task(TaskInterface):
         datasets = self.get_datasets_raw()
 
         if preparation_strategy == PreparationStrategy.FINETUNING:
+            if self.config.preparation_strategies.finetuning is None:
+                raise ValueError("Finetuning preparation strategy is not supported for this task")
+
             # We don't need to do anything for finetuning
             return datasets
 
         if preparation_strategy == PreparationStrategy.PROMPT_BASED_TESTING:
+            if self.config.preparation_strategies.prompt_based_testing is None:
+                raise ValueError("Prompt-based testing preparation strategy is not supported for this task")
+
             if shot_list is None:
                 raise ValueError("shot_list must be specified for prompt-based testing")
 
@@ -358,11 +364,45 @@ class Task(TaskInterface):
 
             metric = evaluate.load(*hf_id, revision=metric_config.git_commit_sha)
 
+            refs_lst = [g["target"] for g in gold]
             preds_lst = [pred["target"] for pred in predictions]
-            if self.config.task_type == TaskType.MULTIPLE_CHOICE:
-                refs_lst = [g["original_target"] for g in gold]
+
+            ref_type = type(refs_lst[0])
+            pred_type = type(preds_lst[0])
+            if pred_type != ref_type:
+                if self.config.task_type != TaskType.MULTIPLE_CHOICE:
+                    raise ValueError(
+                        f"Predictions and references have different types: preds: {pred_type} and refs: {ref_type}. "
+                    )
+                # Convert predictions to the same type as the references
+                if pred_type == str and ref_type == int:
+                    logger.warning("Predictions are strings, but references are ints. Converting predictions to ints.")
+                    converted_preds = []
+                    for pred, ref in zip(preds_lst, gold):
+                        assert "target_options" in ref
+                        converted_preds.append(ref["target_options"].index(pred))
+                    preds_lst = converted_preds
+                elif pred_type == int and ref_type == str:
+                    logger.warning("Predictions are ints, but references are strings. Converting references to ints.")
+                    converted_refs = []
+                    for pred, ref in zip(preds_lst, gold):
+                        assert "target_options" in ref
+                        converted_refs.append(ref["target_options"].index(ref["target"]))
+                    refs_lst = converted_refs
             else:
-                refs_lst = [g["target"] for g in gold]
+                if self.config.task_type == TaskType.MULTIPLE_CHOICE and pred_type != int:
+                    # Convert both predictions and references to int
+                    logger.warning(
+                        "Predictions and references have the same type, but it is not int. Converting both to int."
+                    )
+                    converted_preds = []
+                    converted_refs = []
+                    for pred, ref in zip(preds_lst, gold):
+                        assert "target_options" in ref
+                        converted_preds.append(ref["target_options"].index(pred))
+                        converted_refs.append(ref["target_options"].index(ref["target"]))
+                    preds_lst = converted_preds
+                    refs_lst = converted_refs
 
             extra_kwargs = metric_config.compute_extra_kwargs or {}
             output: dict = metric.compute(predictions=preds_lst, references=refs_lst, **extra_kwargs)
