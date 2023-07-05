@@ -35,18 +35,20 @@ You can find more details about the GenBench program, the workshop and the task,
 2. **Clone your fork**, and link the original repository as upstream.
 ```bash
 git clone https://github.com/awesome-task-creator/genbench_cbt
-cd genbench
+cd genbench_cbt
 git remote add upstream https://github.com/GenBench/genbench_cbt.git
 ```
 3. **Create a new branch for your task**.
 ```bash
-git checkout -b my_awesome_task
+git checkout -b <a-descriptive-branch-for-my-task>
 ```
+Please use a branch name that is informative of your task. (In this exampled, we used `my_awesome_task`)
+
 **Do not** work on the main branch.
 
 4. **Install the `genbench` package in editable mode**.
 
-Create a virtual environment for your task.
+Create a virtual environment for your task (Note that you can use whatever name instead of `venv`)
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -57,9 +59,11 @@ pip install -e ".[dev]"
 ```
 
 5. **Create a new task using the `genbench-cli`**:
+
 ```bash
-genbench-cli create-task --name "My Awesome Task"
+genbench-cli create-task --name "<Task Name>"
 ```
+Use a descriptive name in place of `"<Task Name>"` for your task. (In this example, we used `"My Awesome Task"`)
 Example output:
 ```text
 Task authors (e.g John Doe). Split with ',': John Doe
@@ -75,7 +79,7 @@ Instruction to fill and submit the task at https://github.com/GenBench/genbench_
 ```
 If we look at the task directory, we can see that the task has been created.
 ```text
-$ tree genbench/tasks/my_awesome_task
+$ tree src/genbench/tasks/my_awesome_task
 src/genbench/tasks/my_awesome_task
 ├── __init__.py
 ├── config.jsonnet
@@ -500,7 +504,7 @@ Here is an example:
 The files should be accessible via a single URI per split file (train, test, validation).
 
 #### License
-The dataset should licensed under: TBD
+If you are hosting your own data, we recommend using permissively licensed datasets, including, but not limited to, CC-BY, CC0, Apache, MIT, BSD, to make sure others are allowed to report results on your dataset.
 
 ### Task with Subtasks
 GenBench also supports specifying subtasks. In order to create those, use the following syntax for `genbench-cli`
