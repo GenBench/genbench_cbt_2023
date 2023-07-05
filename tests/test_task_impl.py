@@ -298,7 +298,7 @@ def test_multi_choice_task(multi_choice_task):
         {"target": [i for i in range(len(exm["target_options"])) if i != exm["target"]][0]}
         for exm in original_data[: len(original_data) // 2]
     ]
-    predictions += [{"target": f"{exm['target']}"} for exm in original_data[len(original_data) // 2 :]]
+    predictions += [{"target": exm["target"]} for exm in original_data[len(original_data) // 2 :]]
 
     eval_result = multi_choice_task.evaluate_predictions(predictions=predictions, gold=ds)
     assert eval_result["hf_accuracy__accuracy"] == 0.5
