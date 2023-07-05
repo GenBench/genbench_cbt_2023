@@ -118,3 +118,6 @@ dmypy.json
 
 #Pycharm IDE
 .idea
+
+# vim Files
+*.swp
