@@ -117,7 +117,7 @@ Alternatively, you can use [GenbenchTaskViewer.ipynb](https://colab.sandbox.goog
 ```bash
 genbench-cli test-task --id my_awesome_task
 ```
-Fix styling issues if any:
+Fix style issues if any:
 ```bash
 make fix-style
 ```
