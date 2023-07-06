@@ -125,7 +125,7 @@ Make sure your submission passes all quality checks:
 ```bash
 make check-quality
 ```
-
+*Note: Make sure to run `make *` commands from the root of the repository*
 9. **Push the new changes to your fork**
 ```bash
 git add genbench/tasks/my_awesome_task/*
