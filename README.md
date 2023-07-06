@@ -128,7 +128,12 @@ make check-quality
 *Note: Make sure to run `make *` commands from the root of the repository*
 9. **Push the new changes to your fork**
 ```bash
-git add genbench/tasks/my_awesome_task/*
+git add genbench/tasks/my_awesome_task/__init__.py
+git add genbench/tasks/my_awesome_task/task.py
+git add genbench/tasks/my_awesome_task/config.jsonnet
+git add genbench/tasks/my_awesome_task/doc.md
+# Add other files that your task depends on it
+# git add genbench/tasks/my_awesome_task/file
 git commit -m "Add My Awesome Task"
 git push -u origin my_awesome_task
 ```
