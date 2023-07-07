@@ -142,6 +142,8 @@ git push -u origin my_awesome_task
 ```
 genbench-cli submit-task --id my_awesome_task
 ```
+The GenBench CBT repository is an open source repository, available under the [Apache 2.0 license](LICENSE).
+By submitting to the GenBench CBT, you agree that your submission -- if merged -- will be available under the same licensing conditions.
 
 ### Task
 A GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
