@@ -12,7 +12,6 @@ logger = get_logger(__name__)
 
 
 class FrequencyBasedMathematicsTask(Task):
-    pass
     """Python implementation of the FrequencyBasedMathematics task.
 
     This LLM task assess to what extent the computation of mathematical expressions
@@ -67,17 +66,6 @@ class FrequencyBasedMathematicsTask(Task):
 
         ref_type = type(refs_list[0])
         pred_type = type(preds_list[0])
-
-        # Make sure predictions and gold are the same type
-        if pred_type != ref_type:
-            if pred_type == str and ref_type == int:
-                logger.warning("Predictions are strings, but references are ints. Converting predictions to ints.")
-            elif pred_type == int and ref_type == str:
-                logger.warning("Predictions are ints, but references are strings. Converting references to ints.")
-
-        # In the data, there are 20 examples for each term
-        # in range (10, 50), we compute the avg accuracy per term
-        # by averaging over all samples with the term as first number
 
         for n in range(40):
             # Fetch all accuracy scores for the predictions
