@@ -32,7 +32,7 @@
     evaluation_metrics: [
         {
             hf_id: 'accuracy',
-            git_commit_sha: 'af3c30561d840b83e54fc5f7150ea58046d6af69',
+            git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
             best_score: 1.0
         },
     ],
