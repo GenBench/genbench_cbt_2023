@@ -15,7 +15,7 @@ Because this is an example task, there is no paper abstract.
 ## Examples
 The samples in this task require indicating whether the same sense of one word is being used in two different contexts, for instance:
 ```
-bed	</s> There's a lot of trash on the bed of the river </s> I keep a glass of water next to my bed when I sleep
+bed </s> There's a lot of trash on the bed of the river </s> I keep a glass of water next to my bed when I sleep
 ```
 
 ## Usage
@@ -40,14 +40,16 @@ task.evaluate_predictions(
 
 ## Data Source
 The data can be obtained from `super_glue/wic` via the Huggingface dataset hub.
-WiC is licensed under a Creative Commons Attribution-NonCommercial 4.0 License (see `https://pilehvar.github.io/wic`).
+WiC is licensed under a Creative Commons Attribution-NonCommercial 4.0 License (see https://pilehvar.github.io/wic).
 
 ## Limitations and Bias
 This is an example task for illustrative purposes, it has not been tested empirically.
 
 ## GenBench eval card
-This test can be used to evaluate a finetuned model (or a model trained from scratch): pretrain-test locus.
-It is designed to better understand how models can overcome difficulties that are intrinsically hard for them, without further taking into account external factors of practicalities, fairness, etc.: intrinsic motivation.
-The generalisation type evaluated is 'robustness', and because all the data is natural, but the splitting dimension is unnatural, this is a partitioned, natural shift source.
+- *Shift locus* This test can be used to evaluate a finetuned model (or a model trained from scratch): pretrain-test locus.
+- *Motivation* It is designed to better understand how models can overcome difficulties that are intrinsically hard for them, without further taking into account external factors of practicalities, fairness, etc.
+- *Shift type* The shift type is a covariate one, considering that we do not modify the output distribution.
+- *Generalisation type* The generalisation type evaluated is 'robustness',
+- *Shift source* and because all the data is natural, but the splitting dimension is unnatural, this is a partitioned, natural shift source.
 
 ![GenBench Eval Card](eval_card.png)
