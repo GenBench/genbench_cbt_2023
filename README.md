@@ -4,6 +4,7 @@
 * [GenBench workshop and publication of tasks](#genbench-workshop-and-publication-of-tasks)
 * [How to submit a task to the GenBench CBT](#how-to-submit-a-task-to-the-genbench-cbt)
     * [Overview](#overview)
+    * [Sample Submissions](#sample-submissions)
     * [Task](#task)
     * [Task types](#task-types)
     * [Task files](#task-files)
@@ -125,7 +126,8 @@ Make sure your submission passes all quality checks:
 ```bash
 make check-quality
 ```
-*Note: Make sure to run `make *` commands from the root of the repository*
+*Note: Make sure to run `make <sub-command>` commands from the root of the repository*
+
 9. **Push the new changes to your fork**
 ```bash
 git add genbench/tasks/my_awesome_task/__init__.py
@@ -142,8 +144,17 @@ git push -u origin my_awesome_task
 ```
 genbench-cli submit-task --id my_awesome_task
 ```
+Following this command will open a pull request for your task on this repository.
+
 The GenBench CBT repository is an open source repository, available under the [Apache 2.0 license](LICENSE).
 By submitting to the GenBench CBT, you agree that your submission -- if merged -- will be available under the same licensing conditions.
+
+### Sample Submissions
+The GenBench team has provided a few sample task submission to illustrate the usage of the framework and the task submission pipeline.
+- [[Task Submission] Frequency based mathematics (`frequency_based_mathematics`)](https://github.com/GenBench/genbench_cbt/pull/6)
+- [[Task Submission] Training dynamics split for WiC (`traindyn_wic`)](https://github.com/GenBench/genbench_cbt/pull/5)
+
+In each of this pull requests, you can check the task files under the "File Changed" tab and the automated tests under "Checks" tab.
 
 ### Task
 A GenBench task involves providing a test set along with optional train and validation sets. Each set is comprised of a collection of examples, where each example is represented as a dictionary containing the input and the corresponding ground truth output.
