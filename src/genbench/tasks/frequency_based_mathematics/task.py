@@ -64,9 +64,6 @@ class FrequencyBasedMathematicsTask(Task):
         preds_list = [pred["target"] for pred in predictions]
         refs_list = [g["target"] for g in gold]
 
-        ref_type = type(refs_list[0])
-        pred_type = type(preds_list[0])
-
         for n in range(40):
             # Fetch all accuracy scores for the predictions
             for prediction in predictions:
