@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl',
+        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/test_sample_cbt.jsonl',
     },
 
     has_validation_set: false,
@@ -33,10 +33,7 @@
 
     evaluation_metrics: [
         {
-            hf_id: 'exact_match',
-            git_commit_sha: "758135da6a37ce962b7bc38c6dd5eab672d2b742",
-            best_score: 1.0,
-        }
+            hf_id: 'accuracy',
     ],
 
     preparation_strategies: {
@@ -44,6 +41,10 @@
         // This recipe is suitable for generative LMs such as GPT-3, OPT, T5, etc.
         // We provide a few options for configuring the prompt. But, the task creator can
         // also provide a custom prompt preparation in the task's Python class.
+		finetuning: {
+            objective: 'binary_crossentropy',
+        },
+		
         prompt_based_testing: {
             prompt_builder: {
                 instruction_zero_shot: 'Add two numbers together\n\n',
