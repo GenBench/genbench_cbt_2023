@@ -6,13 +6,13 @@ from transformers import pipeline
 
 from tqdm import tqdm
 
-n_datapoints = 10
+n_datapoints = 2
 
 task = load_task("icl_consistency_test")
 ds = task.get_prepared_datasets(PreparationStrategy.PROMPT_BASED_TESTING, shot_list=[0])[0]
 
 # selecting a subset of example for illustration purposes
-subset = list(set(ds['data_ID']))[:n_samples]
+subset = list(set(ds['data_ID']))[:n_datapoints]
 ds = ds.filter(lambda x: x['data_ID'] in subset)
 
 generator = pipeline('text-generation', model='DistilGPT2')

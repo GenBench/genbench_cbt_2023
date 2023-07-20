@@ -23,8 +23,8 @@
 
     data_source: {
         type: 'manual',
-        // 'https://raw.githubusercontent.com/LucWeber/icl_consistency_data/main/data/genbench_all.jsonl',
-        test: 'https://drive.google.com/file/d/12K-qg66PTmlvzmpID_kijMjbixFT_juN/view?usp=sharing', 
+        // 'https://raw.githubusercontent.com/LucWeber/icl_consistency_data/main/data/genbench_all.jsonl', 'https://drive.google.com/file/d/12K-qg66PTmlvzmpID_kijMjbixFT_juN/view?usp=sharing',
+        test: 'https://github.com/LucWeber/icl_consistency_data/raw/main/data/genbench_all.jsonl',  
     },
 
     has_validation_set: false,

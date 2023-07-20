@@ -29,7 +29,7 @@ label_map_to_numeric = {'Impossible': 2,
                         'duplicates': 0,
                         }
 
-factors = ['dataset', 'balanced_labels', 'cross_task', 'diverse_context', 'n_shots', 'template', 'calibrate', ]
+factors = ['balanced_labels', 'cross_task', 'diverse_context', 'n_shots', 'template', 'calibrate', ]
 
 
 # @Task.register(IclConsistencyTestTask)
@@ -88,8 +88,6 @@ class IclConsistencyTestTask(Task):
         try:
             kappas = {}
             for factor in factors:
-                if factor == 'dataset':
-                    continue
                 factor_present = results_df.loc[results_df[factor] == '1']['predictions_numeric']
                 factor_absent = results_df.loc[results_df[factor] == '0']['predictions_numeric']
                 kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
