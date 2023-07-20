@@ -6,20 +6,25 @@
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'keyword1',
-        'keyword2',
+        'consistency',
+        'LLM',
+        'robustness',
+        'in-context learning',
+        'icl',
+        
     ],
 
     authors: [
         'Lucas Weber',
-        ' Elia Bruni',
-        ' Dieuwke Hupkes',
+        'Elia Bruni',
+        'Dieuwke Hupkes',
         
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl',
+        // 'https://raw.githubusercontent.com/LucWeber/icl_consistency_data/main/data/genbench_all.jsonl',
+        test: 'https://drive.google.com/file/d/12K-qg66PTmlvzmpID_kijMjbixFT_juN/view?usp=sharing', 
     },
 
     has_validation_set: false,
@@ -42,10 +47,10 @@
         // also provide a custom prompt preparation in the task's Python class.
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Add two numbers together\n\n',
-                instruction_few_shot: 'Add two numbers together. Here are some examples: \n\n',
-                input_prefix: 'Q: ',
-                output_prefix: '\nA: ',
+                instruction_zero_shot: '',
+                instruction_few_shot: '',
+                input_prefix: '',
+                output_prefix: '',
             }
         },
     },
