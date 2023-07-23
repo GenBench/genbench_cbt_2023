@@ -50,6 +50,8 @@ Please use a branch name that is informative of your task. (In this exampled, we
 4. **Install the `genbench` package in editable mode**.
 
 Create a virtual environment for your task (Note that you can use whatever name instead of `venv`)
+
+*Make sure your Python version >= 3.9*
 ```bash
 python -m venv venv
 source venv/bin/activate
