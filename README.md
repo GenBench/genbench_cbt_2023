@@ -760,7 +760,7 @@ class MyAwesomeQATask(Task):
         Returns:
             A dictionary containing key-value pairs for the preprocessed/formatted example.
         """
-        input = f"{example['context']} {tokenization_utils.SEP_TOEKN} {example['question']}"
+        input = f"{example['context']} {tokenization_utils.SEP_TOKEN} {example['question']}"
         target = example["answer"]
         return {
             "input": input, 
