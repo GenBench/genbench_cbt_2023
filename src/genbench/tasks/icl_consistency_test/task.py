@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Tuple
 from genbench import Task
 
 from sklearn.metrics import cohen_kappa_score
@@ -6,33 +6,25 @@ from pandas import DataFrame
 
 import datasets
 
-label_map_to_numeric = {'Impossible': 2,
-                        'Inconclusive': 1,
-                        'Correct': 0,
-                        'True': 0,
-                        'Always': 0,
-                        'Yes': 0,
-                        'Possible': 1,
-                        'Never': 2,
-                        'Incorrect': 2,
-                        'False': 2,
-                        'Sometimes': 1,
-                        'No': 2,
-                        'Maybe': 1,
-                        'Guaranteed': 0,
-                        'Neither': 1,
-                        'no': 2,
-                        'yes': 0,
-                        'Not Duplicates': 2,
-                        'Duplicates': 0,
-                        'not duplicates': 2,
-                        'duplicates': 0,
-                        }
+LABELS = [['Correct', 'True', 'Always', 'Yes', 'Guaranteed', 'Duplicates'],  # `correct` labels
+          ['Inconclusive', 'Possible', 'Sometimes', 'Maybe', 'Neither'],  # `neutral` labels
+          ['Impossible', 'Never', 'Incorrect', 'False', 'No', 'Not Duplicates'], ]  # `incorrect` labels
 
-factors = ['balanced_labels', 'cross_task', 'diverse_context', 'n_shots', 'template', 'calibrate', ]
+LABEL_TO_NUMERIC = {}
+LABEL_TO_NUMERIC.update(dict([(label, i) for i, label_subset in enumerate(LABELS) for label in label_subset]))
+LABEL_TO_NUMERIC.update(dict([(label.lower(), i) for i, label_subset in enumerate(LABELS) for label in label_subset]))
+
+factors = [
+    'balanced_labels',
+    'one_label',
+    'cross_task',
+    'cross_instructions',
+    'n_shots',
+    'instructions',
+    'instruction_quality',
+]
 
 
-# @Task.register(IclConsistencyTestTask)
 class IclConsistencyTestTask(Task):
     """Python implementation of the ICL consistency test task."""
 
@@ -56,47 +48,64 @@ class IclConsistencyTestTask(Task):
             values. The keys are strings representing the name of the evaluation metric and the values are
             floating-point numbers.
         """
-        # TODO:
-        #  1. Insert some assert statements, assuming that we have the same data_IDs for all setups.
-        #  2. For consistency metric (Cohen's kappa): mask out out-of-label-space predictions (-1)
-        #  3. For consistency metric (Cohen's kappa): make sure that prediction vectors are aligned
-        #  (according to data_IDs) [Order results_df similar to what I did in the analysis notebook.]
+        self._set_factors()
 
-        gold_labels_numeric = {}
         gold_pandas = gold.to_pandas()
-        for data_id in set(gold_pandas['data_ID']):
-            gold_labels_numeric[str(data_id)] = gold_pandas.loc[
-                gold_pandas['data_ID'] == data_id]['target_numeric'].to_list()[0]
+        gold_pandas['data_ID'] = gold_pandas['data_ID'].astype(str)
+        gold_labels_numeric = gold_pandas.set_index('data_ID')['target_numeric'].to_dict()
 
         results_df = self._create_df(predictions, gold_labels_numeric)
-
-        em = {factor: [] for factor in factors}
-        em.update({
-            'accuracy': [],
-        })
+        results_df = results_df.sort_values(by=['setup_ID', 'data_ID'])
+        self._assert_equal_data_ids(results_df)
 
         # Compute the exact match accuracy for each setup.
-        for setup_ID in predictions:
-            used_data = results_df.loc[results_df['setup_ID'] == setup_ID]
-            temp = self._convert_numeric_id_to_dict(setup_ID, n_repititions=1)
-            for factor in factors:
-                em[factor] += temp[factor]
-
-            em['accuracy'] += [(used_data['predictions_numeric'] == used_data['target_numeric']).mean()]
+        em = {factor: [] for factor in self.factors + ['accuracy']}
+        for setup_ID, setup_predictions in results_df.groupby('setup_ID'):
+            temp = self._convert_numeric_id_to_dict(setup_ID, n_repetitions=1)
+            for factor in self.factors:
+                em[factor].extend(temp[factor])
+            em['accuracy'].append((setup_predictions['predictions_numeric'] == setup_predictions['target_numeric']).mean())
 
         # Compute the Cohen's kappa for consistency.
-        try:
-            kappas = {}
-            for factor in factors:
-                factor_present = results_df.loc[results_df[factor] == '1']['predictions_numeric']
-                factor_absent = results_df.loc[results_df[factor] == '0']['predictions_numeric']
-                kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
-        except:
-            breakpoint()
+        kappas = {}
+        for factor in self.factors:
+            factor_present = results_df.loc[results_df[factor] == '1']['predictions_numeric']
+            factor_absent = results_df.loc[results_df[factor] == '0']['predictions_numeric']
+            mask = [(f1 != -1 and f2 != -1) for f1, f2 in zip(factor_absent, factor_present)]
+            factor_present, factor_absent = factor_present[mask], factor_absent[mask]
+
+            kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
 
         # Return the evaluation metrics.
         return {"exact_match_accuracy": em,
                 "kappas": kappas}
+
+    def add_factor(self, data: Tuple[Dict, Dict], factor: str) -> Dict[str, Dict[str, Any]]:
+        """Concatenate the data with the factor present and absent and update the setup_IDs accordingly. Also add the
+           respective factor to the list of factors.
+
+        Args:
+            data: A tuple containing predictions, where the first element are predictions with factor absent and the
+                    second element are predictions with factor present.
+            factor: A string representing a factor.
+
+        """
+
+        # Update the setup_IDs of the data by appending a 0 when the factor is absent or 1 when the factor is present.
+        setup_ids0 = list(data[0].keys())
+        setup_ids1 = list(data[1].keys())
+
+        for setup_id0, setup_id1 in zip(setup_ids0, setup_ids1):
+            updated_id0 = setup_id0 + '0'
+            updated_id1 = setup_id1 + '1'
+            data[0][updated_id0] = data[0].pop(setup_id0)
+            data[1][updated_id1] = data[1].pop(setup_id1)
+
+        # Add factor to list of factors.
+        self._set_factors()
+        self.factors.append(factor)
+
+        return {**data[0], **data[1]}
 
     def _create_df(self, predictions: Dict[str, Dict[str, Any]], gold_labels: Dict[str, int]) -> DataFrame:
         """Create a dataframe containing all predictions, gold labels and labels.
@@ -111,38 +120,43 @@ class IclConsistencyTestTask(Task):
         Returns:
             A pandas dataframe containing the predictions and gold data.
         """
-        results_dict = {factor: [] for factor in factors}
-        results_dict.update({
-            'predictions_numeric': [],
-            'target_numeric': [],
-            'setup_ID': [],
-        })
+        additional_keys = ['predictions_numeric', 'target_numeric', 'setup_ID', 'data_ID']
+        results_dict = {factor: [] for factor in self.factors + additional_keys}
+        breakpoint()
+        for setup_ID, predictions_setup in predictions.items():
+            data_ids = list(predictions_setup.keys())
+            n_datapoints = len(data_ids)
 
-        for setup_ID in predictions:
-            n_datapoints = len(predictions[setup_ID])
-            results_dict['predictions_numeric'] += [self._label_to_numeric(predictions[setup_ID][data_ID]) for
-                                                    data_ID in predictions[setup_ID].keys()]
-            results_dict['target_numeric'] += [gold_labels[data_ID] for data_ID in predictions[setup_ID].keys()]
-            results_dict['setup_ID'] += [setup_ID] * n_datapoints
-            temp = self._convert_numeric_id_to_dict(setup_ID, n_repititions=n_datapoints)
-            for factor in factors:
-                results_dict[factor] += temp[factor]
+            results_dict['data_ID'].extend(data_ids)
+            results_dict['setup_ID'].extend([setup_ID] * n_datapoints)
+            results_dict['target_numeric'].extend(gold_labels[data_id] for data_id in data_ids)
+            results_dict['predictions_numeric'].extend(self._label_to_numeric(predictions_setup[data_id]) for
+                                                       data_id in data_ids)
+
+            temp = self._convert_numeric_id_to_dict(setup_ID, n_repetitions=n_datapoints)
+            for factor in self.factors:
+                results_dict[factor].extend(temp[factor])
 
         return DataFrame(results_dict)
 
-    @staticmethod
-    def _convert_numeric_id_to_dict(setup_id: str, n_repititions: int = 1) -> Dict[str, Any]:
+    def _set_factors(self):
+        if not hasattr(self, 'factors'):
+            self.factors = factors
+
+    def _convert_numeric_id_to_dict(self, setup_id: str, n_repetitions: int = 1) -> Dict[str, Any]:
         """Convert a numeric setup_ID to a interpretable dict.
 
         Args:
-            id: A numeric ID.
+            id: A numeric ID of the form `id_1010101' where each digit represents a factor.
 
         Returns:
             A dict containing factors as keys and the factor realisation as value.
         """
+        setup_id = setup_id.split('_')[1]
+
         setup_dict = {}
-        for factor, value in zip(factors, setup_id):
-            setup_dict[factor] = [value] * n_repititions
+        for factor, value in zip(self.factors, setup_id):
+            setup_dict[factor] = [value] * n_repetitions
 
         return setup_dict
 
@@ -156,7 +170,18 @@ class IclConsistencyTestTask(Task):
         Returns:
             A numeric label.
         """
-        if label in label_map_to_numeric:
-            return label_map_to_numeric[label]
-        else:
-            return -1
+        return LABEL_TO_NUMERIC[label] if label in LABEL_TO_NUMERIC else -1
+
+
+    @staticmethod
+    def _assert_equal_data_ids(results_df: DataFrame) -> None:
+        """Assert that all data_IDs are the same for all setups.
+
+        Args:
+            results_df: A pandas dataframe containing the predictions and gold data.
+        """
+        used_data_ids = results_df['data_ID'].unique()
+        for setup_ID in results_df['setup_ID'].unique():
+            assert used_data_ids.sort() == results_df.loc[results_df['setup_ID'] == setup_ID][
+                'data_ID'].unique().sort(), \
+                "Not all data_IDs are the same for all setups. Check for missing predictions!"
