@@ -23,22 +23,26 @@
     data_source: {
         type: 'manual',
         test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_java/test_sample_cbt.json',
+		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
     },
 
     has_validation_set: false,
     has_train_set: true,
 
-    task_type: 'multi_choice',
+    task_type: 'multiple_choice',
 
     evaluation_metrics: [
         {
             hf_id: 'accuracy',
+			git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
+			best_score: 1.0,
+		},
     ],
 
     preparation_strategies: {
 	
 	    finetuning: {
-            objective: 'binary_crossentropy',
+            objective: 'maximum_likelihood',
         },
         // A recipe for preparing the model to perform the task by configuring its prompt.
         // This recipe is suitable for generative LMs such as GPT-3, OPT, T5, etc.

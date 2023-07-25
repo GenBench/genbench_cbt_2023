@@ -2,7 +2,7 @@
     name: 'Natural Language Codesearch Classification (codesearchnet_adv)',
 
     // @TODO: Add a description of the task
-    description: 'Natural Language Codesearch Classification (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness in covariate shift'',
+    description: 'Natural Language Codesearch Classification (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness in covariate shift',
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
@@ -11,7 +11,7 @@
 		'binary classification',
 		'python',
 		'robustness',
-		'covariate shift'
+		'covariate shift',
     ],
 
     authors: [
@@ -24,16 +24,20 @@
     data_source: {
         type: 'manual',
         test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/test_sample_cbt.jsonl',
+		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
     },
 
     has_validation_set: false,
     has_train_set: true,
 
-    task_type: 'multi_choice',
+    task_type: 'multiple_choice',
 
     evaluation_metrics: [
         {
             hf_id: 'accuracy',
+			git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
+			best_score: 1.0,
+		},
     ],
 
     preparation_strategies: {
@@ -42,15 +46,20 @@
         // We provide a few options for configuring the prompt. But, the task creator can
         // also provide a custom prompt preparation in the task's Python class.
 		finetuning: {
-            objective: 'binary_crossentropy',
+            objective: 'maximum_likelihood',
         },
 		
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Add two numbers together\n\n',
-                instruction_few_shot: 'Add two numbers together. Here are some examples: \n\n',
+                // Currently, we follow BIG-bench options for prompt construction: 
+                // https://github.com/google/BIG-bench/blob/main/docs/doc.md#optional-fields
+                instruction_zero_shot: 'Add two numbers together',
                 input_prefix: 'Q: ',
-                output_prefix: '\nA: ',
+                output_prefix: 'A: ',
+                choices_prefix: '\n  choice: ',
+                append_choices_to_input: true,
+                few_shot_example_separator: '\n',
+                stop_string: '\n\n',
             }
         },
     },
