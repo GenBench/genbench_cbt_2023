@@ -21,24 +21,31 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://github.com/hate-alert/HateXplain/blob/master/Data/dataset.json',
-        train: ''
+        test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl',
+        validation: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_dev.jsonl',
+        train: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_train.jsonl'
     },
 
-    has_validation_set: false,
-    has_train_set: false,
+    has_validation_set: true,
+    has_train_set: true,
 
-    task_type: 'multi-choice',
+    task_type: 'multiple_choice',
 
     evaluation_metrics: [
         {
             hf_id: 'accuracy',
+            best_score: 1.0,
+            git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
         },
         {
             hf_id: 'f1', 
+            best_score: 1.0,
+            git_commit_sha: '3a4c40f7397dcd7d9dccf0659616dc6b14072dcb',
         },
         {
             hf_id: 'roc_auc', 
+            best_score: 1.0,
+            git_commit_sha: 'fb95becece31595a0c04cd1ae9e50ab8e60e9564'
         },
     ],
 

@@ -8,16 +8,22 @@ We create the split by clustering the internal representations and assigning clu
 Hate Speech is used as a testing ground for developing the splitting method.
 
 ## Examples
-*Give some examples of the Hate Speech Detection.*
+{"input": "wow i guess soyboys are the same in every country", "target": "noHate", "target_options": ["hate", "noHate"]}
+{"input": "A subsection of retarded Hungarians? Ohh boy. brace for a livid Bulbasaur coming in here trying to hate a hole in some of her stupider countrymen.", "target": "hate", "target_options": ["hate", "noHate"]}
+
 
 ## Usage
-*Describe how to load your task and what is required for evaluation, if anything.*
+For the task, the model has to decide whether a social media post includes hate speech or not.
 
 ## Data Source
-*Describe the data source for this Hate Speech Detection.*
+The dataset was published in `A Benchmark Dataset for Learning to Intervene in Online Hate Speech` by Jing Qian, Anna Bethke, Yinyin Liu, Elizabeth Belding, William Yang Wang in 2019.
+The dataset is licensed under the Creative Commons Attribution-NonCommercial 4.0 International Public License. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc/4.0/ or send a letter to Creative Commons, PO Box 1866, Mountain View, CA 94042, USA.
 
 ## Limitations and Bias
 *Note any known limitations or biases that the Hate Speech Detection has, with links and references if possible.*
 
 ## GenBench Eval card
-*Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
+This method can be used to test generalisation in HateSpeech for LLMs (pretrain - test locus).
+The split is based on the feature representations of a language model, therefore we assume that the shift is a covariate 
+shift. The method assesses the robustness of language models and how well they generalise.
+![GenBench Eval Card](eval_card.png)
