@@ -16,17 +16,17 @@ Given a natural language query, determine if a given code snippet is relevant or
 For each comment in each subset we sampled randomly another code snippet from given subset, to create a fully balanced binary classification dataset.
 
 **Dataset Size**:\
--Finetuning set: \
-  -CodeSearchNet Adv train set 251k \
--Test sets: \
-  -CodeSearchNet Adv test set 38k \
-  -WebQuery test set 2k \
-  -CodeSearchNet Ruby test set 4k \
-  -CodeSearchNet Go test set 28k \
-  -CodeSearchNet Java test set 52k \
-  -CodeSearchNet Javascript test set 12k \
-  -CodeSearchNet PHP test set 56k \
-  -StatCodeSearch test set TBD \
+*Finetuning set:* \
+ -CodeSearchNet Adv train set 251k \
+*Test sets:* \
+ -CodeSearchNet Adv test set 38k \
+ -WebQuery test set 2k \
+ -CodeSearchNet Ruby test set 4k \
+ -CodeSearchNet Go test set 28k \
+ -CodeSearchNet Java test set 52k \
+ -CodeSearchNet Javascript test set 12k \
+ -CodeSearchNet PHP test set 56k \
+ -StatCodeSearch test set TBD 
 ## Limitations and Bias
 TBD
 
