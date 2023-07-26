@@ -16,11 +16,10 @@ class CrossLingualConsistencyTask(Task):
         pass
 
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
-        data = eval(example['input'])
-        lang1_rankings = data[0]
-        lang2_rankings = data[1]
-        cand1 = data[2]
-        cand2 = data[3]
+        lang1_rankings = eval(example['lang1_rankings'])
+        lang2_rankings = eval(example['lang2_rankings'])
+        cand1 = eval(example['lang1_cands'])
+        cand2 = eval(example['lang2_cands'])
 
         def softmax(x):
             #Compute softmax values for each sets of scores in x.
