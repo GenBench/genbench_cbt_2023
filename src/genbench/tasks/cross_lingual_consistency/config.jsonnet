@@ -30,7 +30,7 @@
     has_validation_set: false,
     has_train_set: false,
 
-    task_type: 'multiple_choice',
+    task_type: 'free_form',
 
     evaluation_metrics: [
     ],

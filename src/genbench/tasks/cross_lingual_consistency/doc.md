@@ -25,9 +25,9 @@ Based on the ranking lists of two languages (e.g. en and es), we propose RankC m
 
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
-We provided one example in "test.jsonl". For more recorded candidate rankings, see folder 'record17' and 'record53'.
+We provided one example in "test.jsonl". For more recorded candidate rankings, see '<modelname>-Rankings-<lang>.txt' files in 'record17' and 'record53'.
 
-Using the "format\_example()" function, we show the rankings of candidates when probing Bloom-3b with en and es queries in BMLAMA. 
+Using the "format\_example()" function, we show the sample data of candidate rankings when probing Bloom-3b with en and es queries in BMLAMA-17. 
 We also write the RankC metric in the same function to output the cross-lingual consistency of factual knowledge between these two languages.
 For full CLC results on BMLAMA-17 with Bloom-3b, see 'bloom\_3b\_CLC.png'.
 

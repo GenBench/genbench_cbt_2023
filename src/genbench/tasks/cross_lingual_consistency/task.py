@@ -1,5 +1,3 @@
-import argparse
-import json
 from typing import Any, Dict, List
 
 import datasets
@@ -34,13 +32,10 @@ class CrossLingualConsistencyTask(Task):
 
         num_consistent = 0
 
-        for i in range(len(lang1_rankings)):
+        for i in range(3):
             ranking1 = lang1_rankings[i]
             ranking2 = lang2_rankings[i]
 
-            print(i)
-            print(lang1_rankings)
-            print(cand_list1)
             candidate1 = cand_list1[i]
             candidate2 = cand_list2[i]
 
@@ -61,16 +56,18 @@ class CrossLingualConsistencyTask(Task):
                 cover = set1.intersection(set2)
                 num_consistent += weight[j] * (len(cover) / len(set1))
 
-        '''
+        """
         return {
             "rankings of candidates when probing Bloom-3b with en factual queries in BMLAMA:": str(lang1_rankings),
             "rankings of candidates when probing Bloom-3b with es factual queries in BMLAMA:": str(lang2_rankings),
-            "(Computed with our proposed RankC metric) Cross Lingual Consistency between en and es factual knowledge in Bloom-3b": str(
-                num_consistent / len(lang1_rankings)
-            ),
+            "CLC computed with our proposed RankC metric": str(num_consistent / len(lang1_rankings)),
         }
-        '''
+        """
+        input_tmp = []
+        target_tmp = []
+        input_tmp = str(lang1_rankings) + str(lang2_rankings)
+        target_tmp = str(num_consistent / len(lang1_rankings))
         return {
-                "input": str(lang1_rankings)+str(lang2_ranking),
-                "target": str(num_consistent/len(lang1_rankings)),
-                }
+            "input": input_tmp,
+            "target": target_tmp,
+        }
