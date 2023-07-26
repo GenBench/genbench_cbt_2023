@@ -38,6 +38,9 @@ class CrossLingualConsistencyTask(Task):
             ranking1 = lang1_rankings[i]
             ranking2 = lang2_rankings[i]
 
+            print(i)
+            print(lang1_rankings)
+            print(cand_list1)
             candidate1 = cand_list1[i]
             candidate2 = cand_list2[i]
 
