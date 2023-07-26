@@ -1,17 +1,15 @@
 {
     name: 'ICL consistency test',
 
-    // @TODO: Add a description of the task
-    description: 'ICL consistency test aims to measure the consistency of LLM predictions across many different settings on the same datapoint',
+    description: 'The ICL consistency test measures the consistency of LLM predictions on the same datapoints across many different setups. Different setups are defined by "factors". On the one hand, factors can be specific attributes of the used prompt (e.g. the number of examples the model is presented with ["n_shots"] or the type of instructions that were used to wrap a specific datapoint ["Instructions"]). On the otherhand, the analysis can also be augmented by factors that are related to the way a model is evaluated (e.g. whether a model is calibrated) or the type of model that is evaluated (e.g. the number of parameters or instructions tuning). These external factors can be added into analysis by using the task.add_factor() method. The output-metric is Cohen\'s kappa for each factor across all different conditions. A kappa-value close to 1 indicates that the factors does not change the model prediction, while a factor close to 0 strongly changes model predictions. Currently, this test evaluats the ANLI-dataset (Nie et al., 2019).',
 
-    // @TODO: Add a list of keywords that describe the task
     keywords: [
         'consistency',
         'LLM',
         'robustness',
         'in-context learning',
         'icl',
-        
+        'anli',    
     ],
 
     authors: [
@@ -30,14 +28,6 @@
     has_train_set: false,
 
     task_type: 'free_form',
-
-    evaluation_metrics: [
-        {
-            hf_id: 'exact_match',
-            git_commit_sha: "758135da6a37ce962b7bc38c6dd5eab672d2b742",
-            best_score: 1.0,
-        }
-    ],
 
     preparation_strategies: {
         // A recipe for preparing the model to perform the task by configuring its prompt.

@@ -64,15 +64,21 @@ class IclConsistencyTestTask(Task):
             temp = self._convert_numeric_id_to_dict(setup_ID, n_repetitions=1)
             for factor in self.factors:
                 em[factor].extend(temp[factor])
-            em['accuracy'].append((setup_predictions['predictions_numeric'] == setup_predictions['target_numeric']).mean())
+            em['accuracy'].append(
+                (setup_predictions['predictions_numeric'] == setup_predictions['target_numeric']).mean())
 
         # Compute the Cohen's kappa for consistency.
         kappas = {}
         for factor in self.factors:
             factor_present = results_df.loc[results_df[factor] == '1']['predictions_numeric']
             factor_absent = results_df.loc[results_df[factor] == '0']['predictions_numeric']
+
+            # mask out predictions that are out-of-label-distribution 
             mask = [(f1 != -1 and f2 != -1) for f1, f2 in zip(factor_absent, factor_present)]
-            factor_present, factor_absent = factor_present[mask], factor_absent[mask]
+            try:
+                factor_present, factor_absent = factor_present[mask], factor_absent[mask]
+            except:
+                breakpoint()
 
             kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
 
@@ -87,7 +93,7 @@ class IclConsistencyTestTask(Task):
         Args:
             data: A tuple containing predictions, where the first element are predictions with factor absent and the
                     second element are predictions with factor present.
-            factor: A string representing a factor.
+            factor: A string giving the name of the added factor.
 
         """
 
@@ -107,6 +113,30 @@ class IclConsistencyTestTask(Task):
 
         return {**data[0], **data[1]}
 
+    def remove_factor(self, data: datasets.Dataset, factor: str, keep_present: bool = False) -> datasets.Dataset:
+        """Remove data of factor and update the setup_IDs accordingly. Also remove the
+           respective factor from the list of factors. Keep_present determines whether to keep data with the factor
+           present or absent.
+
+        Args:
+            data: The dataset as obtained by the get_prepared_datasets() method.
+            factor: A string with the name of the factor to remove.
+            keep_present: whether to keep data with the factor present or absent.
+        """
+        len_setup_ID_preamble = 4
+        index_factor = self.factors.index(factor) + len_setup_ID_preamble
+        realisation_to_keep = str(int(keep_present))
+
+        # filter out all unwanted datapoints and adapt setup_IDs to exclude factor
+        data = data.filter(lambda x: x['setup_ID'][index_factor] == realisation_to_keep)
+        data = data.map(lambda x: {**x, "setup_ID": x["setup_ID"][:index_factor] + x["setup_ID"][index_factor + 1:]} )
+
+        # Remove factor from list of factors.
+        self._set_factors()
+        self.factors.pop(self.factors.index(factor))
+
+        return data
+
     def _create_df(self, predictions: Dict[str, Dict[str, Any]], gold_labels: Dict[str, int]) -> DataFrame:
         """Create a dataframe containing all predictions, gold labels and labels.
 
@@ -122,7 +152,7 @@ class IclConsistencyTestTask(Task):
         """
         additional_keys = ['predictions_numeric', 'target_numeric', 'setup_ID', 'data_ID']
         results_dict = {factor: [] for factor in self.factors + additional_keys}
-        breakpoint()
+
         for setup_ID, predictions_setup in predictions.items():
             data_ids = list(predictions_setup.keys())
             n_datapoints = len(data_ids)
@@ -171,7 +201,6 @@ class IclConsistencyTestTask(Task):
             A numeric label.
         """
         return LABEL_TO_NUMERIC[label] if label in LABEL_TO_NUMERIC else -1
-
 
     @staticmethod
     def _assert_equal_data_ids(results_df: DataFrame) -> None:

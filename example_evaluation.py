@@ -10,7 +10,7 @@ from tqdm import tqdm
 import torch
 import os
 
-N_DATAPOINTS = 10
+N_DATAPOINTS = 1
 
 
 def make_predictions(generator, dataset):
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # Load the task
     task = load_task("icl_consistency_test")
 
-    if not os.path.exists('cache.p'):
+    if not os.path.exists(f'cache_{N_DATAPOINTS}.p'):
         ds = task.get_prepared_datasets(PreparationStrategy.PROMPT_BASED_TESTING, shot_list=[0])[0]
 
         # Selecting a subset of example for illustration purposes
@@ -49,13 +49,13 @@ if __name__ == '__main__':
         generator = pipeline('text-generation', model='gpt2')
         predictions = make_predictions(generator, ds)
 
-        # OPTIONAL: The ICL-consistency test provides the option to add factors to the analysis by using the `add_factor`
-        # method (here exemplified with distillation).
+        # OPTIONAL: The ICL-consistency test provides the option to add factors to the analysis by using the
+        # `add_factor` method (here exemplified with distillation).
         generator_distil = pipeline('text-generation', model='DistilGPT2')
         predictions_distil = make_predictions(generator_distil, ds)
-        torch.save((predictions, predictions_distil, ds), 'cache.p')
+        torch.save((predictions, predictions_distil, ds), f'cache_{N_DATAPOINTS}.p')
     else:
-        predictions, predictions_distil, ds = torch.load('cache.p')
+        predictions, predictions_distil, ds = torch.load(f'cache_{N_DATAPOINTS}.p')
     predictions = task.add_factor(data=(predictions, predictions_distil), factor='distillation')
     # Evaluate the predictions
     results = task.evaluate_predictions(predictions=predictions, gold=ds)
