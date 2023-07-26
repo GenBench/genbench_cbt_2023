@@ -4,11 +4,11 @@
 Multilingual large-scale Pretrained Language Models (PLMs) have been shown to learn considerable amounts of factual knowledge from the training corpora. However, large variations are observed in the extent to which this knowledge generalizes across different languages. With the ultimate goal of ensuring that users with different language backgrounds obtain consistent feedback from the same model, we study the cross-lingual consistency (CLC) of factual knowledge in various multilingual PLMs. To this end, we resplit the existing mLAMA (Kassner et al., 2021) to construct a new benchmark BMLAMA where instances for each language are balanced. Additionally, we propose a new Ranking-based Consistency (RankC) metric to evaluate knowledge consistency across languages independently from accuracy. We conduct an in-depth analysis of the determining factors for CLC, both at model level and at language-pair level. Among other results, we find that average CLC is low across different PLMs. Moreover, increasing model size leads to higher factual probing accuracy in most languages, but does not improve cross-lingual consistency. All code and data will be released at Github.
 
 ## Statistics of the Balanced Multilingual LAMA (BMLAMA)
-- Property: BMLAMA-17 / BMLAMA-53	
-- \# Language: 17 / 53
-- \# Relations: 41 / 30
-- \# Queries: 6792*17 / 3070*53
-- \# Candidates (Avg): 9.71 / 9.56
+- Property: BMLAMA-17 | BMLAMA-53	
+- \# Language: 17 | 53
+- \# Relations: 41 | 30
+- \# Queries: 6792\*17 | 3070\*53
+- \# Candidates (Avg): 9.71 | 9.56
 
 ## Examples
 Instead of measuring the amount of factual knowledge encoded in each language, we focus on its consistency across languages, which shows how knowledge is generalized among different languages in the PLM.
