@@ -58,6 +58,7 @@ class CrossLingualConsistencyTask(Task):
                 cover = set1.intersection(set2)
                 num_consistent += weight[j] * (len(cover) / len(set1))
 
+        '''
         return {
             "rankings of candidates when probing Bloom-3b with en factual queries in BMLAMA:": str(lang1_rankings),
             "rankings of candidates when probing Bloom-3b with es factual queries in BMLAMA:": str(lang2_rankings),
@@ -65,3 +66,8 @@ class CrossLingualConsistencyTask(Task):
                 num_consistent / len(lang1_rankings)
             ),
         }
+        '''
+        return {
+                "input": str(lang1_rankings)+str(lang2_ranking),
+                "target": str(num_consistent/len(lang1_rankings)),
+                }
