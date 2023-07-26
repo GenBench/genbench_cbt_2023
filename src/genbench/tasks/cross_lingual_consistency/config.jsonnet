@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-		test: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/test.jsonl',
+		test: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/test_sample.jsonl',
     },
 	
 
