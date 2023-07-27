@@ -7,6 +7,20 @@ In this evaluation we want to explore the ability of finetuned language models t
 in a field of semantic parsing on different generated splits - target query length (see **ru_pauq_target_length_split**, **en_pauq_target_length_split**), 
 target maximum compound divergence (will be submitted later) in contrast to i.i.d. generated split (see **ru_pauq_iid_split**, **en_pauq_iid_split**). 
 
+
+**GenBench taxonomy values for the experiments:**
+
+Motivation: Practical
+
+Generalisation type: Compositional, Structural, Across language
+
+Shift type: Covariate
+
+Shift source: Naturally occuring
+
+Shift locus: train--test, Finetune train--test
+
+
 Additional details from PAUQ abstract [1]: We construct and complement a Spider dataset for the Russian language, thus creating the first publicly available text-to-SQL dataset in Russian. While examining dataset components—NL questions, SQL queries, and database content—we identify limitations of the existing database structure, fill out missing values for tables and add new requests for underrepresented categories. To conduct the experiment, we adapt baseline models RAT-SQL and BRIDGE and provide in-depth query component analysis. Both models demonstrate strong single language results and improved accuracy with multilingual training on the target language.
 
 baseline scores of a sequence-to-sequence model on our splits: TODO
