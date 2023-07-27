@@ -1,8 +1,21 @@
-# Shifted Pauq (ru_pauq_target_length_split)
+# Shifted PAUQ -- Text-to-SQL (ru_pauq_target_length_split)
+*A brief explaination of the task, its motivation and a description of the submssion data. Minimally, this should include: what generalisation property(ies) the task is testing for (GenBench taxonomy values); what assumptions are made about the training data; the size of the dataset; baseline scores. If it already contains this information, feel free to copy the abstract of the accompanying paper.*
 
 ## Abstract
-This is length based split based on the token length of target query in Russian. Dataset is split between train and test based 
-on 30th percentile. In order to measure compositional generalization we have verified that all SQL test tokens are present in train.
+In this work, we propose a custom split of the Russian _Text-to-SQL_ dataset, PAUQ [1], that assesses compositional generalization in a _text-to-query_ models. 
+The proposed split, ru_pauq_target_length_split, is length-based split based on the token length, i.e. datasets' items are separated by length such that the test set contains examples of different lengths than those in the train set. In this setup, we measure generalization to more complex queries.
+Dataset is split between train and test based on 30th percentile.
+In order to measure compositional generalization, we have verified that all SQL test tokens are present in train.
+
+baseline scores of a sequence-to-sequence model: TODO
+
+the size of the dataset: please refer to [1] for details
+
+the size of the split: TODO
+
+
+
+
 
 ## Examples
 ```
@@ -71,11 +84,45 @@ on 30th percentile. In order to measure compositional generalization we have ver
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
+For evaluation, we will use a sequence-to-sequence architecture. Please refer to config.jsonnet for details for now.
+
+
 ## Data Source
 *Describe the data source for this Shifted Pauq (ru_pauq_target_length_split).*
+
+The PAUQ statistics can be found in [1]
 
 ## Limitations and Bias
 *Note any known limitations or biases that the Shifted Pauq (ru_pauq_target_length_split) has, with links and references if possible.*
 
+Our research explores distribution shift, i.e. spurious correlation using ru_pauq_target_length_split, and investigates how they affect the model. Specifically, we examine the scenario where test tokens are present in the training set and do not explore the more challenging case of modeling unseen tokens.
+
+Big language models such as Codex, a 175B GPT model further fine-tuned on code, are out of the scope of this study.
+
 ## GenBench Eval card
 *Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
+
+**GenBench taxonomy values for the experiments:**
+
+Motivation: Practical
+
+Generalisation type: Compositional, Structural
+
+Shift type: Covariate
+
+Shift source: Naturally occuring
+
+Shift locus: train--test, Finetune train--test
+
+
+## References
+[1] PAUQ: Text-to-SQL in Russian
+```
+@inproceedings{pauq,
+  title={PAUQ: Text-to-SQL in Russian},
+  author={Bakshandaeva, Daria and Somov, Oleg and Dmitrieva, Ekaterina and Davydova, Vera and Tutubalina, Elena},
+  booktitle={Findings of the Association for Computational Linguistics: EMNLP 2022},
+  pages={2355--2376},
+  year={2022}
+}
+```
