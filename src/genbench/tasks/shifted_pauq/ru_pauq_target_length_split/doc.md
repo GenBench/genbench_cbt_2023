@@ -84,7 +84,7 @@ the size of the split: TODO
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
-For evaluation, we will use a sequence-to-sequence architecture. Please refer to config.jsonnet for details for now.
+For evaluation, we will use a sequence-to-sequence architecture. Evaluation metric is exact match. Please refer to config.jsonnet for details for now.
 
 
 ## Data Source
@@ -98,6 +98,8 @@ Train/test data for the ru_pauq_target_length_split split is available at https:
 *Note any known limitations or biases that the Shifted Pauq (ru_pauq_target_length_split) has, with links and references if possible.*
 
 Our research explores distribution shift, i.e. spurious correlation using ru_pauq_target_length_split, and investigates how they affect the model. Specifically, we examine the scenario where test tokens are present in the training set and do not explore the more challenging case of modeling unseen tokens.
+
+Another limitation concerns evaluation metric -- exact match, which is the most commonly used to evaluate text-to-SQL models performance. However, this metric is too strict and prone to false negative results [1].
 
 Big language models such as Codex, a 175B GPT model further fine-tuned on code, are out of the scope of this study.
 
