@@ -1,7 +1,11 @@
-# Shifted Pauq (en_pauq_target_length_split)
+# # Shifted PAUQ -- Text-to-SQL (en_pauq_target_length_split)
 
 ## Abstract
-This is length based split based on the token length of target query in English. Dataset is split between train and test based 
+This is length based split based on the token length of target query in English. 
+
+We will use this split in addition to the **ru_pauq_target_length_split** split to measure generalisation across languages. 
+
+Dataset is split between train and test based 
 on 30th percentile. In order to measure compositional generalization we have verified that all SQL test tokens are present in train.
 
 ## Examples
@@ -50,11 +54,35 @@ on 30th percentile. In order to measure compositional generalization we have ver
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
+Please refer to the **ru_pauq_target_length_split** card.
+
 ## Data Source
 *Describe the data source for this Shifted Pauq (en_pauq_target_length_split).*
+
+Please refer to the **ru_pauq_target_length_split** card.
 
 ## Limitations and Bias
 *Note any known limitations or biases that the Shifted Pauq (en_pauq_target_length_split) has, with links and references if possible.*
 
+Please refer to the **ru_pauq_target_length_split** card.
+
 ## GenBench Eval card
 *Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
+
+**GenBench taxonomy values for the experiments:**
+
+Same as in the **ru_pauq_target_length_split** card with addition:
+
+Generalisation type: generalisation across languages (from English to Russian)
+
+## References
+[1] [https://aclanthology.org/D18-1425/](https://aclanthology.org/D18-1425/)
+``` 
+@inproceedings{spider,
+  title={Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task},
+  author={Yu, Tao and Zhang, Rui and Yang, Kai and Yasunaga, Michihiro and Wang, Dongxu and Li, Zifan and Ma, James and Li, Irene and Yao, Qingning and Roman, Shanelle and others},
+  booktitle={Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},
+  pages={3911--3921},
+  year={2018}
+}
+```
