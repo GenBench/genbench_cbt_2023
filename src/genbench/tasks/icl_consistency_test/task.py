@@ -123,6 +123,8 @@ class IclConsistencyTestTask(Task):
             factor: A string with the name of the factor to remove.
             keep_present: whether to keep data with the factor present or absent.
         """
+        self._set_factors()
+        #breakpoint()
         len_setup_ID_preamble = 4
         index_factor = self.factors.index(factor) + len_setup_ID_preamble
         realisation_to_keep = str(int(keep_present))
@@ -132,7 +134,7 @@ class IclConsistencyTestTask(Task):
         data = data.map(lambda x: {**x, "setup_ID": x["setup_ID"][:index_factor] + x["setup_ID"][index_factor + 1:]} )
 
         # Remove factor from list of factors.
-        self._set_factors()
+        
         self.factors.pop(self.factors.index(factor))
 
         return data

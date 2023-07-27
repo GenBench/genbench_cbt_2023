@@ -10,7 +10,7 @@ from tqdm import tqdm
 import torch
 import os
 
-N_DATAPOINTS = 1
+N_DATAPOINTS = 20
 
 
 def make_predictions(generator, dataset):
@@ -61,5 +61,5 @@ if __name__ == '__main__':
     results = task.evaluate_predictions(predictions=predictions, gold=ds)
 
     print('EVALUATED SUCCESSFULLY!')
-    print(f'Exact-match accuracies: \n{results["exact_match_accuracy"]}')
+    print(f'Exact-match accuracies: \n{results["exact_match_accuracy"]["accuracy"]}')
     print(f'Consistency: \n{results["kappas"]}')
