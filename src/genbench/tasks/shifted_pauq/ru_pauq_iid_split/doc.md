@@ -3,10 +3,6 @@
 ## Abstract
 This is an original split of the Russian _Text-to-SQL_ dataset, PAUQ [1], which is under the assumption of independency and identically (i.i.d) distributed train and test data. We provide this split in addition to the **ru_pauq_target_length_split** split.
 
-PAUQ is the Russian version of the Spider, where all three components have been modified and localized: the natural language (NL) questions, the SQL queries, and the content of the databases. 
-
-From PAUQ abstract [1]: We construct and complement a Spider dataset for the Russian language, thus creating the first publicly available text-to-SQL dataset in Russian. While examining dataset components—NL questions, SQL queries, and database content—we identify limitations of the existing database structure, fill out missing values for tables and add new requests for underrepresented categories. To conduct the experiment, we adapt baseline models RAT-SQL and BRIDGE and provide in-depth query component analysis. Both models demonstrate strong single language results and improved accuracy with multilingual training on the target language.
-
 baseline scores of a sequence-to-sequence model such as BRIDGE: please refer to [1] for details
 
 the size of the dataset: please refer to [1] for details
