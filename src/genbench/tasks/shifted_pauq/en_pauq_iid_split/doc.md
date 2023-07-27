@@ -1,7 +1,7 @@
-# Shifted Pauq (en_pauq_iid_split)
+# Shifted PAUQ -- Text-to-SQL (en_pauq_iid_split)
 
 ## Abstract
-This is original split from Spider dataset in English. 
+This is original split from Spider dataset in English [1]. We will use this split in addition to the **ru_pauq_iid_split** split to measure generalisation across languages. 
 
 ## Examples
 ```
@@ -49,11 +49,35 @@ This is original split from Spider dataset in English.
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
+Please refer to the **ru_pauq_iid_split** card.
+
 ## Data Source
-*Describe the data source for this Shifted Pauq (en_pauq_iid_split).*
+*Describe the data source for this Shifted PAUQ (en_pauq_iid_split).*
+
+Please refer to the **ru_pauq_iid_split** card.
 
 ## Limitations and Bias
-*Note any known limitations or biases that the Shifted Pauq (en_pauq_iid_split) has, with links and references if possible.*
+
+Please refer to the **ru_pauq_iid_split** card.
 
 ## GenBench Eval card
-*Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
+*Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for 
+your task*.
+
+**GenBench taxonomy values for the experiments:**
+
+Same as in the **ru_pauq_iid_split** card with addition:
+
+Generalisation type: generalisation across languages (from English to Russian)
+
+## References
+[1] [https://aclanthology.org/D18-1425/](https://aclanthology.org/D18-1425/)
+``` 
+@inproceedings{spider,
+  title={Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task},
+  author={Yu, Tao and Zhang, Rui and Yang, Kai and Yasunaga, Michihiro and Wang, Dongxu and Li, Zifan and Ma, James and Li, Irene and Yao, Qingning and Roman, Shanelle and others},
+  booktitle={Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing},
+  pages={3911--3921},
+  year={2018}
+}
+```
