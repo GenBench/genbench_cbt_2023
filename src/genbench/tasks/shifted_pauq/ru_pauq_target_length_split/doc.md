@@ -92,6 +92,8 @@ For evaluation, we will use a sequence-to-sequence architecture. Please refer to
 
 The PAUQ statistics can be found in [1]
 
+Train/test data for the ru_pauq_target_length_split split is available at https://huggingface.co/datasets/composite/pauq/viewer/ru_pauq_tl
+
 ## Limitations and Bias
 *Note any known limitations or biases that the Shifted Pauq (ru_pauq_target_length_split) has, with links and references if possible.*
 
