@@ -7,15 +7,9 @@ The proposed split, ru_pauq_target_length_split, is length-based split based on 
 Dataset is split between train and test based on 30th percentile.
 In order to measure compositional generalization, we have verified that all SQL test tokens are present in train.
 
-baseline scores of a sequence-to-sequence model: TODO
-
-the size of the dataset: please refer to [1] for details
-
-the size of the split: TODO
-
-
-
-
+* Baseline scores of a sequence-to-sequence model: TODO
+* The size of the dataset: please refer to [1] for details
+* The size of the split: TODO
 
 ## Examples
 ```
@@ -106,17 +100,13 @@ Big language models such as Codex, a 175B GPT model further fine-tuned on code, 
 ## GenBench Eval card
 *Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
 
-**GenBench taxonomy values for the experiments:**
+### GenBench taxonomy values for the experiments:
 
-Motivation: Practical
-
-Generalisation type: Compositional, Structural
-
-Shift type: Covariate
-
-Shift source: Naturally occuring
-
-Shift locus: train--test, Finetune train--test
+* **Motivation:** Practical
+* **Generalisation type:** Compositional, Structural
+* **Shift type:** Covariate
+* **Shift source:** Naturally occuring
+* **Shift locus:** train--test, Finetune train--test
 
 
 ## References
