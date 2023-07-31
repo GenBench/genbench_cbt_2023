@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/statcodesearch/test_sample_cbt.json',
+        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/statcodesearch/test_sample_cbt.jsonl',
 		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
     },
 

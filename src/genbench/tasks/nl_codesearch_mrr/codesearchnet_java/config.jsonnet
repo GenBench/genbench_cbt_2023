@@ -29,10 +29,13 @@
     has_validation_set: false,
     has_train_set: true,
 
-    task_type: '',
+    task_type: 'multiple_choice',
 
     evaluation_metrics: [
         {
+		hf_id: 'accuracy',
+		git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
+		best_score: 1.0,
 		},
     ],
 
