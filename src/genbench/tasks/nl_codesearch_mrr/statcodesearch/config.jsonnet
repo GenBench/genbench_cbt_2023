@@ -1,17 +1,17 @@
 {
-    name: 'Natural Language Codesearch Ranking (webquery)',
+    name: 'Natural Language Codesearch Ranking (statcodesearch)',
 
     // @TODO: Add a description of the task
-    description: 'Natural Language Codesearch Ranking (codesearchnet_javascript) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness in covariate shift',
+    description: 'Natural Language Codesearch Ranking (statcodesearch) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures cross-lingual and domain generalization',
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
         'codesearch',
         'natural language query',
 		'mean reciprocal rank',
-		'python',
-		'robustness',
-		'covariate shift',
+		'r',
+		'cross-lingual',
+		'domain-shift'
     ],
 
     authors: [
@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/webquery/test_sample_cbt.jsonl',
+        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/statcodesearch/test_sample_cbt.jsonl',
 		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_adv/train_sample_cbt.jsonl',
     },
 

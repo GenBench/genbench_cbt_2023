@@ -26,6 +26,6 @@
         'codesearchnet_java',
         'codesearchnet_javascript',
         'codesearchnet_php',
-        
+        'statcodesearch',
     ],
 }
