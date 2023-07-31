@@ -457,6 +457,13 @@ class Task(TaskInterface):
                     )
                     data_files[split] = split_url[len("file://") :]
 
+            ########### inserted ####################
+            # data_files = {
+            #      "test": "/home/maike/genbench/genbench_cbt/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl",
+            #      "train": "/home/maike/genbench/genbench_cbt/src/genbench/tasks/hate_speech_detection/reddit_dev.jsonl",
+            #      "validation" : "/home/maike/genbench/genbench_cbt/src/genbench/tasks/hate_speech_detection/reddit_train.jsonl"
+            #  }
+            #########################################
             return load_dataset("json", data_files=data_files, field=None)
         elif self.config.data_source.type == "hf":
             hf_id = self.config.data_source.hf_id
