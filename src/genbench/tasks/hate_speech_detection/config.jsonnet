@@ -16,7 +16,7 @@
         'Maike Züfle',
         'Verna Dankers',
         'Ivan Titov',
-        
+
     ],
 
     data_source: {
@@ -38,15 +38,15 @@
             git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
         },
         {
-            hf_id: 'f1', 
+            hf_id: 'f1',
             best_score: 1.0,
             git_commit_sha: '3a4c40f7397dcd7d9dccf0659616dc6b14072dcb',
         },
-        {
-            hf_id: 'roc_auc', 
-            best_score: 1.0,
-            git_commit_sha: 'fb95becece31595a0c04cd1ae9e50ab8e60e9564'
-        },
+#        {
+#            hf_id: 'roc_auc',
+#            best_score: 1.0,
+#            git_commit_sha: 'fb95becece31595a0c04cd1ae9e50ab8e60e9564'
+#        },
     ],
 
     preparation_strategies: {
