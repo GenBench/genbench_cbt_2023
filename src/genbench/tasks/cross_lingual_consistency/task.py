@@ -32,12 +32,12 @@ class CrossLingualConsistencyTask(Task):
 
         num_consistent = 0
 
-        # for i in range(len(lang1_rankings)): 
-        # Original line. It works well locally but encounters errors 
-        # with the genbench_cbt framework. 
+        # for i in range(len(lang1_rankings)):
+        # Original line. It works well locally but encounters errors
+        # with the genbench_cbt framework.
         # (Highly likely related to cache files.)
-        for i in range(3): 
-            # So we manually change the ranging number to 3, 
+        for i in range(3):
+            # So we manually change the ranging number to 3,
             # the number of queries for the sample in test_sample.jsonl
             ranking1 = lang1_rankings[i]
             ranking2 = lang2_rankings[i]
