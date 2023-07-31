@@ -21,13 +21,13 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl'
-        // validation: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl',
-        //train: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl'
+        test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl',
+        validation: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_dev.jsonl',
+        train: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_train.jsonl'
     },
 
-    has_validation_set: false,
-    has_train_set: false,
+    has_validation_set: true,
+    has_train_set: true,
 
     task_type: 'multiple_choice',
 

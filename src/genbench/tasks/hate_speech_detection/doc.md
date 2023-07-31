@@ -3,13 +3,12 @@
 ## Abstract
 This project aims to go beyond the random train-test split by developing a more challenging data-splitting process 
 to better evaluate generalisation performance.
-We rely on a models internal representations to create a data split specifically designed for a provided model. 
-We create the split by clustering the internal representations and assigning clusters to either the train or the test set.
+We rely on a models internal representations to create a data split and create the split by clustering the internal representations and assigning clusters to either the train or the test set.
 Hate Speech is used as a testing ground for developing the splitting method.
 
 ## Examples
-{"input": "wow i guess soyboys are the same in every country", "target": "noHate", "target_options": ["hate", "noHate"]}
-{"input": "A subsection of retarded Hungarians? Ohh boy. brace for a livid Bulbasaur coming in here trying to hate a hole in some of her stupider countrymen.", "target": "hate", "target_options": ["hate", "noHate"]}
+{"input": "wow i guess soyboys are the same in every country", "target": 1, "target_options": ["hate", "noHate"]}
+{"input": "A subsection of retarded Hungarians? Ohh boy. brace for a livid Bulbasaur coming in here trying to hate a hole in some of her stupider countrymen.", "target": 0, "target_options": ["hate", "noHate"]}
 
 
 ## Usage

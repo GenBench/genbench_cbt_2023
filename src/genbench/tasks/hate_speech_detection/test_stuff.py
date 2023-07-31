@@ -4,7 +4,8 @@ from genbench.api import PreparationStrategy
 task = load_task("hate_speech_detection")
 ds = task.get_prepared_datasets(
     PreparationStrategy.FINETUNING)
-print(ds["test"])
+print(ds)
+print(ds["test"][0])
 
 
 # {
