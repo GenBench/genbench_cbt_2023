@@ -53,13 +53,11 @@
             prompt_builder: {
                 // Currently, we follow BIG-bench options for prompt construction: 
                 // https://github.com/google/BIG-bench/blob/main/docs/doc.md#optional-fields
-                instruction_zero_shot: 'Add two numbers together',
-                input_prefix: 'Q: ',
-                output_prefix: 'A: ',
-                choices_prefix: '\n  choice: ',
-                append_choices_to_input: true,
-                few_shot_example_separator: '\n',
-                stop_string: '\n\n',
+                instruction_zero_shot: 'Given a code comment and an R programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as: comment [SEP] code',
+				input_prefix: '',
+                output_prefix: '',
+                choices_prefix: '',
+                append_choices_to_input: false,
             }
         },
     },

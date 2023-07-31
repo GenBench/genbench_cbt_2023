@@ -51,10 +51,11 @@
         // also provide a custom prompt preparation in the task's Python class.
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Add two numbers together\n\n',
-                instruction_few_shot: 'Add two numbers together. Here are some examples: \n\n',
-                input_prefix: 'Q: ',
-                output_prefix: '\nA: ',
+                instruction_zero_shot: 'Given a code comment and an R programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as: comment [SEP] code',
+				input_prefix: '',
+                output_prefix: '',
+                choices_prefix: '',
+                append_choices_to_input: false,
             }
         },
     },
