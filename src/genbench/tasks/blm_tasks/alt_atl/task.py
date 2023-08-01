@@ -13,9 +13,9 @@ logger = get_logger(__name__)
 
 
 def make_list(N, ind_1):
-    l = [0] * N
-    l[ind_1] = 1
-    return l
+    binary_list = [0] * N
+    binary_list[ind_1] = 1
+    return binary_list
 
 
 class BlmTasksAltAtl(Task):
