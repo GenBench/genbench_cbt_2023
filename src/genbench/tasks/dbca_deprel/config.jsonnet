@@ -1,8 +1,11 @@
 {
     name: 'Divergent DepRel Distributions',
 
-    // @TODO: Add a description of the task
-    description: 'dbca_deprel aims to measure ...',
+    description: 'This task aims to measure how well an NMT model generalises to a shifted distribution of
+    dependency relations. In practice, this means that the test set includes novel
+    (<head lemma>, <deprel>, <dependant lemma>) tuples (=compounds) that were not seen in
+    the training set, while having the same distribution of the lemmas and dependency
+    relation tags (= elements of the compound tuples = atoms).',
 
     keywords: [
         'translation',
@@ -23,8 +26,8 @@
 
     data_source: {
         type: 'manual',
-        train: 'https://github.com/anmoisio/genbench_cbt/blob/dbca_deprel/src/genbench/tasks/dbca_deprel/train.jsonl',
-        test: 'https://github.com/anmoisio/genbench_cbt/blob/dbca_deprel/src/genbench/tasks/dbca_deprel/test.jsonl',
+        train: 'https://raw.githubusercontent.com/anmoisio/genbench_cbt/be64488a106dcf8bc5bd7d58f9eb972718e9e6b8/src/genbench/tasks/dbca_deprel/train.jsonl',
+        test: 'https://raw.githubusercontent.com/anmoisio/genbench_cbt/be64488a106dcf8bc5bd7d58f9eb972718e9e6b8/src/genbench/tasks/dbca_deprel/test.jsonl',
     },
 
     has_validation_set: false,

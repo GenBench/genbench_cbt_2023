@@ -11,8 +11,11 @@ The task is simply sentence-level translation, e.g.:
 
 
 ## Usage
-To use the provided train-test split, load the data from
+To use the provided maximum-compound-divergence train-test split, load the data and evaluate a model's predictions:
 ```
+from genbench import load_task
+from genbench.api import PreparationStrategy
+
 # Load the task
 task = load_task("dbca_deprel")
 ds = task.get_prepared_datasets(PreparationStrategy.FINETUNING)
@@ -26,13 +29,30 @@ print(task.evaluate_predictions(
     )
 ```
 
-To compute the atom and compound divergences for any pair of training (pre-training, training and/or fine-tuning) and test data sets, use the script `calculate_divergences.py`. To create the atom and compound distributions of the two sets, the frequencies of each atom and compound in each set need to be calculated first. 
+To compute the atom and compound divergences for any pair of training (pre-training, training and/or fine-tuning) and test data sets, use method `DbcaDeprelTask.divergence`. To create the atom and compound distributions of the training and test sets, the frequencies of each atom and compound in each set need to be calculated first. The vectors that represent the atom and compound distributions of the train/test sets are inputted to the method to calculate the divergences:
+```
+# alpha is 0.5 for atom divergence and 0.1 for compound divergence
+train_set_atom_distribution = torch.tensor([2,4,10])
+test_set_atom_distribution = torch.tensor([1,2,5])
+atom_divergence = task.divergence(train_set_atom_distribution,
+                                  test_set_atom_distribution,
+                                  0.5)
+
+train_set_compound_distribution = torch.tensor([2,0,6])
+test_set_compound_distribution = torch.tensor([0,5,5])
+compound_divergence = task.divergence(train_set_compound_distribution,
+                                      test_set_compound_distribution,
+                                      0.1)
+```
+Each element in the distribution vectors represents the frequency of one type of atom/compound.
+
+To compare different models' capacity to generalise, we assess whether the performance gets worse when the compound divergence between train and test sets increases. We keep atom distributions the same between train and test sets to make generalisation possible in principle. This means we should evaluate a model on both low- and high-divergence data splits.
 
 ## Data Source
 The original data source is `https://www.statmt.org/europarl/`
 
 ## Limitations and Bias
-*Note any known limitations or biases that the dbca_deprel has, with links and references if possible.*
+TODO
 
 ## GenBench Eval card
 ![GenBench Eval Card](eval_card.png)
