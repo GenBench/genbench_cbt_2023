@@ -7,7 +7,8 @@
     keywords: [
         'cross-lingual',
         'compositional',
-        'french'
+        'french',
+
     ],
 
     authors: [
@@ -25,6 +26,12 @@
     has_train_set: false,
 
     task_type: 'free_form',
+
+    preparation_strategies: {
+        finetuning: {
+            objective: 'maximum_likelihood',
+        },
+    },
 
     evaluation_metrics: [
         {

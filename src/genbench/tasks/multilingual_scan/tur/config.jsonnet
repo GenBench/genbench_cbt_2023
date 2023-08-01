@@ -26,6 +26,12 @@
 
     task_type: 'free_form',
 
+    preparation_strategies: {
+        finetuning: {
+            objective: 'maximum_likelihood',
+        },
+    },
+
     evaluation_metrics: [
         {
             hf_id: 'exact_match',

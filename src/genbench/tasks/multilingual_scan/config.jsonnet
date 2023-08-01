@@ -29,7 +29,7 @@
         finetuning: {
             objective: 'maximum_likelihood',
         },
-    }
+    },
 
     subtasks_order: [
         'fra',
