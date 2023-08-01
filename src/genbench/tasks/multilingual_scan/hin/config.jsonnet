@@ -1,18 +1,17 @@
 {
     name: 'Multilingual SCAN (hin)',
 
-    // @TODO: Add a description of the task
-    description: 'Multilingual SCAN (hin) aims to measure ...',
+    description: 'Multilingual SCAN (hin) aims to measure compositional and cross-lingual generalization in multilingual LLMs',
 
-    // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'keyword1',
-        'keyword2',
+        'cross-lingual',
+        'compositional',
+        'hindi',
     ],
 
     authors: [
         'Amélie Reymond',
-        ' Shane Steinert-Threlkeld',
+        'Shane Steinert-Threlkeld',
         
     ],
 

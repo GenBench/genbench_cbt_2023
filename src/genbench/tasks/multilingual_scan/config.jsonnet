@@ -1,18 +1,17 @@
 {
     name: 'Multilingual SCAN',
 
-    // @TODO: Add a description of the task
-    description: 'Multilingual SCAN aims to measure ...',
+    description: 'Multilingual SCAN aims to measure compositional and cross-lingual generalization in multilingual LLMs.',
 
-    // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'multilingual',
+        'cross-lingual',
         'compositional',
+        'LLMs',
     ],
 
     authors: [
         'Amélie Reymond',
-        ' Shane Steinert-Threlkeld',
+        'Shane Steinert-Threlkeld',
     ],
 
     data_source: {
@@ -20,6 +19,7 @@
         test: 'https://somewebsite.com/path/to/test.jsonl',
     },
 
+    # TODO: provide finetuning set
     has_train_set: true,
 
 
