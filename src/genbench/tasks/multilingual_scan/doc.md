@@ -7,19 +7,23 @@ The majority of research on compositional generalisation has focussed on English
 ## Examples
 We have five subtasks, corresponding each to five languages: French (fra), Hindi (hin), Russian (ru), Turkish (tur), and Mandarin Chinese (cmn). 
 
-Each subtasks consists of the adapted SCAN dataset into the aforementioned languages. 
+Each subtask consists of the adapted SCAN dataset into the aforementioned languages. 
 
 Example: 
 
-ENG-SCAN
+### SCAN example
 
+```
 IN: walk opposite right thrice after run opposite right 
 OUT: I_TURN_RIGHT I_TURN_RIGHT I_RUN I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK
+```
 
+### FRA-SCAN example
 
-FRA-SCAN 
+```
 IN: marcher à l'envers par la droite trois fois après courir à l'envers par la droite 
 OUT: I_TURN_RIGHT I_TURN_RIGHT I_RUN I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK
+```
 
 ## Data Source
 To generate the data, native speakers of the five selected languages have been asked to manually translate the vocabulary of the original SCAN dataset as well as either the equivalent interpretation function or grammar in their own language. 

@@ -1,10 +1,14 @@
 # Multilingual SCAN (fra)
 
 ## Abstract
-*Copy the abstract of your accompanying paper for this task here Multilingual SCAN (fra).*
+
+This specific task consists of adapted SCAN benchmark into French (fra). 
 
 ## Examples
-*Give some examples of the Multilingual SCAN (fra).*
+
+```json
+{"input": "marcher en face à droite trois fois ensuite courir en face à droite", "target": "I_TURN_RIGHT I_TURN_RIGHT I_RUN I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK"}
+```
 
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*

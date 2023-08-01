@@ -1,10 +1,14 @@
 # Multilingual SCAN (hin)
 
 ## Abstract
-*Copy the abstract of your accompanying paper for this task here Multilingual SCAN (hin).*
+
+This specific task consists of adapted SCAN benchmark into Hindi (hin). 
 
 ## Examples
-*Give some examples of the Multilingual SCAN (hin).*
+
+```json
+{"input": "daaye doosra bhaag ke baad theenbaar daaye doosra chal", "target": "I_TURN_RIGHT I_TURN_RIGHT I_RUN I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK"}
+```
 
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*

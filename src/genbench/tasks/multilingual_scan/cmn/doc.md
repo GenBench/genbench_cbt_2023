@@ -1,10 +1,14 @@
 # Multilingual SCAN (cmn)
 
 ## Abstract
-*Copy the abstract of your accompanying paper for this task here Multilingual SCAN (cmn).*
+
+This specific task consists of adapted SCAN benchmark into Mandarin Chinese (cmn). 
 
 ## Examples
-*Give some examples of the Multilingual SCAN (cmn).*
+
+```json
+{"input": "xiang you fan fangxiang pao hou, xiang you fan fangxiang xingzou san ci", "target": "I_TURN_RIGHT I_TURN_RIGHT I_RUN I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK I_TURN_RIGHT I_TURN_RIGHT I_WALK"}
+```
 
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
