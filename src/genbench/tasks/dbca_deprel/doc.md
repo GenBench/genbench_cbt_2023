@@ -30,7 +30,7 @@ print(task.evaluate_predictions(
     )
 ```
 
-To compute the atom and compound divergences for any pair of training (pre-training, training and/or fine-tuning) and test data sets, use method `DbcaDeprelTask.divergence`. To create the atom and compound distributions of the training and test sets, the frequencies of each atom and compound in each set need to be calculated first. The vectors that represent the atom and compound distributions of the train/test sets are inputted to the method to calculate the divergences:
+To compute the atom and compound divergences for any pair of training (pre-training, training and/or fine-tuning) and test data sets, use method `DbcaDeprelTask.divergence`. To create the atom and compound distributions of the training and test sets, the frequencies of each atom and compound in each set need to be first counted. The vectors that represent the atom and compound distributions of the train/test sets are inputted to the method to calculate the divergences:
 ```
 # alpha is 0.5 for atom divergence and 0.1 for compound divergence
 train_set_atom_distribution = torch.tensor([2,4,10])
@@ -47,7 +47,7 @@ compound_divergence = task.divergence(train_set_compound_distribution,
 ```
 Each element in the distribution vectors represents the frequency of one type of atom/compound.
 
-To compare a model's capacity to generalise, we assess how much the translation accuracy decreases when the compound divergence between train and test sets increases. We keep atom distributions the same between train and test sets to make generalisation possible in principle. This means we should evaluate each model on both low- and high-divergence data splits.
+To compare a model's capacity to generalise, we assess how much the translation accuracy decreases when the compound divergence between train and test sets increases. We keep atom distributions the same between train and test sets to make generalisation possible in principle. This means we should evaluate each model on both low- and high-compound-divergence data splits.
 
 ## Data Source
 The original data source is `https://www.statmt.org/europarl/`
