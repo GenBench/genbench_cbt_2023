@@ -1,7 +1,7 @@
 from typing import Any, Dict, List
 
 import datasets
-import torch
+import numpy as np
 from sacrebleu.metrics import BLEU
 
 from genbench import Task
@@ -51,11 +51,11 @@ class DbcaDeprelTask(Task):
         if alpha < 0 or alpha > 1:
             raise ValueError("alpha must be in [0,1]")
         # use log to avoid underflow
-        return torch.sum(torch.exp((torch.log(vec1) * alpha) + (torch.log(vec2) * (1 - alpha))), axis=0)
+        return np.sum(np.exp((np.log(vec1) * alpha) + (np.log(vec2) * (1 - alpha))), axis=1)
 
     def normalize_vector(self, vector):
         """Normalize a vector to have sum 1."""
-        return torch.nan_to_num(torch.divide(vector, torch.sum(vector)))
+        return np.nan_to_num(np.divide(vector, np.sum(vector)))
 
     def divergence(self, vec1, vec2, alpha):
         """

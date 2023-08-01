@@ -33,14 +33,14 @@ print(task.evaluate_predictions(
 To compute the atom and compound divergences for any pair of training (pre-training, training and/or fine-tuning) and test data sets, use method `DbcaDeprelTask.divergence`. To create the atom and compound distributions of the training and test sets, the frequencies of each atom and compound in each set need to be first counted. The vectors that represent the atom and compound distributions of the train/test sets are inputted to the method to calculate the divergences:
 ```
 # alpha is 0.5 for atom divergence and 0.1 for compound divergence
-train_set_atom_distribution = torch.tensor([2,4,10])
-test_set_atom_distribution = torch.tensor([1,2,5])
+train_set_atom_distribution = np.array([2,4,10])
+test_set_atom_distribution =  np.array([1,2,5])
 atom_divergence = task.divergence(train_set_atom_distribution,
                                   test_set_atom_distribution,
                                   0.5)
 
-train_set_compound_distribution = torch.tensor([2,0,6])
-test_set_compound_distribution = torch.tensor([0,5,5])
+train_set_compound_distribution = np.array([2,0,6])
+test_set_compound_distribution = np.array([0,5,5])
 compound_divergence = task.divergence(train_set_compound_distribution,
                                       test_set_compound_distribution,
                                       0.1)
