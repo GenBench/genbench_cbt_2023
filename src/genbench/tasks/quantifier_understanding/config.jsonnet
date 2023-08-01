@@ -16,7 +16,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/dieuwkehupkes/genbench_cbt_sample_submission/frequency_math/src/genbench/tasks/frequency_based_mathematics/test_data.jsonl',
+        test: 'https://github.com/lerow/genbench_cbt/blob/quantifier_understanding/src/genbench/tasks/quantifier_understanding/test_data.jsonl',
     },
 
     has_validation_set: false,
