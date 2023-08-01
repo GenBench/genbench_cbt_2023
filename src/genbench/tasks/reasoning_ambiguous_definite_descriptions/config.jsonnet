@@ -29,20 +29,19 @@
 
     field_mapping: {
         input: 'input',
-        target: 'label_nr',
+        target: 'target',
+        target_options: 'target_options'
     },
 
     evaluation_metrics: [
         {
-            type: 'hf',
             hf_id: 'accuracy',
-            git_commit_sha: '8b9373dc8693ffe0244a52551ac5573cffa503aa',
+            git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
             best_score: 1.0,
         },
         {
-            type: 'hf',
             hf_id: 'f1',
-            git_commit_sha: '8b9373dc8693ffe0244a52551ac5573cffa503aa',
+            git_commit_sha: '3a4c40f7397dcd7d9dccf0659616dc6b14072dcb',
             best_score: 1.0,
         },
     ],
