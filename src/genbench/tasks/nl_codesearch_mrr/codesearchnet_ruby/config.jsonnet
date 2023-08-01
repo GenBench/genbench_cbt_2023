@@ -1,4 +1,4 @@
-{{
+{
     name: 'Natural Language Codesearch Ranking (codesearchnet_ruby)',
 
     // @TODO: Add a description of the task

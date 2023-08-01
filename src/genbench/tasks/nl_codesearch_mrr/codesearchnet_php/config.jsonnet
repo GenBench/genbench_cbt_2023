@@ -23,7 +23,7 @@
     data_source: {
         type: 'manual',
         test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_php/test_sample_cbt.jsonl',
-		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_php/train_sample_cbt.jsonl',
+		train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
     },
 
     has_validation_set: false,
