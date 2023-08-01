@@ -2,8 +2,7 @@ from typing import Any, Dict, List
 
 import datasets
 import numpy as np
-from sacrebleu.metrics import BLEU
-
+import evaluate
 from genbench import Task
 
 
@@ -36,10 +35,10 @@ class DbcaDeprelTask(Task):
         preds_list = [pred["target"] for pred in predictions]
         refs_list = [g["target"] for g in gold]
 
-        bleu = BLEU()
-        bleu_result = bleu.corpus_score(preds_list, [refs_list])
+        bleu = evaluate.load("bleu")
+        bleu_result = bleu.compute(predictions=preds_list, references=refs_list)
 
-        return {"BLEU": bleu_result}
+        return {"BLEU": bleu_result['bleu']}
 
     def chernoff_coef(self, vec1, vec2, alpha):
         """
