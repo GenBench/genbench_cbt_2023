@@ -11,7 +11,8 @@ The task is simply sentence-level translation, e.g.:
 
 
 ## Usage
-To use the provided maximum-compound-divergence train-test split, load the data and evaluate a model's predictions:
+To use the provided maximum-compound-divergence train-test split,
+load the data, train a model on the training subset, and evaluate the model's predictions on the test subset
 ```
 from genbench import load_task
 from genbench.api import PreparationStrategy
@@ -20,11 +21,11 @@ from genbench.api import PreparationStrategy
 task = load_task("dbca_deprel")
 ds = task.get_prepared_datasets(PreparationStrategy.FINETUNING)
 
-# Load model predictions and evaluate
+# Evaluate predictions
 preds = ...
 print(task.evaluate_predictions(
             predictions=preds,
-            gold=ds,
+            gold=ds['test'],
         )
     )
 ```
@@ -46,7 +47,7 @@ compound_divergence = task.divergence(train_set_compound_distribution,
 ```
 Each element in the distribution vectors represents the frequency of one type of atom/compound.
 
-To compare different models' capacity to generalise, we assess whether the performance gets worse when the compound divergence between train and test sets increases. We keep atom distributions the same between train and test sets to make generalisation possible in principle. This means we should evaluate a model on both low- and high-divergence data splits.
+To compare a model's capacity to generalise, we assess how much the translation accuracy decreases when the compound divergence between train and test sets increases. We keep atom distributions the same between train and test sets to make generalisation possible in principle. This means we should evaluate each model on both low- and high-divergence data splits.
 
 ## Data Source
 The original data source is `https://www.statmt.org/europarl/`

@@ -4,7 +4,7 @@
     description: 'This task aims to measure how well an NMT model generalises to a shifted distribution of
     dependency relations. In practice, this means that the test set includes novel
     (<head lemma>, <deprel>, <dependant lemma>) tuples (=compounds) that were not seen in
-    the training set, while having the same distribution of the lemmas and dependency
+    the training set, while having similar relative frequencies of the lemmas and dependency
     relation tags (= elements of the compound tuples = atoms).',
 
     keywords: [

@@ -8,12 +8,8 @@ class DbcaDeprelTask(Task):
     """This task evaluates how well an NMT model generalises to a shifted distribution of
     dependency relations. In practice, this means that the test set includes novel
     (<head lemma>, <deprel>, <dependant lemma>) tuples (=compounds) that were not seen in
-    the training set, while having the same distribution of the lemmas and dependency
+    the training set, while having similar relative frequencies of the lemmas and dependency
     relation tags (= elements of the compound tuples = atoms).
-    
-    To facilitate this, it reimplements the following default functions:
-    - evaluate_predictions: this function implements the generalisation
-                metric used for this task
     """
 
     def evaluate_predictions(
@@ -23,7 +19,7 @@ class DbcaDeprelTask(Task):
         gold: datasets.Dataset = None,
     ) -> Dict[str, float]:
         """Evaluate the predictions of the model against the gold data.
-        For this task, the evaluation metric returns the BLEU or chrF score and the atom and
+        For this task, the evaluation metric returns the BLEU and/or chrF score and the atom and
         compound divergences.
         Args:
             predictions: A list of dictionaries, where each dictionary contains the predicted
