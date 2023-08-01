@@ -13,7 +13,7 @@ distractor sample: {"input": "Allocate sampled topics to the documents rather th
 **WebQuery** : Python codesnippets from the CodeSearchNet dataset paired with real world user search engine queries, introduced in the CodeXGLUE benchmark suite: https://github.com/microsoft/CodeXGLUE \
 **StatCodeSearch** : R code-comment pair snippets, scraped and extracted from public project on the Open Science Framework (OSF) by the submission authors \
 
-During evaluation for each true code-comment pair we create n number of distractors where the comment is matched with a random code snippet. The distractor samples are sampled consistently by setting the random seed in the get_raw_data function
+During evaluation for each true code-comment pair we create n number of distractors where the comment is matched with a random code snippet. The distractor samples are sampled consistently by setting the random seed in the get_dataset_raw function
 
 **Dataset Size**:\
 *Finetuning set:* \
