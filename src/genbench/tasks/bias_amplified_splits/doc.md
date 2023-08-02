@@ -2,9 +2,9 @@
 NLP models often rely on superficial cues known as *dataset biases* to achieve impressive performance, and can fail on examples where these biases do not hold. 
 Recent work sought to develop robust, unbiased models by filtering *biased* examples from training sets. We argue that such filtering can obscure the true capabilities of models to overcome biases, which might never be removed in full from the dataset. 
 
-We argue that in order to drive the development of models robust to subtle biases, dataset biases should be **amplified** in the training set. 
+We propose that in order to drive the development of models robust to subtle biases, dataset biases should in fact be **amplified** in the training set. 
 We introduce **bias-amplifed splits**, an evaluation framework defined by a *bias-amplified* training set and an *anti-biased* test set, both automatically extracted from existing datasets. 
-To extract *biased* and *anti-biased* examples, we introduce a novel clustering-based approach for detecting minority examples in the dataset.
+To extract *biased* and *anti-biased* examples, we use a novel clustering-based approach for detecting minority examples in the dataset.
 
 ## Examples
 Bias-amplified splits can be created for various tasks. Each of the sub-tasks is for a different dataset -- see examples in each sub-task's documentation.
