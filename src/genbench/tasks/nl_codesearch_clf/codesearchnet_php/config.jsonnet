@@ -38,7 +38,6 @@
     ],
 
     preparation_strategies: {
-	
         finetuning: {
             objective: 'maximum_likelihood',
         },

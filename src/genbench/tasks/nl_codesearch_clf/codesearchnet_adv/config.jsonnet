@@ -39,14 +39,12 @@
     ],
 
     preparation_strategies: {
-		finetuning: {
+        finetuning: {
             objective: 'maximum_likelihood',
         },
 		
         prompt_based_testing: {
             prompt_builder: {
-                // Currently, we follow BIG-bench options for prompt construction: 
-                // https://github.com/google/BIG-bench/blob/main/docs/doc.md#optional-fields
                 instruction_zero_shot: 'Given a code comment and a Python programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as: comment [SEP] code',
                 input_prefix: '',
                 output_prefix: '',

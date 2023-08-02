@@ -38,8 +38,7 @@
     ],
 
     preparation_strategies: {
-	
-	    finetuning: {
+        finetuning: {
             objective: 'maximum_likelihood',
         },
         prompt_based_testing: {
