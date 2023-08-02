@@ -1,14 +1,16 @@
-from genbench import Task
-from typing import Any, Callable, List, Mapping, Optional, Union, Dict
+from typing import Any, Callable, Dict, List, Mapping, Optional, Union
+
 from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict, load_dataset
 
+from genbench import Task
 from genbench.api import DatasetSplit
+from genbench.task import resplit_data_source
 from genbench.utils.file import load_jsonnet
 from genbench.utils.tasks import get_task_dir
-from genbench.task import resplit_data_source
 
 
-WANLI_LABEL2INT = {'entailment': 0, 'neutral': 1, 'contradiction': 2}
+WANLI_LABEL2INT = {"entailment": 0, "neutral": 1, "contradiction": 2}
+
 
 class BiasAmplifiedSplitsWanli(Task):
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
@@ -38,7 +40,12 @@ class BiasAmplifiedSplitsWanli(Task):
 
     def get_datasets_raw(self) -> Mapping[DatasetSplit, Dataset]:
         data_source = self._load_data_source()
-        data_source['validation'] = data_source['test']
+
+        # There is an assertion that tests if all of the split names ('train', 'validation', 'test')
+        # also exist in the dataset originally.
+        # in WANLI there's only a test set that is used for validation.
+        # To define a validation set without turning on the assertion, we must "fake" one.
+        data_source["validation"] = data_source["test"]
 
         if self.config.split_file is not None:
             split_file_path = get_task_dir(self.root_task_id, self.subtask_id) / self.config.split_file
