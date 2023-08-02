@@ -1,9 +1,14 @@
 from genbench import Task
 from typing import Any, Callable, List, Mapping, Optional, Union, Dict
-from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict
+from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict, load_dataset
+
+from genbench.api import DatasetSplit
+from genbench.utils.file import load_jsonnet
+from genbench.utils.tasks import get_task_dir
+from genbench.task import resplit_data_source
+
 
 WANLI_LABEL2INT = {'entailment': 0, 'neutral': 1, 'contradiction': 2}
-
 
 class BiasAmplifiedSplitsWanli(Task):
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
@@ -31,25 +36,34 @@ class BiasAmplifiedSplitsWanli(Task):
             "target": WANLI_LABEL2INT[example["gold"]],
         }
 
-    def _load_data_source(
-        self,
-    ) -> Union[DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
-        """
-        Private method to load the data source based on the type specified in the configuration.
-
-        The data source can be of two types: 'manual' or 'hf'.
-        For 'manual' type, it loads JSON datasets from the specified test, validation, and train files.
-        For 'hf' type, it loads datasets from the HuggingFace datasets hub using the given HuggingFace dataset ID(s)
-        and the git commit SHA for the specified version of the dataset.
-
-        Returns:
-            Loaded dataset which can be any of the following types:
-            DatasetDict, Dataset, IterableDatasetDict, IterableDataset.
-
-        Raises:
-            ValueError: If the specified data source type is not supported.
-        """
-        data_source = super(BiasAmplifiedSplitsWanli)._load_data_source()
+    def get_datasets_raw(self) -> Mapping[DatasetSplit, Dataset]:
+        data_source = self._load_data_source()
         data_source['validation'] = data_source['test']
-        return data_source
 
+        if self.config.split_file is not None:
+            split_file_path = get_task_dir(self.root_task_id, self.subtask_id) / self.config.split_file
+            splitting_info = load_jsonnet(split_file_path)
+            data_source = resplit_data_source(data_source, splitting_info)
+
+        output = {}
+        for split in sorted(data_source.keys()):
+            dataset = data_source[split]
+            output[split] = dataset.map(
+                self.format_example,
+                num_proc=self.dataset_format_num_proc,
+                batched=self.dataset_format_batched,
+                desc=f"Formatting `{split}` examples",
+            )
+            assert all([f in output[split].column_names for f in ["input", "target"]])
+
+        # Assign id to each example
+        for split in sorted(output.keys()):
+            output[split] = output[split].map(
+                lambda example, idx: {"_genbench_idx": idx},
+                with_indices=True,
+                num_proc=self.dataset_format_num_proc,
+                batched=False,
+                desc=f"Assigning id to `{split}` examples",
+            )
+
+        return output
