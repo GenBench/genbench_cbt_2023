@@ -1,6 +1,7 @@
 from genbench import Task
 from typing import Any, Dict
 
+WANLI_LABEL2INT = {'entailment': 0, 'neutral': 1, 'contradiction': 2}
 
 class BiasAmplifiedSplitsWanli(Task):
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
@@ -21,9 +22,9 @@ class BiasAmplifiedSplitsWanli(Task):
         Returns:
             A dictionary containing key-value pairs for the preprocessed/formatted example.
             The dictionary should contain keys `input`, `target`, `target_scores`, or `target_label`
-            depending on the task type.
+            depending on the task type.Œ
         """
         return {
             "input": f"{example['premise']} </s> {example['hypothesis']}",
-            "target": example["gold"],
+            "target": WANLI_LABEL2INT[example["gold"]],
         }
