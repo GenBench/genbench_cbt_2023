@@ -1,13 +1,13 @@
 {
     name: 'reasoning_ambiguous_definite_descriptions',
 
-    // @TODO: Add a description of the task
-    description: 'reasoning_ambiguous_definite_descriptions aims to measure ...',
+    description: 'Reasoning about Ambiguous Definite Descriptions aims to evaluate how well Large Language Models can use explicit reasoning to resolve ambiguity in language',
 
-    // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'keyword1',
-        'keyword2',
+        'natural language reasoning',
+        'definite descriptions',
+        'ambiguity',
+        'large language models',
     ],
 
     authors: [
@@ -52,13 +52,13 @@
                 instruction_zero_shot: '',
                 instruction_few_shot: '',
                 input_prefix: '',
-                output_prefix: '',
+                output_prefix: '\n\nOption ',
                 append_choices_to_input: false,
                 choices_prefix: '',
                 choice_item_postfix: '',
                 choice_item_prefix: '',
                 permute_choices: false,
-                few_shot_example_separator: '\n\n',
+                few_shot_example_separator: '\n\n\n',
                 stop_string: '.',
             },
         },
