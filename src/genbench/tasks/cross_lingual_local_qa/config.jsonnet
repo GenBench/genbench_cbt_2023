@@ -46,10 +46,5 @@
         // This recipe is suitable for generative LMs such as GPT-3, OPT, T5, etc.
         // We provide a few options for configuring the prompt. But, the task creator can
         // also provide a custom prompt preparation in the task's Python class.
-        prompt_based_testing: {
-            prompt_builder: {
-                question:,
-            }
-        },
     },
 }
