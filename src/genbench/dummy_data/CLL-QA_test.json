@@ -1,0 +1,1292 @@
+{
+    "2": {
+        "category": "geography",
+        "template": "In which {country} city would you find {landmark}?",
+        "localities": {
+            "Ethiopia": [
+                {
+                    "question_template": "In which {Ethiopian} city would you find {Lalibela Church}?",
+                    "answer_template": "Lalibela",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ላሊበላ ቤተክርስትያን በየትኛው ከተማ ይገኛል?",
+                            "answer": "ላሊበላ"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Ethiopische stad staat de Lalibela-kerk?",
+                            "answer": "Lalibela"
+                        },
+                        "en-GB": {
+                            "question": "In which Ethiopian city would you find Lalibela Church?",
+                            "answer": "Lalibela"
+                        },
+                        "de-DE": {
+                            "question": "In welcher äthiopischen Stadt befindet sich die Lalibela-Kirche?",
+                            "answer": "Lalibela"
+                        },
+                        "hi-IN": {
+                            "question": "आपको इथियोपिया के किस शहर में लालिबेला चर्च मिलेगा?",
+                            "answer": "लालिबेला"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad etiope se encuentran las iglesias en la roca de Lalibela?",
+                            "answer": "Lalibela"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad etiope se encuentra la escultura conocida como las iglesias en la roca de Lalibela?",
+                            "answer": "Lalibela"
+                        }
+                    }
+                }
+            ],
+            "Netherlands": [
+                {
+                    "question_template": "In which {Dutch} city would you find {Euromast}?",
+                    "answer_template": "Rotterdam",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በየትኛው የኔዘርላንድ ከተማ ዩሮማስትን ያገኛሉ?",
+                            "answer": "ሮተርዳም"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Nederlandse stad staat de Euromast?",
+                            "answer": "Rotterdam"
+                        },
+                        "en-GB": {
+                            "question": "In which Dutch city would you find Euromast?",
+                            "answer": "Rotterdam"
+                        },
+                        "de-DE": {
+                            "question": "In welcher niederländischen Stadt befindet sich der Euromast?",
+                            "answer": "Rotterdam"
+                        },
+                        "hi-IN": {
+                            "question": "आपको यूरोमास्ट किस डच शहर में मिलेगा?",
+                            "answer": "रॉटरडैम"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad neerlandesa se encuentra el Euromast?",
+                            "answer": "Róterdam"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad neerlandesa se encuentra el Euromast?",
+                            "answer": "Róterdam"
+                        }
+                    }
+                }
+            ],
+            "UK": [
+                {
+                    "question_template": "In which {English} city would you find {Pull's Ferry}?",
+                    "answer_template": "Norwich",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የፑል ጀልባን በየትኛው የእንግሊዝ ከተማ ያገኛሉ?",
+                            "answer": "ኖርዊች"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Engelse stad ligt Pull's Ferry?",
+                            "answer": "Norwich"
+                        },
+                        "en-GB": {
+                            "question": "In which English city would you find Pull's Ferry?",
+                            "answer": "Norwich"
+                        },
+                        "de-DE": {
+                            "question": "In welcher englischen Stadt befindet sich Pull's Ferry?",
+                            "answer": "Norwich"
+                        },
+                        "hi-IN": {
+                            "question": "आपको पुल्स फेरी किस अंग्रेजी शहर में मिलेगी?",
+                            "answer": "नॉर्विच"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad inglesa se encuentra el Pull's Ferry?",
+                            "answer": "Norwich"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad inglesa se encuentra el Pull's Ferry?",
+                            "answer": "Norwich"
+                        }
+                    }
+                }
+            ],
+            "Germany": [
+                {
+                    "question_template": "In which {German} city would you find {Little Tokyo}?",
+                    "answer_template": "Düsseldorf",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ትንሿ ቶኪዮ በየትኛው የጀርመን ከተማ ታገኛለህ?",
+                            "answer": "ዱሰልዶርፍ"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Duitse stad ligt Little Tokyo?",
+                            "answer": "Düsseldorf"
+                        },
+                        "en-GB": {
+                            "question": "In which German city would you find Little Tokyo?",
+                            "answer": "Düsseldorf"
+                        },
+                        "de-DE": {
+                            "question": "In welcher deutschen Stadt befindet sich Little Tokyo?",
+                            "answer": "Düsseldorf"
+                        },
+                        "hi-IN": {
+                            "question": "आपको लिटिल टोक्यो किस जर्मन शहर में मिलेगा?",
+                            "answer": "डसेलडोर्फ"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad alemana se encuentra Little Tokyo?",
+                            "answer": "Dusseldorf"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad alemana se encuentra la escultura conocida como Little Tokyo?",
+                            "answer": "Dusseldorf"
+                        }
+                    }
+                }
+            ],
+            "India": [
+                {
+                    "question_template": "In which {Indian} city would you find {the Golden Temple}?",
+                    "answer_template": "Amritsar",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በየትኛው የህንድ ከተማ ወርቃማው ቤተመቅደስን ታገኛላችሁ?",
+                            "answer": "አምሪሳር"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Indiase stad staat de Gouden Tempel?",
+                            "answer": "Amritsar"
+                        },
+                        "en-GB": {
+                            "question": "In which Indian city would you find the Golden Temple?",
+                            "answer": "Amritsar"
+                        },
+                        "de-DE": {
+                            "question": "In welcher indischen Stadt befindet sich der Goldene Tempel?",
+                            "answer": "Amritsar"
+                        },
+                        "hi-IN": {
+                            "question": "आपको भारत के किस शहर में स्वर्ण मंदिर मिलेगा?",
+                            "answer": "अमृतसर"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad hindu se encuentra el Templo Dorado?",
+                            "answer": "Amritsar"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad hindu se encuentra la escultura conocida como el Templo Dorado?",
+                            "answer": "Amritsar"
+                        }
+                    }
+                }
+            ],
+            "Mexico": [
+                {
+                    "question_template": "In which {Mexican} city would you find {el caballito sculpture}?",
+                    "answer_template": "Mexico City",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በየትኛው የሜክሲኮ ከተማ ውስጥ የኤል ካባሊቶ ቅርፃቅርፅን ያገኛሉ?",
+                            "answer": "ሜክሲኮ ከተማ"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Mexicaanse stad staat het beeld El Caballito?",
+                            "answer": "Mexico Stad"
+                        },
+                        "en-GB": {
+                            "question": "In which Mexican city would you find el caballito sculpture?",
+                            "answer": "Mexico City"
+                        },
+                        "de-DE": {
+                            "question": "In welcher mexikanischen Stadt befindet sich die Skulptur El Caballito?",
+                            "answer": "Mexiko Stadt"
+                        },
+                        "hi-IN": {
+                            "question": "आपको किस मैक्सिकन शहर में एल कैबेलिटो मूर्तिकला मिलेगी?",
+                            "answer": "मेक्सिको सिटी"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad mexicana se encuentra la escultura conocida como el caballito?",
+                            "answer": "Ciudad de Mexico"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad mexicana se encuentra la escultura conocida como el caballito?",
+                            "answer": "Ciudad de Mexico"
+                        }
+                    }
+                }
+            ],
+            "Spain": [
+                {
+                    "question_template": "In which {Spanish} city would you find {the great roman acueduct}?",
+                    "answer_template": "Segovia",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በየትኛው የስፔን ከተማ ውስጥ ታላቁን የሮማን የውሃ ማስተላለፊያ መስመር ታገኛላችሁ?",
+                            "answer": "ሴጎቪያ"
+                        },
+                        "nl-NL": {
+                            "question": "In welke Spaanse stad find je het Grote Romeinse Aquaduct?",
+                            "answer": "Segovia"
+                        },
+                        "en-GB": {
+                            "question": "In which Spanish city would you find the great roman acueduct?",
+                            "answer": "Segovia"
+                        },
+                        "de-DE": {
+                            "question": "In welcher spanischen Stadt befindet sich das große römische Aquädukt?",
+                            "answer": "Segovia"
+                        },
+                        "hi-IN": {
+                            "question": "आपको किस स्पेनिश शहर में महान रोमन एक्यूडक्ट मिलेगा?",
+                            "answer": "सेगोविआ"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué ciudad española se encuentra el gran acueducto romano?",
+                            "answer": "Segovia"
+                        },
+                        "es-ES": {
+                            "question": "¿En qué ciudad española se encuentra el gran acueducto romano?",
+                            "answer": "Segovia"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "15": {
+        "category": "organisations",
+        "template": "What is {country-specific company} known for?",
+        "localities": {
+            "Ethiopia": [
+                {
+                    "question_template": "What is {Telebirr} Known for?",
+                    "answer_template": "mobile money service",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ቴሌብር በምን ይታወቃል ?",
+                            "answer": "የሞባይል ገንዘብ አገልግሎት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat Telebirr bekend om?",
+                            "answer": "mobiele geldservice"
+                        },
+                        "en-GB": {
+                            "question": "What is country-specific company known for?",
+                            "answer": "mobile money service"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist ein länderspezifisches Unternehmen bekannt?",
+                            "answer": "Mobiler Gelddienst"
+                        },
+                        "hi-IN": {
+                            "question": "टेलीबिर किस लिए जानी जाती है?",
+                            "answer": "मोबाइल मनी सेवा"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a Telebirr?",
+                            "answer": "dinero móvil"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a Telebirr?",
+                            "answer": "dinero móvil"
+                        }
+                    }
+                }
+            ],
+            "Netherlands": [
+                {
+                    "question_template": "What is {Hunkemöller} known for?",
+                    "answer_template": "underwear",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ሁንከምሞለር በምን ይታወቃል?",
+                            "answer": "የውስጥ ሱሪ"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat Hunkemöller om bekend?",
+                            "answer": "ondergoed"
+                        },
+                        "en-GB": {
+                            "question": "What is Hunkemöller known for?",
+                            "answer": "underwear"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist Hunkemöller bekannt?",
+                            "answer": "Unterwäsche"
+                        },
+                        "hi-IN": {
+                            "question": "हंकमोलर किस लिए जाना जाता है?",
+                            "answer": "अंडरवियर"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a Hunkemöller?",
+                            "answer": "lencería"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a Hunkemöller?",
+                            "answer": "lencería"
+                        }
+                    }
+                }
+            ],
+            "UK": [
+                {
+                    "question_template": "What is {Huntley & Palmers} known for?",
+                    "answer_template": "biscuits",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ሀንትሊ እና ፓልመርስ በምን ይታወቃሉ?",
+                            "answer": "ብስኩት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat Huntley & Palmers bekend om?",
+                            "answer": "koekjes"
+                        },
+                        "en-GB": {
+                            "question": "What is Huntley & Palmers known for?",
+                            "answer": "biscuits"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist Huntley & Palmers bekannt?",
+                            "answer": "Kekse"
+                        },
+                        "hi-IN": {
+                            "question": "हंटले एंड पामर्स किस लिए जाने जाते हैं?",
+                            "answer": "बिस्कुट"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a Huntley & Palmers?",
+                            "answer": "galletas"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a Huntley and Palmers?",
+                            "answer": "galletas"
+                        }
+                    }
+                }
+            ],
+            "Germany": [
+                {
+                    "question_template": "What is {dm} known for?",
+                    "answer_template": "drugstore, beauty",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ዲኤም ኩባንያ በምን ይታወቃል?",
+                            "answer": "መድኃኒት ቤት, ውበት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat dm om bekend?",
+                            "answer": "drogisterij, schoonheid"
+                        },
+                        "en-GB": {
+                            "question": "What is dm known for?",
+                            "answer": "drugstore, beauty"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist dm bekannt?",
+                            "answer": "Drogerie, Kosmetik"
+                        },
+                        "hi-IN": {
+                            "question": "डीएम किस लिए जाना जाता है?",
+                            "answer": "दवा की दुकान, सुंदरता"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a dm?",
+                            "answer": "Farmacia, productos de belleza"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a dm?",
+                            "answer": "Farmacia"
+                        }
+                    }
+                }
+            ],
+            "India": [
+                {
+                    "question_template": "What is {Nykaa} known for?",
+                    "answer_template": "beauty",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ናይካ ኩባንያ በምን ይታወቃል?",
+                            "answer": "ውበት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat Nykaa om bekend?",
+                            "answer": "schoonheid"
+                        },
+                        "en-GB": {
+                            "question": "What is Nykaa known for?",
+                            "answer": "beauty"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist Nykaa bekannt?",
+                            "answer": "Kosmetik"
+                        },
+                        "hi-IN": {
+                            "question": "नायका किस लिए जाना जाता है?",
+                            "answer": "सुंदरता"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a Nykaa?",
+                            "answer": "productos de belleza"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a Nykaa?",
+                            "answer": "productos de belleza"
+                        }
+                    }
+                }
+            ],
+            "Mexico": [
+                {
+                    "question_template": "What is {America Movil} known for?",
+                    "answer_template": "telecomunications",
+                    "translations": {
+                        "am-ET": {
+                            "question": "አሜሪካ ሞቪል ኩባንያ በምን ይታወቃል?",
+                            "answer": "ቴሌኮሙኒኬሽን"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat America Movil om bekend?",
+                            "answer": "telecommunicatie"
+                        },
+                        "en-GB": {
+                            "question": "What is America Movil known for?",
+                            "answer": "telecomunications"
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist America Movil bekannt?",
+                            "answer": "Telekommunikation"
+                        },
+                        "hi-IN": {
+                            "question": "अमेरिका मोविल किस लिए जाना जाता है?",
+                            "answer": "दूरसंचार"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a America Movil?",
+                            "answer": "telecomunicaciones"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a America Movil?",
+                            "answer": "telecomunicaciones"
+                        }
+                    }
+                }
+            ],
+            "Spain": [
+                {
+                    "question_template": "What is {El Corte Inglés} known for?",
+                    "answer_template": "department stores ",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ኤል ኮርቴ ኢንግልስ ኩባንያ በምን ይታወቃል?",
+                            "answer": "የመደብር መደብሮች"
+                        },
+                        "nl-NL": {
+                            "question": "Waar staat El Corte Inglés om bekend?",
+                            "answer": "warenhuizen"
+                        },
+                        "en-GB": {
+                            "question": "What is El Corte Inglés known for?",
+                            "answer": "department stores "
+                        },
+                        "de-DE": {
+                            "question": "Wofür ist El Corte Inglés bekannt?",
+                            "answer": "Warenhäuser"
+                        },
+                        "hi-IN": {
+                            "question": "एल कॉर्टे इंगलिस किस लिए जाना जाता है?",
+                            "answer": "विभागीय स्टोर"
+                        },
+                        "es-MX": {
+                            "question": "¿Por qué se le conoce a El Corte Inglés?",
+                            "answer": "tienda departamental"
+                        },
+                        "es-ES": {
+                            "question": "¿Por que actividad empresarial se le conoce a El Corte Inglés?",
+                            "answer": "Tiendas departamentales"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "17": {
+        "category": "sports",
+        "template": "What stadium is the home of {country-specific team}?",
+        "localities": {
+            "Ethiopia": [
+                {
+                    "question_template": "What stadium is the home of {St. George Club}?",
+                    "answer_template": "Addis Ababa Stadium",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ቅዱስ ጊዮርጊስ ክለብ የሜዳቸውን ጨዋታ የሚጫወቱት የትኛው ስታዲየም ነው።",
+                            "answer": "አዲስ አበባ ስታዲየም"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van St. George Club?",
+                            "answer": "Addis Abeba-stadion"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of St. George Club?",
+                            "answer": "Addis Ababa Stadium"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte des St. George Clubs? ",
+                            "answer": "Addis Abeba Stadion"
+                        },
+                        "hi-IN": {
+                            "question": "सेंट जॉर्ज क्लब का घर कौन सा स्टेडियम है?",
+                            "answer": "अदीस अबाबा स्टेडियम"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el Saint George SA de local?",
+                            "answer": "Estadio de Adís Abeba"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al Saint George SA?",
+                            "answer": "Estadio de Adís Abeba"
+                        }
+                    }
+                }
+            ],
+            "Netherlands": [
+                {
+                    "question_template": "What stadium is the home of {FC Groningen}?",
+                    "answer_template": "Euroborg",
+                    "translations": {
+                        "am-ET": {
+                            "question": "ኤፍ.ሲግሮኒንገን የትኛው ታዋቂ ቡድን ስታዲየም ነው?",
+                            "answer": "ዩሮቦርግ"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van FC Groningen?",
+                            "answer": "Euroborg"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of FC Groningen?",
+                            "answer": "Euroborg"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte des FC Groningen?",
+                            "answer": "Euroborg"
+                        },
+                        "hi-IN": {
+                            "question": "एफसी ग्रोनिंगन का घर कौन सा स्टेडियम है?",
+                            "answer": "यूरोबोर्ग"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el FC Groningen de local?",
+                            "answer": "Euroborg"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al FC Groningen?",
+                            "answer": "Euroborg"
+                        }
+                    }
+                }
+            ],
+            "UK": [
+                {
+                    "question_template": "What stadium is the home of {Hull City football club}?",
+                    "answer_template": "MKM Stadium",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የሃል ከተማ እግር ኳስ ክለብ ቤት የትኛው ታዋቂ ስታዲየም ነው?",
+                            "answer": "ኤምኬኤም ስታዲየም"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van voetbalclub Hull City?",
+                            "answer": "MKM-stadion"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of Hull City football club?",
+                            "answer": "MKM Stadium"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte des Hull City Fussballvereins?",
+                            "answer": "MKM-Stadion"
+                        },
+                        "hi-IN": {
+                            "question": "हल सिटी फुटबॉल क्लब का घर कौन सा स्टेडियम है?",
+                            "answer": "एमकेएम स्टेडियम"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el Hull City de local?",
+                            "answer": "Estadio MKM"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al Hull City?",
+                            "answer": "Estadio MKM"
+                        }
+                    }
+                }
+            ],
+            "Germany": [
+                {
+                    "question_template": "What stadium is the home of {Fortuna Düsseldorf}?",
+                    "answer_template": "Merkur Spiel-Arena, Düsseldorf Arena",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የፎርቱና ዱሰልዶርፍ መኖሪያ የትኛው ታዋቂ ስታዲየም ነው?",
+                            "answer": "የመርኩር ጨዋታ መድረክ, ዱሰልዶርፍ መድረክ"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van Fortuna Düsseldorf?",
+                            "answer": "Merkur Spiel-Arena, Düsseldorf Arena"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of Fortuna Düsseldorf?",
+                            "answer": "Merkur Spiel-Arena, Düsseldorf Arena"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte der Fortuna Düsseldorf?",
+                            "answer": "Merkur Spiel-Arena, Düsseldorf Arena"
+                        },
+                        "hi-IN": {
+                            "question": "फ़ोर्टुना डसेलडोर्फ का घर कौन सा स्टेडियम है?",
+                            "answer": "मर्कुर स्पील-एरिना, डसेलडोर्फ एरिना"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el Fortuna Düsseldorf de local?",
+                            "answer": "Merkur Spiel Arena"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al Fortuna Düsseldorf?",
+                            "answer": "Merkur Spiel-Arena"
+                        }
+                    }
+                }
+            ],
+            "India": [
+                {
+                    "question_template": "What stadium is the home of {Royal Challengers Bangalore}?",
+                    "answer_template": "M. Chinnaswamy Stadium",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የሮያል ቻሌንጀርስ ባንጋሎር ቤት የትኛው ታዋቂ ስታዲየም ነው?",
+                            "answer": "ኤም ቺናስዋሚ ስታዲየም"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van Royal Challengers Bangalore?",
+                            "answer": "M. Chinnaswamy-stadion"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of Royal Challengers Bangalore?",
+                            "answer": "M. Chinnaswamy Stadium"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte der Royal Challengers Bangalore?",
+                            "answer": "M. Chinnaswamy-Stadion"
+                        },
+                        "hi-IN": {
+                            "question": "रॉयल चैलेंजर्स बैंगलोर का घर कौन सा स्टेडियम है?",
+                            "answer": "एम. चिन्नास्वामी स्टेडियम"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el Royal Challengers Bangalore de local?",
+                            "answer": "Estadio M. Chinnaswamy"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al Royal Challengers Bangalore?",
+                            "answer": "Estadio M. Chinnaswamy"
+                        }
+                    }
+                }
+            ],
+            "Mexico": [
+                {
+                    "question_template": "What stadium is the home of {las chivas}?",
+                    "answer_template": "Akron",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የላስ ቺቫስ ቤት የትኛው ታዋቂ ስታዲየም ነው?",
+                            "answer": "አክሮን"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van Las Chivas?",
+                            "answer": "Akron"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of las chivas?",
+                            "answer": "Akron"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte der Chivas?",
+                            "answer": "Akron"
+                        },
+                        "hi-IN": {
+                            "question": "लास चिवास का घर कौन सा स्टेडियम है?",
+                            "answer": "अक्रोन"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juegan las Chivas de local?",
+                            "answer": "Akron"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga a las Chivas?",
+                            "answer": "Akron"
+                        }
+                    }
+                }
+            ],
+            "Spain": [
+                {
+                    "question_template": "What stadium is the home of {Osasuna}?",
+                    "answer_template": "El Sadar",
+                    "translations": {
+                        "am-ET": {
+                            "question": "የኦሳሱና ቤት የትኛው ታዋቂ ስታዲየም ነው?",
+                            "answer": "ኤል ሳዳር"
+                        },
+                        "nl-NL": {
+                            "question": "Welk stadion is de thuisbasis van Osasuna?",
+                            "answer": "El Sadar"
+                        },
+                        "en-GB": {
+                            "question": "What stadium is the home of Osasuna?",
+                            "answer": "El Sadar"
+                        },
+                        "de-DE": {
+                            "question": "Welches Stadion ist die Heimspielstätte von Osasuna?",
+                            "answer": "El Sadar"
+                        },
+                        "hi-IN": {
+                            "question": "ओसासुना का घर कौन सा स्टेडियम है?",
+                            "answer": "एल सदर"
+                        },
+                        "es-MX": {
+                            "question": "¿En qué estadio juega el Osasuna de local?",
+                            "answer": "El Sadar"
+                        },
+                        "es-ES": {
+                            "question": "¿Qué estadio alberga al Osasuna?",
+                            "answer": "El Sadar"
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "30": {
+        "category": "literature",
+        "template": "Who won the {local literature prize} in 2017?",
+        "localities": {
+            "Ethiopia": [
+                {
+                    "question_template": "Who won the {HOHE literature prize} in 2017?",
+                    "answer_template": "Adam Retta",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እ.ኤ.አ. በ 2017 የሆሄ ሥነ ጽሑፍ ሽልማትን ማን አሸነፈ?",
+                            "answer": "አዳም ረታ"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de HOHE literatuurprijs in 2017?",
+                            "answer": "Adam Retta"
+                        },
+                        "en-GB": {
+                            "question": "Who won the HOHE literature prize in 2017?",
+                            "answer": "Adam Retta"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den HOHE-Literaturpreis gewonnen?",
+                            "answer": "Adam Retta"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में HOHE साहित्य पुरस्कार किसने जीता?",
+                            "answer": "एडम रेट्टा"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio HOHE de literatura en 2017?",
+                            "answer": "Adam Retta"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio HOHE en 2017?",
+                            "answer": "Adam Retta"
+                        }
+                    }
+                }
+            ],
+            "Netherlands": [
+                {
+                    "question_template": "Who won the {Libris Prize} in 2017?",
+                    "answer_template": "Alfred Birney",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በ2017 የሊብሪስ ሽልማትን ማን አሸነፈ?",
+                            "answer": "አልፍሬድ ቢርኒ"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Librisprijs 2017?",
+                            "answer": "Alfred Birney"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Libris Prize in 2017?",
+                            "answer": "Alfred Birney"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Libris-Preis gewonnen?",
+                            "answer": "Alfred Birney"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में लाइब्रिस पुरस्कार किसने जीता?",
+                            "answer": "अल्फ्रेड बिर्नी"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Libris en 2017?",
+                            "answer": "Alfred Birney"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Libris en 2017?",
+                            "answer": "Alfred Birney"
+                        }
+                    }
+                }
+            ],
+            "UK": [
+                {
+                    "question_template": "Who won the {Ondaatje Prize} in 2017?",
+                    "answer_template": "Francis Spufford",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እ.ኤ.አ. በ2017 የኦንዳቲጄ ሽልማትን ማን አሸነፈ?",
+                            "answer": "ፍራንሲስ ስፕፎርድ"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Ondaatje Prijs in 2017?",
+                            "answer": "Francis Spufford"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Ondaatje Prize in 2017?",
+                            "answer": "Francis Spufford"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Ondaatje-Preis gewonnen?",
+                            "answer": "Francis Spufford"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में ओन्डाटजे पुरस्कार किसने जीता?",
+                            "answer": "फ्रांसिस स्पफ़ोर्ड"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Ondaatje en 2017?",
+                            "answer": "Francis Spufford"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Ondaatje en 2017?",
+                            "answer": "Francis Spufford"
+                        }
+                    }
+                }
+            ],
+            "Germany": [
+                {
+                    "question_template": "Who won the {Georg-Büchner-Preis} in 2017?",
+                    "answer_template": "Jan Wagner",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በ 2017 የ ጆርጅ ቡሄነር ሽልማትን ማን አሸነፈ?",
+                            "answer": "ጃን ዋግነር"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Georg-Büchner-Preis in 2017?",
+                            "answer": "Jan Wagner"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Georg-Büchner-Preis in 2017?",
+                            "answer": "Jan Wagner"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Georg-Büchner-Preis gewonnen?",
+                            "answer": "Jan Wagner"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में जॉर्ज-बुचनर-प्रीइस किसने जीता?",
+                            "answer": "जान वैगनर"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Georg Büchner en 2017?",
+                            "answer": "Jan Wagner"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Georg Büchner en 2017?",
+                            "answer": "Jan Wagner"
+                        }
+                    }
+                }
+            ],
+            "India": [
+                {
+                    "question_template": "Who won the {Jnanpith Award} in 2017?",
+                    "answer_template": "Krishna Sobti \n",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በ2017 የ ጅናፕት ሽልማትን ማን አሸነፈ?",
+                            "answer": "ክርሽና ሶብቲ"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Jnanpith Award in 2017?",
+                            "answer": "Krishna Sobti"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Jnanpith Award in 2017?",
+                            "answer": "Krishna Sobti \n"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Jnanpith Award gewonnen?",
+                            "answer": "Krishna Sobti"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में ज्ञानपीठ पुरस्कार किसने जीता?",
+                            "answer": "कृष्णा सोबती\n"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Jnanpith en 2017?",
+                            "answer": "Krishna Sobti \n"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Jnanpith en 2017?",
+                            "answer": "Krishna Sobti \n"
+                        }
+                    }
+                }
+            ],
+            "Mexico": [
+                {
+                    "question_template": "Who won the {Xavier Villaurrutia} prize in 2017?",
+                    "answer_template": "David Toscana",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በ 2017 የ ዣቪር ቪላአሩትአ ሽልማት ማን አሸነፈ?",
+                            "answer": "ዴቪድ ቶስካና"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Xavier Villaurrutia-prijs in 2017?",
+                            "answer": "David Toscane"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Xavier Villaurrutia prize in 2017?",
+                            "answer": "David Toscana"
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Xavier-Villaurrutia-Preis gewonnen?",
+                            "answer": "David Toscana"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में जेवियर विलारुटिया पुरस्कार किसने जीता?",
+                            "answer": "डेविड टोस्काना"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Xavier Villaurrutia en 2017?",
+                            "answer": "David Toscana"
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Xavier Villaurrutia en 2017?",
+                            "answer": "David Toscana"
+                        }
+                    }
+                }
+            ],
+            "Spain": [
+                {
+                    "question_template": "Who won the {Premio Nadal} in 2017?",
+                    "answer_template": "Premio Nadal ",
+                    "translations": {
+                        "am-ET": {
+                            "question": "በ2017 ፕሪሚዮ ናዳልን ማን አሸነፈ?",
+                            "answer": "ፕሪሚዮ ናዳል"
+                        },
+                        "nl-NL": {
+                            "question": "Wie won de Premio Nadal in 2017?",
+                            "answer": "Premie Nadal"
+                        },
+                        "en-GB": {
+                            "question": "Who won the Premio Nadal in 2017?",
+                            "answer": "Premio Nadal "
+                        },
+                        "de-DE": {
+                            "question": "Wer hat 2017 den Premio Nadal gewonnen?",
+                            "answer": "Premio Nadal"
+                        },
+                        "hi-IN": {
+                            "question": "2017 में प्रेमियो नडाल किसने जीता?",
+                            "answer": "प्रेमियो नडाल"
+                        },
+                        "es-MX": {
+                            "question": "¿Quién ganó el premio Nadal en 2017?",
+                            "answer": "Premio Nadal "
+                        },
+                        "es-ES": {
+                            "question": "¿Quién ganó el premio Nadal en 2017?",
+                            "answer": "Premio Nadal "
+                        }
+                    }
+                }
+            ]
+        }
+    },
+    "38": {
+        "category": "food ",
+        "template": "True or False? {Holiday/seasonal dish} is a traditional dish in {country}?",
+        "localities": {
+            "Ethiopia": [
+                {
+                    "question_template": "True or False? {Doro Wet} is a traditional dish in {Ethiopia}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት ዶሮ ወጥ የኢትዮጵያ ባህላዊ ምግብ ነው ::",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? DORO WET is een traditioneel gerecht in Ethiopië?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? DORO WET is a traditional dish in Ethiopia?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? DORO WET ist ein traditionelles Gericht in Äthiopien?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? डोरो वेट इथियोपिया का एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿El doro wat es un platillo típico en Etiopía?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿El doro wat es un plato tradicional en Etiopía?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "Netherlands": [
+                {
+                    "question_template": "True or False? {Stampot} is a traditional dish in {The Netherlands}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? ካፕሳሎን በኔዘርላንድ ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Stampot is een traditioneel gerecht in Nederland?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Stampot is a traditional dish in The Netherlands?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Stampot ist ein traditionelles Gericht in den Niederlanden?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? स्टैम्पपोट नीदरलैंड का एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿El stampot es un platillo típico en los Países Bajos?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿El stampot es un plato tradicional en los Países Bajos?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "UK": [
+                {
+                    "question_template": "True or False? {Hot cross buns} are a traditional dish in {England}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? ትኩስ የመስቀል ዳቦ በእንግሊዝ ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Hot cross buns zijn een traditioneel gerecht in Engeland?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Hot cross buns are a traditional dish in England?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Hot Cross Buns sind ein traditionelles Gericht in England?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? हॉट क्रॉस बन्स इंग्लैंड में एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿Los hot cross buns son un platillo típico en Inglaterra?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿Los bollos cruzados calientes son un plato tradicional en Inglaterra?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "Germany": [
+                {
+                    "question_template": "True or False? {Poppy seed cake} is a traditional dish in {Germany}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? የፖፒ ዘር ኬክ በጀርመን ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Maanzaad cake is een traditioneel gerecht in Duitsland?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Poppy seed cake is a traditional dish in Germany?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Mohnkuchen ist ein traditionelles Gericht in Deutschland?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? जर्मनी में खसखस केक एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿Los pastelitos de semillas de amapola son un platillo típico en Alemania?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿Los pastelillos de amapolas son un plato tradicional en Alemania?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "India": [
+                {
+                    "question_template": "True or False? {Butter Chicken} is a traditional dish in {India}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? ቅቤ ዶሮ በህንድ ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Boterkip is een traditioneel gerecht in India?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Butter Chicken is a traditional dish in India?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Butter Chicken ist ein traditionelles Gericht in Indien?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? बटर चिकन भारत का एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿El butter chicken es un platillo típico en la India?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿El butter ghicken son un plato tradicional en India?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "Mexico": [
+                {
+                    "question_template": "True or False? {Chiles in nogada} is a traditional dish in Mexico?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? በኖጋዳ ውስጥ የሚገኘው ቺሊ በሜክሲኮ ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Chiles in nogada is een traditioneel gerecht in Mexico?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Chiles in nogada is a traditional dish in Mexico?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Chiles in Nogada ist ein traditionelles Gericht in Mexiko?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? नोगाडा में चिली मेक्सिको का एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿Los chiles en nogada son un platillo típico en México?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿Los chiles en nogada son un plato tradicional en México?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ],
+            "Spain": [
+                {
+                    "question_template": "True or False? {Mona de Pascua} is a traditional dish in {Spain}?",
+                    "answer_template": "TRUE",
+                    "translations": {
+                        "am-ET": {
+                            "question": "እውነት ወይም ሐሰት? ሞና ዴ ፓስኩዋ በስፔን ውስጥ ባህላዊ ምግብ ነው?",
+                            "answer": "እውነት"
+                        },
+                        "nl-NL": {
+                            "question": "Waar of niet waar? Mona de Pascua is een traditioneel gerecht in Spanje?",
+                            "answer": "WAAR"
+                        },
+                        "en-GB": {
+                            "question": "True or False? Mona de Pascua is a traditional dish in Spain?",
+                            "answer": "TRUE"
+                        },
+                        "de-DE": {
+                            "question": "Richtig oder falsch? Mona de Pascua ist ein traditionelles Gericht in Spanien?",
+                            "answer": "WAHR"
+                        },
+                        "hi-IN": {
+                            "question": "सही या गलत? मोना डे पास्कुआ स्पेन का एक पारंपरिक व्यंजन है?",
+                            "answer": "सत्य"
+                        },
+                        "es-MX": {
+                            "question": "Verdadero o Falso: ¿La mona de pascua es un platillo típico en España?",
+                            "answer": "Verdadero"
+                        },
+                        "es-ES": {
+                            "question": "Cierto o Falso: ¿La mona de pascua es un plato tradicional en España?",
+                            "answer": "Cierto"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}
