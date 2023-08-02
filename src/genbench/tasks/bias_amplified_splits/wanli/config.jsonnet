@@ -17,7 +17,7 @@
 
     data_source: {
         type: 'hf',
-        hf_id: ['alisawuffles/WANLI'],
+        hf_id: 'alisawuffles/WANLI',
         git_commit_sha: '61c95318fd71c55b6ba355d76253254615f387ec',
     },
 
