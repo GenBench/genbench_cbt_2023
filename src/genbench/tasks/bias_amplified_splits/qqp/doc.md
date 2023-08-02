@@ -34,7 +34,7 @@ ds = task.get_prepared_datasets(
     shot_list=[0]
 )
 task.evaluate_predictions(
-    predictions=[{"target": 1}],
+    predictions=[{"target": 0}],
     gold=[ds["test"][0]],
 )
 ```
