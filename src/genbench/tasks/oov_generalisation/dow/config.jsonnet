@@ -6,31 +6,33 @@
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'keyword1',
-        'keyword2',
+        'subword tokenization',
+        'OOV',
+        'OOV generalisation',
+        'OOD generalisation',
+        'text classificaiton'
     ],
 
     authors: [
         'Khuyagbaatar Batsuren',
-        ' TBD',
+        'TBD',
         
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl',
+        train: 'https://raw.githubusercontent.com/kbatsuren/genbench_cbt/main/src/genbench/oov_generalisation/dow/train.jsonl',
+        validation: 'https://raw.githubusercontent.com/kbatsuren/genbench_cbt/main/src/genbench/oov_generalisation/dow/validation.jsonl',
+        test: 'https://raw.githubusercontent.com/kbatsuren/genbench_cbt/main/src/genbench/oov_generalisation/dow/test.jsonl',
     },
 
-    has_validation_set: false,
-    has_train_set: false,
-
-    task_type: 'free_form',
+    has_validation_set: true,
+    has_train_set: true,
+    task_type: 'multiple_choice',
 
     evaluation_metrics: [
         {
-            hf_id: 'exact_match',
-            git_commit_sha: "758135da6a37ce962b7bc38c6dd5eab672d2b742",
-            best_score: 1.0,
+            hf_id: 'accuracy',
         }
     ],
 
@@ -41,11 +43,15 @@
         // also provide a custom prompt preparation in the task's Python class.
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Add two numbers together\n\n',
-                instruction_few_shot: 'Add two numbers together. Here are some examples: \n\n',
-                input_prefix: 'Q: ',
+                instruction_zero_shot: 'Classify if word and definition matches: True or False?\n\n',
+                instruction_few_shot: 'Classify if word and definition matches: True or False? Here are some examples: \n\n',
+                input1_prefix: 'W: ',
+                input2_prefix: 'D: ',
                 output_prefix: '\nA: ',
             }
+        },
+        finetuning: {
+            objective: 'maximum_likelihood',
         },
     },
 }
