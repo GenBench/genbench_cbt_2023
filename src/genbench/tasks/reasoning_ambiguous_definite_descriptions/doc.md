@@ -21,10 +21,6 @@ which means a model does not require anything but reasoning to do well.
 |          | interpretations     | Two interpretations for the ambiguous sentence, one of which contradicts the regularity.                                     | 1. Lars Lervik's unit in March 2010 (Telemark Battalion) was of size class brigade. <br/> 2. Lars Lervik's current unit (Brigade Nord) was of size class brigade in March 2010. |
 
 
-## Usage
-*Describe how to load your task and what is required for evaluation, if anything.*
-
-
 ## Data Source
 We create a (semi-)automatically generated dataset based on Wikidata.
 This dataset is based on 5 Wikidata property-pairs, and is in English. 
@@ -42,7 +38,7 @@ Note that by changing property we ascribe to the denotee we can flip which of th
 
 ## Limitations and Bias
 The *de dicto* / *de re* ambiguity we use in our dataset is one of many possible kinds of ambiguities. 
-Completely excluding the possibility that our results rely on the particulars of this ambiguity will require a diverse 
+Excluding the possibility that our results rely on the particulars of this ambiguity will require a diverse 
 set of ambiguities.
 
 So far we have only included English prompts in our benchmark.
@@ -53,8 +49,8 @@ We leave the creation of prompt templates in other languages for future work.
 This task is intended to test if LLMs (Pretrain-test locus) are capable of resolving ambiguous phrases by reasoning 
 about them (primarily intrinsic motivation, but also practical). This task consists of choosing between two possible 
 interpretations of an ambiguous sentence (compositional generalisation), and the model is required to resolve it through
-natural language reasoning (cross task generalisation). Our data is fully generated and focuses on a very particular 
-kind of language use ensuring Covariate shift, we might also have a label shift, but we do not know if our label 
+natural language reasoning (cross task generalisation). Our data is fully generated and focuses on a particular 
+phenomenon, as such it is safe to assume Covariate shift. As for label shift, we do not know if our label 
 distribution (50/50) differs from the training setting.
 
 
