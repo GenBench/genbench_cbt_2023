@@ -2,7 +2,8 @@ from typing import Any, Dict, List
 
 import datasets
 import numpy as np
-import evaluate
+
+# import evaluate
 from genbench import Task
 
 
@@ -32,13 +33,15 @@ class DbcaDeprelTask(Task):
             values. The keys are strings representing the name of the evaluation metric and the values are
             floating-point numbers.
         """
-        preds_list = [pred["target"] for pred in predictions]
-        refs_list = [g["target"] for g in gold]
 
-        bleu = evaluate.load("bleu")
-        bleu_result = bleu.compute(predictions=preds_list, references=refs_list)
+        # TODO: implement BLEU and chrF
+        # preds_list = [pred["target"] for pred in predictions]
+        # refs_list = [g["target"] for g in gold]
 
-        return {"BLEU": bleu_result['bleu']}
+        # bleu = evaluate.load("bleu")
+        # bleu_result = bleu.compute(predictions=preds_list, references=refs_list)
+        # return {"BLEU": bleu_result['bleu']}
+        return {"BLEU": 0.0}
 
     def chernoff_coef(self, vec1, vec2, alpha):
         """
