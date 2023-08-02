@@ -35,4 +35,3 @@ TODO: *Note any known limitations or biases that the Bias-amplified Splits has, 
 ## Further References
 TODO: *Add any useful further references.*
 
-## GenBench Eval Card
