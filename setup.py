@@ -7,7 +7,7 @@ REQUIRED_PKGS = [
     # We use Click to power our command line interface
     "Click>=8.1",
     # Jsonnet is used as a format for task configs
-    "jsonnet>=0.20",
+    "jsonnet-binary",
     # dataclass_factory is used to convert jsonnet to dataclasses
     "dataclass_factory>=2.16",
     # We use datasets to load data from HuggingFace datasets
