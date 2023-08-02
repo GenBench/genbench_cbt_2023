@@ -1,13 +1,16 @@
 {
-    name: 'Cross_lingual Local QA',
+    name: 'Cross-lingual Local QA',
 
-    // @TODO: Add a description of the task
-    description: 'Cross_lingual Local QA aims to measure ...',
+    // Add a description of the task
+    description: 'Cross-lingual Local QA aims to measure the presence of local and culture-specific knowledge in LLMs, as well as its generalisation across languages.',
 
-    // @TODO: Add a list of keywords that describe the task
+    // Add a list of keywords that describe the task
     keywords: [
-        'keyword1',
-        'keyword2',
+        'cross-lingual',
+        'multilingual'
+        'knowledge generalisation',
+        'LLM evaluation',
+        'QA',
     ],
 
     authors: [
@@ -22,7 +25,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/LLM_test.jsonl',
+        test: 'https://raw.githubusercontent.com/GenBench/genbench_cbt/main/src/genbench/dummy_data/CLL-QA_test.jsonl',
     },
 
     has_validation_set: false,
@@ -45,10 +48,7 @@
         // also provide a custom prompt preparation in the task's Python class.
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Add two numbers together\n\n',
-                instruction_few_shot: 'Add two numbers together. Here are some examples: \n\n',
-                input_prefix: 'Q: ',
-                output_prefix: '\nA: ',
+                question:,
             }
         },
     },
