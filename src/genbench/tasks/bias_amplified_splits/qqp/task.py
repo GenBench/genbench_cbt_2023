@@ -1,5 +1,6 @@
-from genbench import Task
 from typing import Any, Dict
+
+from genbench import Task
 
 
 class BiasAmplifiedSplitsQqp(Task):
