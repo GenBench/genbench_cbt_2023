@@ -7,7 +7,7 @@
     // Add a list of keywords that describe the task
     keywords: [
         'cross-lingual',
-        'multilingual'
+        'multilingual',
         'knowledge generalisation',
         'LLM evaluation',
         'QA',
