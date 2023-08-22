@@ -8,9 +8,9 @@ to the way a model is evaluated (e.g. whether a model is calibrated) or the type
 number of parameters or instructions tuning). These external factors can be added into analysis by using the 
 task.add_factor() method. The output-metric is Cohen\'s kappa for each factor across all different conditions. 
 A kappa-value close to 1 indicates that the factors does not change the model prediction, while a factor close to 0 
-strongly changes model predictions. Currently, this test evaluats the ANLI-dataset (Nie et al., 2019).
+strongly changes model predictions. Currently, this test evaluates the ANLI-dataset (Nie et al., 2019).
 
-*Size*: for 600 data_IDs. The user can choose to reduce the number of evaluated data_IDs.
+*Size*: 57600 for 600 data_IDs. The user can choose to reduce the number of evaluated data_IDs.
 
 ## Abstract
 Finding the best way of adapting pre-trained language models to a task is a big challenge in current NLP.
