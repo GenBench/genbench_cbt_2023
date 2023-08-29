@@ -2,15 +2,15 @@
     name: 'Latent feature based Data Split',
 
      // @TODO: Add a description of the task
-    description: 'We split hate speech data based on the internal representations of language models. 
+    description: "We split hate speech data based on the internal representations of a RoBERTa model. 
     The o.o.d. data splits leads to an under-representation of parts of the latent space in the 
-    model\'s training set, making the split more challenging than a random split.'
+    model's training set, making the split more challenging than a random split.",
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
         'non-i.i.d. generalisation',
-        'o.o.d. generalisation'
-        'latent-features'
+        'o.o.d. generalisation',
+        'latent-features',
         'hate speech'
     ],
 
@@ -38,7 +38,7 @@
             git_commit_sha: '34d6add55811828baef83e0d7c6826e2193f7b6a',
         },
         {
-            hf_id: 'f1',
+            hf_id: 'f1(average=macro)',
             best_score: 1.0,
             git_commit_sha: '3a4c40f7397dcd7d9dccf0659616dc6b14072dcb',
         },
