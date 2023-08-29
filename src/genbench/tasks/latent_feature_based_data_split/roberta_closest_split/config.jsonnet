@@ -1,15 +1,17 @@
 {
-    name: 'Hate Speech Detection',
+    name: 'Latent feature based Data Split (roberta_closest_split)',
 
     // @TODO: Add a description of the task
-    description: 'Hate speech detection is the task of detecting offensive or hateful language in communication. Usually,
-    such speech is directed towards a person or a group of people based on some characteristics like religion, gender
-    ethnicity etc.',
+    description: 'We split hate speech data based on the internal representations of a RoBERTa model. 
+    The o.o.d. data splits leads to an under-representation of parts of the latent space in the 
+    model\'s training set, making the split more challenging than a random split.'
 
     // @TODO: Add a list of keywords that describe the task
     keywords: [
-        'hate speech',
-        'social media',
+        'non-i.i.d. generalisation',
+        'o.o.d. generalisation'
+        'latent-features'
+        'hate speech'
     ],
 
     authors: [
@@ -22,11 +24,9 @@
     data_source: {
         type: 'manual',
         test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_test.jsonl',
-        validation: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_dev.jsonl',
         train: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/hate_speech_detection/reddit_train.jsonl'
     },
 
-    has_validation_set: true,
     has_train_set: true,
 
     task_type: 'multiple_choice',
@@ -42,11 +42,6 @@
             best_score: 1.0,
             git_commit_sha: '3a4c40f7397dcd7d9dccf0659616dc6b14072dcb',
         },
-#        {
-#            hf_id: 'roc_auc',
-#            best_score: 1.0,
-#            git_commit_sha: 'fb95becece31595a0c04cd1ae9e50ab8e60e9564'
-#        },
     ],
 
     preparation_strategies: {
