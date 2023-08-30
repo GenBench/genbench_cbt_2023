@@ -49,10 +49,10 @@ The sentences and the sequence of sentences for each dataset have a prescribed s
 
 ## GenBench Eval card
 
-- *Generalisation type* The generalisation type evaluated is 'compositional' and 'structural', because the dataset is generated with overlapping (and compositional) rules, that a system should detect
-- *Motivation* The motivation is both 'practical' and 'cognitive' because the dataset should test the capabilities of the system to reason in terms of rules as humans do, and as a side effect lead to more explainable models, which would have an impact on practicality
-- *Shift source* the data is automatically generated from manually collected seeds, and by applying prespecified (but naturalistic) templates
-- *Shift locus* This test can be used to evaluate a pretrained or finetuned model
+- *Generalisation type* The generalisation type evaluated is 'compositional' because the dataset is generated with overlapping (and compositional) rules, that a system should detect
+- *Motivation* The motivation is both 'intrinsic' and 'cognitive': 'cognitive' because the dataset would test the capabilities of the system to detect the kind of information humans perceive in the provided data; 'intrinsic' because if a system can learn to detect specific linguistic information, we could adjust the model to detect different types of information.
+- *Shift source* the data is automatically generated from manually collected seeds, and by applying prespecified (but naturalistic) templates.
+- *Shift locus* is 'pretrained-trained' because we imagine a system would use representations of the data from a pretrained model to address the task of identifying specific linguistic phenomena.
 - *Shift type* 
 
 

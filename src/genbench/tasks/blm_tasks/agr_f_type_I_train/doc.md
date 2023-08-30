@@ -1,4 +1,4 @@
-# BLM_tasks (agr_f)
+# BLM_tasks (agr_f_type_I_train)
 
 ## Abstract
 
@@ -7,7 +7,7 @@ BLM-AgrF is an instance of Blackbird's Language Matrices (BLM). This novel lingu
 The sentence structure is constructed to illustrate several underlying generative rules that describe different aspects of the linguistic phenomenon. These rules need to be identified and disentangled to correctly generalize and thus identify the correct answer. The sequence structure was designed in a similar manner to visual IQ tests, and follows a generative process of overlapping rules. The output is multiple choice. The correct sentence should be the correct continuation of the input sequence w.r.t. the dataset's generation rules.
 
 ## Examples
-BLM-AgrF (agr_f) is a dataset capturing subject-verb agreement in French:
+BLM-AgrF (agr_f_type_I_train) is a dataset capturing subject-verb agreement in French:
 
 Input: 
 
@@ -43,7 +43,7 @@ The task is formatted as multiple choice. The input consists of a sequence of 7 
 }
 
 ## Data Source
-The dataset was automatically generated based on manually selected seeds and predefined sentence templates.
+The dataset was automatically generated based on manually selected seeds and predefined sentence templates. Compared to the 'agr_f' task, the training data for this subtask has minimal lexical variation both among the sentences in the input sequence, and between the input and output sentences.
 
 ## Limitations and Bias
 The sentences and the sequence of sentences for each dataset have a prescribed structure. 
@@ -54,7 +54,7 @@ The sentences and the sequence of sentences for each dataset have a prescribed s
 - *Motivation* The motivation is both 'intrinsic' and 'cognitive': 'cognitive' because the dataset would test the capabilities of the system to detect the kind of information humans perceive in the provided data; 'intrinsic' because if a system can learn to detect specific linguistic information, we could adjust the model to detect different types of information.
 - *Shift source* the data is automatically generated from manually collected seeds, and by applying prespecified (but naturalistic) templates.
 - *Shift locus* is 'pretrained-trained' because we imagine a system would use representations of the data from a pretrained model to address the task of identifying specific linguistic phenomena.
-- *Shift type* 
+- *Shift type* There is a difference in the lexical distribution in the training data and the test -- there is minimal variation in the lexical material in the training instances, whereas the test set has maximal lexical variation.
 
 
 ![GenBench Eval Card](GenBench_eval_card.png)

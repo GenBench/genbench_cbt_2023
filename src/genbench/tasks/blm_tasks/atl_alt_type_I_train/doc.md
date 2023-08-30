@@ -1,4 +1,4 @@
-# BLM_tasks (alt_atl)
+# BLM_tasks (atl_alt_type_I_train)
 
 ## Abstract
 This dataset defines a BLM task for predicate-argument structure, with a structured dataset focused on the spray/load verb alternations in English. The input sequence for each problem instance consists of 7 sentences that include one alternant from the spray-load alternation and the target sentence is the other alternant, to be chosen among a minimally contrastive and adversarial set of answers. The dataset aims to facilitate investigations into how verb information is encoded in sentence embeddings and how well models can generalize the complex properties of argument structures.
@@ -7,10 +7,10 @@ The sentence structure is constructed to illustrate several underlying generativ
 
 
 ## Examples
+
 Input:
 
-|   |                                                 |
-|---|-------------------------------------------------|
+|:--:|:-----------------------------------------------|
 | 1 | The girl sprayed the wall with paint.           |
 | 2 | Paint was sprayed by the girl                   |
 | 3 | Paint was sprayed onto the wall by the girl     |
@@ -22,8 +22,7 @@ Input:
 
 Choices:
 
-|                                           |          |
-|-------------------------------------------|----------|
+|:------------------------------------------|:---------|
 | The girl sprayed paint onto the wall      | Correct  |
 | The girl was sprayed paint onto the wall  | AgentAct |
 | The girl sprayed paint the wall           | Alt1     |
@@ -38,13 +37,12 @@ Choices:
 The task is formatted as multiple choice. The input consists of a sequence of 7 sentences, separated by the end of sentence marker (</s>). The options are provided as a list of sentences, and the index of the correct one is specified as the target:
 
 {
-   "input": "The editors smudge the paper with grease. </s> Sarcasm was smudged by teachers. </s> The title was plastered on the vinyls by the band. </s> The pad was rubbed on the screen. </s> The box was loaded by the buyer. </s> The site was plastered with logos by the quartet. </s> The earth was seeded with carbon.", 
-   "target": 4, 
-   "target_options": ["Moses strung these lights under the fence.", "The author strews irony the book.", "Salt sprinkle the nuns over the beans.", "Teachers were smudged sarcasm on the canvas.", "He wraps it around his neck.", "Dirt spatters you whoever.", "The inside squirt you with a tiny bit of oil.", "Alex just sticks with the food in a box.", "Flanagan strews the humor of the movie."]
-}
+   "input": "The buyer can load the tools in the box. </s> The crystals were scattered by the wizard. </s> The letters were hung on the ceiling by the artist. </s> Plenty of historical backstory was strewed in the figures. </s> Poles were sewed by them. </s> The sink was swashed with the chemicals by the volunteers. </s> The writing marks were rubbed with the eraser.", 
+   "target": 2, 
+   "target_options": ["The other place was sticked the center with the OEM drive.", "Whoever spatters the windshield the poison.", "I will hang the ceiling with the picture.", "The orb scatters earth under the dragons.", "Drizzle over the cream with brandy.", "Blotches of ink smudge them on the paper.", "The vegetables baste vinegar the farmers.", "The pot squirt the miners with the glue.", "The buyer can load the suitcase for the wedding."]}
 
 ## Data Source
-The dataset was automatically generated based on manually selected seeds and predefined sentence templates. The dataset contains a single verb alternation.
+The dataset was automatically generated based on manually selected seeds and predefined sentence templates. The dataset contains a single verb alternation. Compared to the 'atl_alt' task, the training data for this subtask has minimal lexical variation both among the sentences in the input sequence, and between the input and output sentences.
 
 ## Limitations and Bias
 The sentences and the sequence of sentences for each dataset have a prescribed structure. 
@@ -55,7 +53,7 @@ The sentences and the sequence of sentences for each dataset have a prescribed s
 - *Motivation* The motivation is both 'intrinsic' and 'cognitive': 'cognitive' because the dataset would test the capabilities of the system to detect the kind of information humans perceive in the provided data; 'intrinsic' because if a system can learn to detect specific linguistic information, we could adjust the model to detect different types of information.
 - *Shift source* the data is automatically generated from manually collected seeds, and by applying prespecified (but naturalistic) templates.
 - *Shift locus* is 'pretrained-trained' because we imagine a system would use representations of the data from a pretrained model to address the task of identifying specific linguistic phenomena.
-- *Shift type* 
+- *Shift type* There is a difference in the lexical distribution in the training data and the test -- there is minimal variation in the lexical material in the training instances, whereas the test set has maximal lexical variation.
 
 
 ![GenBench Eval Card](GenBench_eval_card.png)

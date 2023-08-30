@@ -19,8 +19,11 @@
     ],
 
     subtasks_order: [
+        'agr_f_type_I_train',
         'agr_f',
+        'atl_alt_type_I_train',
         'atl_alt',
+        'alt_atl_type_I_train',
         'alt_atl',        
     ],
 }

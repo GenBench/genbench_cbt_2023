@@ -4,7 +4,7 @@ When exposed to tests of analytic intelligence, for example the visual RAVEN IQ 
 The tasks we propose translate this IQ task into language. Each subtask pertains to a grammatical or linguistic phenomenon, and the corresponding dataset consists of a sequence of sentences. The sentence structure is constructed to illustrate several underlying generative rules that describe different aspects of the linguistic phenomenon. These rules need to be identified and disentangled to correctly generalize and thus identify the correct answer. The sequence structure was designed in a similar manner to visual IQ tests, and follows a generative process of overlapping rules. The output is multiple choice. The correct sentence should be the correct continuation of the input sequence w.r.t. the dataset's generation rules.
 
 ## Examples
-We have three subtasks:
+We have three subtasks, each with a variation (so more accurately, six subtasks):
 
 * `agrF`: subject-verb agreement in French:
 
@@ -31,6 +31,9 @@ Choices:
 | The vases with the flower  from the garden  leak.         | WN1     |
 | The vases with the flowers  from the gardens  leak.       | WN2     |
 |-----------------------------------------------------------|---------|
+
+
+There are two variations for this task -- one where the training data has minimal lexical variation in the input and output (agr_f_type_I_train), and one where there is maximal lexical variation among the sentences in the input, and between the input and the candidate answers.
 
 * `ALT-ATL`: spray/load verb alternation in English (from Agent - Locative - Theme to Agent - Theme - Locative)
 
@@ -62,7 +65,12 @@ Choices:
 | Paint sprayed the wall with the girl      | AASSM    |
 
 
+As for the subject-verb agreement dataset, there are two variations for this task -- one where the training data has minimal lexical variation in the input and output (ALT-ATL_type_I_train), and one where there is maximal lexical variation among the sentences in the input, and between the input and the candidate answers.
+
 * `ATL-ALT`: verb causal alternation in English (from Agent - Theme - Locative to Agent - Locative - Theme)
+
+Again, there are two variations for this task -- one where the training data has minimal lexical variation in the input and output (ATL-ALT_type_I_train), and one where there is maximal lexical variation among the sentences in the input, and between the input and the candidate answers.
+
 
 
 ## Data Source
