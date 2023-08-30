@@ -10,7 +10,6 @@ import statsmodels.api as sm
 
 from genbench import Task
 
-
 LABELS = [
     ["Correct", "True", "Always", "Yes", "Guaranteed", "Duplicates"],  # `correct` labels
     ["Inconclusive", "Possible", "Sometimes", "Maybe", "Neither"],  # `neutral` labels
@@ -32,7 +31,7 @@ factors = [
 ]
 
 
-class IclConsistencyTestTask(Task):
+class IclConsistencyTestAnli(Task):
     """Python implementation of the ICL consistency test task."""
 
     def evaluate_predictions(
@@ -79,24 +78,18 @@ class IclConsistencyTestTask(Task):
 
         # Compute main effects for each factor
         betas, p_values = [], []
-        # TODO: delete this extra list when error with one_label is fixed
-        factors = []
         for factor in self.factors:
             X = setups_by_factor_df[factor].to_numpy(dtype=int)  # X is binary and states if a factor is present or not
             y = accuracies_df["accuracy"].to_numpy(dtype=float)  # y are the acc. scores of the respective setups
             mask = X != 2  # create mask to ignore setups that are irrelevant to factor (coded as X == 2)
 
             # fit GLM
-            try:
-                beta, p_value = self._calculate_main_effects(X[mask], y[mask])
-            except:
-                continue
+            beta, p_value = self._calculate_main_effects(X[mask], y[mask])
 
             betas.append(beta)
             p_values.append(p_value)
-            factors.append(factor)
 
-        main_effects_df = DataFrame({'factor': factors, 'beta': betas, 'p_value': p_values})
+        main_effects_df = DataFrame({'factor': self.factors, 'beta': betas, 'p_value': p_values})
 
         # Compute Cohen's kappa for consistency
         kappas = []
@@ -266,3 +259,4 @@ class IclConsistencyTestTask(Task):
             assert (
                 used_data_ids.sort() == results_df.loc[results_df["setup_ID"] == setup_ID]["data_ID"].unique().sort()
             ), "Not all data_IDs are the same for all setups. Check for missing predictions!"
+

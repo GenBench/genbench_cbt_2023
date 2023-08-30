@@ -21,8 +21,9 @@ from tqdm import tqdm
 from genbench import load_task
 from genbench.api import PreparationStrategy
 
-
-N_DATAPOINTS = 50
+    
+DATASET = 'mnli' # choose between 'anli' and 'mnli'
+N_DATAPOINTS = 2 #50
 MODEL_NAME = "huggyllama/llama-7b"
 BATCH_SIZE = 8
 
@@ -94,8 +95,9 @@ class Generator:
 
 
 if __name__ == "__main__":
+   
     # Load the task
-    task = load_task("icl_consistency_test")
+    task = load_task("icl_consistency_test")[DATASET]
     ds = task.get_prepared_datasets(PreparationStrategy.PROMPT_BASED_TESTING, shot_list=[0])[0]
 
     # Selecting a subset of example for illustration purposes
@@ -117,5 +119,6 @@ if __name__ == "__main__":
     results = task.evaluate_predictions(predictions=predictions, gold=ds)
 
     print("EVALUATED SUCCESSFULLY!")
-    print(f'Exact-match accuracies: \n{results["exact_match_accuracy"]["accuracy"]}')
+    print(f'Accuracies: \nMean: {results["accuracy"]["accuracy"].mean()}; std: {results["accuracy"]["accuracy"].std()}')
+    print(f'Main effects: \n{results["main_effects"]}')
     print(f'Consistency: \n{results["kappas"]}')
