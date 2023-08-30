@@ -3,6 +3,7 @@ from numpy import ndarray
 
 import numpy as np
 import datasets
+import pandas as pd
 from pandas import DataFrame
 from sklearn.metrics import cohen_kappa_score
 import statsmodels.api as sm
@@ -64,32 +65,41 @@ class IclConsistencyTestTask(Task):
         results_df = results_df.sort_values(by=["setup_ID", "data_ID"])
         self._assert_equal_data_ids(results_df)
 
-        # Compute the exact match accuracy for each setup
-        accuracy_metrics = {factor: [] for factor in self.factors + ["accuracy"]}
+        # Compute the accuracy for each setup
+        accuracies, setup_IDs, setups_by_factor = [], [], []
         for setup_ID, setup_predictions in results_df.groupby("setup_ID"):
-            temp = self._convert_numeric_id_to_dict(setup_ID, n_repetitions=1)
-            for factor in self.factors:
-                accuracy_metrics[factor].extend(temp[factor])
-            accuracy_metrics["accuracy"].append(
-                (setup_predictions["predictions_numeric"] == setup_predictions["target_numeric"]).mean()
-            )
-        breakpoint()
+            accuracy = (setup_predictions["predictions_numeric"] == setup_predictions["target_numeric"]).mean()
+
+            accuracies.append(accuracy)
+            setup_IDs.append(setup_ID)
+            setups_by_factor.append(setup_predictions[self.factors].head(1))
+
+        accuracies_df = DataFrame({"setup_ID": setup_IDs, "accuracy": accuracies})
+        setups_by_factor_df = pd.concat(setups_by_factor, ignore_index=True)
 
         # Compute main effects for each factor
+        betas, p_values = [], []
+        # TODO: delete this extra list when error with one_label is fixed
+        factors = []
         for factor in self.factors:
-            X = np.array(accuracy_metrics[factor], dtype=int)
-            y = np.array(accuracy_metrics["accuracy"], dtype=float)
-
-            # create mask to ignore setups that are irrelevant to factor
-            mask = X != 2
+            X = setups_by_factor_df[factor].to_numpy(dtype=int)  # X is binary and states if a factor is present or not
+            y = accuracies_df["accuracy"].to_numpy(dtype=float)  # y are the acc. scores of the respective setups
+            mask = X != 2  # create mask to ignore setups that are irrelevant to factor (coded as X == 2)
 
             # fit GLM
-            betas, p_values = self._calculate_main_effects(X[mask], y[mask])
-            accuracy_metrics[factor] = {"beta": betas[1],
-                                        "p_value": p_values[1]}
+            try:
+                beta, p_value = self._calculate_main_effects(X[mask], y[mask])
+            except:
+                continue
 
-        # Compute the Cohen's kappa for consistency
-        kappas = {}
+            betas.append(beta)
+            p_values.append(p_value)
+            factors.append(factor)
+
+        main_effects_df = DataFrame({'factor': factors, 'beta': betas, 'p_value': p_values})
+
+        # Compute Cohen's kappa for consistency
+        kappas = []
         for factor in self.factors:
             factor_present = results_df.loc[results_df[factor] == "1"]["predictions_numeric"]
             factor_absent = results_df.loc[results_df[factor] == "0"]["predictions_numeric"]
@@ -98,15 +108,17 @@ class IclConsistencyTestTask(Task):
             mask = [(f1 != -1 and f2 != -1) for f1, f2 in zip(factor_absent, factor_present)]
             factor_present, factor_absent = factor_present[mask], factor_absent[mask]
 
-            kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
+            kappas.append(cohen_kappa_score(factor_present, factor_absent))
+
+        kappas_df = DataFrame({'factor': self.factors, 'kappa': kappas})
 
         # Calculate average kappa
-        kappa_avg = np.mean(list(kappas.values()))
+        kappa_avg = kappas_df["kappa"].mean()
 
         # Return the evaluation metrics.
-        return {"exact_match_accuracy": accuracy_metrics["accuracy"],
-                "main_effects": accuracy_metrics,
-                "kappas": kappas,
+        return {"accuracy": accuracies_df,
+                "main_effects": main_effects_df,
+                "kappas": kappas_df,
                 "kappa_avg": kappa_avg}
 
     def add_factor(self, data: Tuple[Dict, Dict], factor: str) -> Dict[str, Dict[str, Any]]:
@@ -228,7 +240,7 @@ class IclConsistencyTestTask(Task):
         model = sm.GLM(y, X)
         results = model.fit()
 
-        return results.params, results.pvalues
+        return results.params[1], results.pvalues[1]
 
     @staticmethod
     def _label_to_numeric(label: str) -> int:
