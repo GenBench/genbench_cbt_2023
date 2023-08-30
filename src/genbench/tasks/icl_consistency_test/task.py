@@ -1,9 +1,11 @@
 from typing import Any, Dict, Tuple
+from numpy import ndarray
 
 import numpy as np
 import datasets
 from pandas import DataFrame
 from sklearn.metrics import cohen_kappa_score
+import statsmodels.api as sm
 
 from genbench import Task
 
@@ -37,7 +39,6 @@ class IclConsistencyTestTask(Task):
         *,
         predictions: Dict[str, Dict[str, Any]],
         gold: datasets.Dataset,
-        save_path: str = None,
     ) -> Dict[str, Any]:
         """Evaluate the predictions of the model against the gold data.
         Calculating exact match accuracy plus consistency across all setups (Cohen's kappa).
@@ -63,17 +64,31 @@ class IclConsistencyTestTask(Task):
         results_df = results_df.sort_values(by=["setup_ID", "data_ID"])
         self._assert_equal_data_ids(results_df)
 
-        # Compute the exact match accuracy for each setup.
-        em = {factor: [] for factor in self.factors + ["accuracy"]}
+        # Compute the exact match accuracy for each setup
+        accuracy_metrics = {factor: [] for factor in self.factors + ["accuracy"]}
         for setup_ID, setup_predictions in results_df.groupby("setup_ID"):
             temp = self._convert_numeric_id_to_dict(setup_ID, n_repetitions=1)
             for factor in self.factors:
-                em[factor].extend(temp[factor])
-            em["accuracy"].append(
+                accuracy_metrics[factor].extend(temp[factor])
+            accuracy_metrics["accuracy"].append(
                 (setup_predictions["predictions_numeric"] == setup_predictions["target_numeric"]).mean()
             )
+        breakpoint()
 
-        # Compute the Cohen's kappa for consistency.
+        # Compute main effects for each factor
+        for factor in self.factors:
+            X = np.array(accuracy_metrics[factor], dtype=int)
+            y = np.array(accuracy_metrics["accuracy"], dtype=float)
+
+            # create mask to ignore setups that are irrelevant to factor
+            mask = X != 2
+
+            # fit GLM
+            betas, p_values = self._calculate_main_effects(X[mask], y[mask])
+            accuracy_metrics[factor] = {"beta": betas[1],
+                                        "p_value": p_values[1]}
+
+        # Compute the Cohen's kappa for consistency
         kappas = {}
         for factor in self.factors:
             factor_present = results_df.loc[results_df[factor] == "1"]["predictions_numeric"]
@@ -89,7 +104,8 @@ class IclConsistencyTestTask(Task):
         kappa_avg = np.mean(list(kappas.values()))
 
         # Return the evaluation metrics.
-        return {"exact_match_accuracy": em,
+        return {"exact_match_accuracy": accuracy_metrics["accuracy"],
+                "main_effects": accuracy_metrics,
                 "kappas": kappas,
                 "kappa_avg": kappa_avg}
 
@@ -131,7 +147,7 @@ class IclConsistencyTestTask(Task):
             keep_present: whether to keep data with the factor present or absent.
         """
         self._set_factors()
-        # breakpoint()
+
         len_setup_ID_preamble = 4
         index_factor = self.factors.index(factor) + len_setup_ID_preamble
         realisation_to_keep = str(int(keep_present))
@@ -198,6 +214,21 @@ class IclConsistencyTestTask(Task):
             setup_dict[factor] = [value] * n_repetitions
 
         return setup_dict
+
+    @staticmethod
+    def _calculate_main_effects(X: ndarray, y: ndarray) -> Tuple[ndarray, ndarray]:
+        """
+
+        :return:
+        """
+        # Add a constant column to X for the intercept
+        X = sm.add_constant(X)
+
+        # Fit GLM
+        model = sm.GLM(y, X)
+        results = model.fit()
+
+        return results.params, results.pvalues
 
     @staticmethod
     def _label_to_numeric(label: str) -> int:
