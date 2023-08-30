@@ -30,6 +30,9 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 
 class Generator:
+    """
+    A simple wrapper to evaluate a given hf-model
+    """
     def __init__(self, model_name="huggyllama/llama-7b"):
         self.max_new_tokens = 4  # some labels consist of up to 4 tokens
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(
