@@ -50,6 +50,8 @@ Please use a branch name that is informative of your task. (In this exampled, we
 4. **Install the `genbench` package in editable mode**.
 
 Create a virtual environment for your task (Note that you can use whatever name instead of `venv`)
+
+*Make sure your Python version >= 3.9*
 ```bash
 python -m venv venv
 source venv/bin/activate
@@ -271,10 +273,10 @@ To this end, GenBench tasks exist as Python classes and are defined using two fi
     has_train_set: true, // Default false
     
     // We currently support three task types: 
-    // 'free_form', 'multi_choice', and 'sequence_labeling'
+    // 'free_form', 'multiple_choice', and 'sequence_labeling'
     // The task type selected here must match the choices in other fields 
     // (e.g. "free_form_output_regex", or "field_mapping")
-    task_type: 'multi_choice',
+    task_type: 'multiple_choice',
     
     // If the task is a free form generation, we use the following
     // regex to extract the answer.
@@ -599,7 +601,7 @@ class MyAwesomeTaskDict(TaskDict):
     has_validation_set: true,
     has_train_set: true,
     
-    task_type: 'multi_choice',
+    task_type: 'multiple_choice',
     
     field_mapping: {
         input: 'sentence',
@@ -758,7 +760,7 @@ class MyAwesomeQATask(Task):
         Returns:
             A dictionary containing key-value pairs for the preprocessed/formatted example.
         """
-        input = f"{example['context']} {tokenization_utils.SEP_TOEKN} {example['question']}"
+        input = f"{example['context']} {tokenization_utils.SEP_TOKEN} {example['question']}"
         target = example["answer"]
         return {
             "input": input, 

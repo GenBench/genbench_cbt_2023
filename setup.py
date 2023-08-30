@@ -76,6 +76,6 @@ setup(
     include_package_data=True,
     install_requires=REQUIRED_PKGS,
     extras_require=EXTRAS_REQUIRE,
-    python_requires=">=3.8.0",
+    python_requires=">=3.9.0",
     entry_points={"console_scripts": ["genbench-cli = genbench.cli.genbench_cli:cli"]},
 )
