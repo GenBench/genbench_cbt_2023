@@ -1,5 +1,6 @@
 from typing import Any, Dict, Tuple
 
+import numpy as np
 import datasets
 from pandas import DataFrame
 from sklearn.metrics import cohen_kappa_score
@@ -84,10 +85,13 @@ class IclConsistencyTestTask(Task):
 
             kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
 
-        # TODO: Calculate average kappa
-        breakpoint()
+        # Calculate average kappa
+        kappa_avg = np.mean(list(kappas.values()))
+
         # Return the evaluation metrics.
-        return {"exact_match_accuracy": em, "kappas": kappas}
+        return {"exact_match_accuracy": em,
+                "kappas": kappas,
+                "kappa_avg": kappa_avg}
 
     def add_factor(self, data: Tuple[Dict, Dict], factor: str) -> Dict[str, Dict[str, Any]]:
         """Concatenate the data with the factor present and absent and update the setup_IDs accordingly. Also add the
