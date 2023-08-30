@@ -24,7 +24,7 @@ factors = [
     "cross_instructions",
     "n_shots",
     "instructions",
-    "instruction_quality",
+    "hp_instructions",
 ]
 
 
@@ -84,6 +84,8 @@ class IclConsistencyTestTask(Task):
 
             kappas[factor] = cohen_kappa_score(factor_present, factor_absent)
 
+        # TODO: Calculate average kappa
+        breakpoint()
         # Return the evaluation metrics.
         return {"exact_match_accuracy": em, "kappas": kappas}
 
