@@ -1,12 +1,16 @@
-from genbench import Task
 from collections import OrderedDict
-from typing import Any,  List, Mapping
-from genbench.api import TaskType
+from typing import Any, List, Mapping
+
 import datasets
 import evaluate
+
+from genbench import Task
+from genbench.api import TaskType
 from genbench.utils.logging import get_logger
 
+
 logger = get_logger(__name__)
+
 
 class LatentFeatureBasedDataSplitRobertaClosestSplit(Task):
     def evaluate_predictions(

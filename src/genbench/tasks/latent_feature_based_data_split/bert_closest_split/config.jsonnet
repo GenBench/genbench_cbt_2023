@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/latent_feature_based_data_split/bert_closest_split/hatexplain_bert_closest_split_test.jsonl',
+        test: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/latent_feature_based_data_split/bert_closest_split/hatexplain_bert_closest_split_test_new.jsonl',
         train: 'https://raw.githubusercontent.com/MaikeZuefle/genbench_cbt/latent_feature_split/src/genbench/tasks/latent_feature_based_data_split/bert_closest_split/hatexplain_bert_closest_split_train.jsonl'
     },
 
