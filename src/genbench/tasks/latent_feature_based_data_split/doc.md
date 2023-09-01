@@ -1,10 +1,13 @@
 # Hate Speech Detection
 
 ## Abstract
-This project aims to go beyond the random train-test split by developing a more challenging data-splitting process 
-to better evaluate generalisation performance.
-We rely on a models internal representations to create a data split and create the split by clustering the internal representations and assigning clusters to either the train or the test set.
-Hate Speech is used as a testing ground for developing the splitting method.
+With the ever-growing presence of social media platforms comes the increased spread of harmful content and the need for robust hate speech detection systems.
+Such systems easily overfit to specific targets and keywords, and evaluating them without considering distribution shifts that might occur between train and test data overestimates their benefit.
+We challenge hate speech models via new train-test splits of existing datasets that rely on the clustering of models' hidden representations.
+We present two split variants (Subset-Sum-Split and Closest-Split) that, when applied to two datasets using four models, reveal how models catastrophically fail on blind spots in the latent space.
+This result generalises when developing a split with one model and evaluating it on another.
+Our analysis suggests that there is no clear surface-level property of the data split that correlates with the decreased performance, which underscores that task difficulty is not always humanly interpretable.
+We recommend incorporating latent feature-based splits in model development and release two splits via the GenBench benchmark.
 
 ## Examples
 {"input": "wow do not all speak at once niggers", "target": 0, "target_options": ["hate", "noHate", "offensive"]}  
@@ -45,6 +48,5 @@ SOFTWARE.
 
 ## GenBench Eval card
 This method can be used to test generalisation in HateSpeech for LLMs (pretrain - test locus).
-The split is based on the feature representations of a language model, therefore we assume that the shift is a covariate 
-shift. The method assesses the robustness of language models and how well they generalise.
+The split is based on the feature representations of a language model, therefore we assume that the shift is a covariate shift. The method assesses the robustness of language models and how well they generalise in out-of-distribution settings.
 ![GenBench Eval Card](eval_card.png)
