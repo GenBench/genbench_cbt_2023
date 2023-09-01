@@ -117,28 +117,26 @@ if __name__ == "__main__":
 
     # Evaluate the predictions
     results = task.evaluate_predictions(predictions=predictions, gold=ds)
-    
+
     print_out = f"""
     {"#" * 90}
     EVALUATED SUCCESSFULLY!
     {"#" * 90}
-    
+
     {"-" * 90}
     Accuracies:
     Mean: {results["accuracy"]["accuracy"].mean()}; std: {results["accuracy"]["accuracy"].std()}
     {"-" * 90}
-    Main effects:      
-    {results["main_effects"]}   
-    {"-" * 90}   
+    Main effects:
+    {results["main_effects"]}
+    {"-" * 90}
     Consistency:
     {results["kappas"]}
-    {"-" * 90} 
-    
+    {"-" * 90}
+
     {"#" * 90}
     Overall consistency: {results["kappa_avg"]}
     {"#" * 90}
     """
-    
-    print(print_out)
 
-    
+    print(print_out)
