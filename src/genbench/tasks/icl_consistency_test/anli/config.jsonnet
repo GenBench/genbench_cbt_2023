@@ -23,7 +23,7 @@
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/LucWeber/icl_consistency_data/main/data/genbench_all.jsonl',  
+        test: 'https://raw.githubusercontent.com/LucWeber/icl_consistency_data/main/data/genbench_all_anli.jsonl',  
     },
 
     has_validation_set: false,

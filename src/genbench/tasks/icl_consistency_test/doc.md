@@ -14,13 +14,12 @@ the other the MNLI-dataset (Wang et al., 2017).
 *Size*: Each subtask contains 57600 when using the full 600 data\_IDs. The user can choose to reduce the number of evaluated data\_IDs.
 
 ## Abstract
-Finding the best way of adapting pre-trained language models to a task is a big challenge in current NLP.
-Just like the previous generation of task-tuned models (TT), models that are adapted to tasks via in-context-learning (ICL) or instruction tuning (IT) are robust in some setups, but not in others.
-Here, we present a detailed analysis of which design choices cause instabilities and inconsistencies in LLM predictions.
-First, we show how spurious correlations between input distributions and labels -- a known issue in TT  models -- form only a minor problem for prompted models.
-Then we engage in a systematic, holistic evaluation of different factors that have been found to influence predictions in a prompting setup.
-We test all possible combinations of a range of factors on both vanilla and instruction-tuned LLMs of different scale, and statistically analyse the results to show which factors are the most influential, the most interactive or the most stable.
-From our results, we deduce which factors can be used without precautions, should be avoided or handled with care in most settings.
+Just like the previous generation of \textit{task-tuned} models (TT), LLMs that are adapted to tasks via prompt-based methods like _in-context-learning_ (ICL) or _instruction tuning_ (IT) perform well in some setups, but not in others.
+This lack of consistency in model predictions is a problem in prompt-based learning and hints at a lack of robust generalisation.
+We here introduce the ICL consistency test -- a contribution to the GenBench CBT -- which evaluates how consistent a model does predictions across many different setups while using the same data.
+The test is based on different established natural language inference tasks.
+It introduces a consistency metric to reliably estimate model consistency and provides insight into which properties of an evaluation setup render ICL predictions unstable.
+We conduct an empirical analysis of eight state-of-the-art models and our consistency metric reveals how LLMs lack robust generalisation.
 
 ## Examples
 The test evaluates the same datapoints across many different setups to determine the consistency of a model's predictions. Every datapoint has a data\_ID (specifying the original datapoint) and a setup\_ID (with each digit specifying the presence or absence of a factor).

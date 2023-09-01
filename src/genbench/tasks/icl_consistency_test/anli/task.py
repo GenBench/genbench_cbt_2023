@@ -97,6 +97,8 @@ class IclConsistencyTestAnli(Task):
             factor_present = results_df.loc[results_df[factor] == "1"]["predictions_numeric"]
             factor_absent = results_df.loc[results_df[factor] == "0"]["predictions_numeric"]
 
+            breakpoint()
+
             # mask out predictions that are out-of-label-distribution
             mask = [(f1 != -1 and f2 != -1) for f1, f2 in zip(factor_absent, factor_present)]
             factor_present, factor_absent = factor_present[mask], factor_absent[mask]
