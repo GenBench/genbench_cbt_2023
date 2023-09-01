@@ -21,8 +21,8 @@ from tqdm import tqdm
 from genbench import load_task
 from genbench.api import PreparationStrategy
 
-    
-DATASET = 'anli' # options: {'anli', 'mnli'}
+
+DATASET = "anli"  # options: {'anli', 'mnli'}
 N_DATAPOINTS = 200
 MODEL_NAME = "huggyllama/llama-7b"
 BATCH_SIZE = 8
@@ -34,6 +34,7 @@ class Generator:
     """
     A simple wrapper to evaluate a given hf-model
     """
+
     def __init__(self, model_name="huggyllama/llama-7b"):
         self.max_new_tokens = 4  # some labels consist of up to 4 tokens
         self.tokenizer = transformers.AutoTokenizer.from_pretrained(
@@ -95,11 +96,9 @@ class Generator:
 
 
 if __name__ == "__main__":
-   
     # Load the task
     task = load_task("icl_consistency_test")[DATASET]
     ds = task.get_prepared_datasets(PreparationStrategy.PROMPT_BASED_TESTING, shot_list=[0])[0]
-    breakpoint()
 
     # Selecting a subset of example for illustration purposes
     subset = list(set(ds["data_ID"]))[:N_DATAPOINTS]
@@ -118,11 +117,28 @@ if __name__ == "__main__":
 
     # Evaluate the predictions
     results = task.evaluate_predictions(predictions=predictions, gold=ds)
+    
+    print_out = f"""
+    {"#" * 90}
+    EVALUATED SUCCESSFULLY!
+    {"#" * 90}
+    
+    {"-" * 90}
+    Accuracies:
+    Mean: {results["accuracy"]["accuracy"].mean()}; std: {results["accuracy"]["accuracy"].std()}
+    {"-" * 90}
+    Main effects:      
+    {results["main_effects"]}   
+    {"-" * 90}   
+    Consistency:
+    {results["kappas"]}
+    {"-" * 90} 
+    
+    {"#" * 90}
+    Overall consistency: {results["kappa_avg"]}
+    {"#" * 90}
+    """
+    
+    print(print_out)
 
-    print("EVALUATED SUCCESSFULLY!")
-    print(f'Accuracies: \nMean: {results["accuracy"]["accuracy"].mean()}; std: {results["accuracy"]["accuracy"].std()}')
-    print(f'Main effects: \n{results["main_effects"]}')
-    print(f'Consistency: \n{results["kappas"]}')
-    print(f'#' * 90)
-    print(f'Overall consistency: {results["kappa_avg"]}')
-    print(f'#' * 90)
+    

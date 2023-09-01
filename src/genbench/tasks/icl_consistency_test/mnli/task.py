@@ -1,14 +1,14 @@
 from typing import Any, Dict, Tuple
-from numpy import ndarray
 
-import numpy as np
 import datasets
 import pandas as pd
+import statsmodels.api as sm
+from numpy import ndarray
 from pandas import DataFrame
 from sklearn.metrics import cohen_kappa_score
-import statsmodels.api as sm
 
 from genbench import Task
+
 
 LABELS = [
     ["Correct", "True", "Always", "Yes", "Guaranteed", "Duplicates"],  # `correct` labels
@@ -89,7 +89,7 @@ class IclConsistencyTestWSubtasksMnli(Task):
             betas.append(beta)
             p_values.append(p_value)
 
-        main_effects_df = DataFrame({'factor': self.factors, 'beta': betas, 'p_value': p_values})
+        main_effects_df = DataFrame({"factor": self.factors, "beta": betas, "p_value": p_values})
 
         # Compute Cohen's kappa for consistency
         kappas = []
@@ -103,16 +103,18 @@ class IclConsistencyTestWSubtasksMnli(Task):
 
             kappas.append(cohen_kappa_score(factor_present, factor_absent))
 
-        kappas_df = DataFrame({'factor': self.factors, 'kappa': kappas})
+        kappas_df = DataFrame({"factor": self.factors, "kappa": kappas})
 
         # Calculate average kappa
         kappa_avg = kappas_df["kappa"].mean()
 
         # Return the evaluation metrics.
-        return {"accuracy": accuracies_df,
-                "main_effects": main_effects_df,
-                "kappas": kappas_df,
-                "kappa_avg": kappa_avg}
+        return {
+            "accuracy": accuracies_df,
+            "main_effects": main_effects_df,
+            "kappas": kappas_df,
+            "kappa_avg": kappa_avg,
+        }
 
     def add_factor(self, data: Tuple[Dict, Dict], factor: str) -> Dict[str, Dict[str, Any]]:
         """Concatenate the data with the factor present and absent and update the setup_IDs accordingly. Also add the
@@ -259,4 +261,3 @@ class IclConsistencyTestWSubtasksMnli(Task):
             assert (
                 used_data_ids.sort() == results_df.loc[results_df["setup_ID"] == setup_ID]["data_ID"].unique().sort()
             ), "Not all data_IDs are the same for all setups. Check for missing predictions!"
-
