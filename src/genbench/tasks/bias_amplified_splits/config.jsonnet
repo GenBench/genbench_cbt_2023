@@ -17,7 +17,9 @@
 
     subtasks_order: [
         'mnli',
+        'mnli_prompt_based',
         'wanli',
+        'wanli_prompt_based',
         'qqp',
     ],
 }
