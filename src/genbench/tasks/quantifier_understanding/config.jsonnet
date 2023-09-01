@@ -12,11 +12,12 @@
 
     authors: [
         'Leroy Wang',
+        'Shane Steinert-Threlkeld'
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://github.com/lerow/genbench_cbt/blob/quantifier_understanding/src/genbench/tasks/quantifier_understanding/test_data.jsonl',
+        test: 'https://raw.githubusercontent.com/lerow/genbench_cbt/quantifier_understanding/src/genbench/tasks/quantifier_understanding/test_data.jsonl',
     },
 
     has_validation_set: false,
