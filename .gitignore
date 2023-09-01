@@ -87,13 +87,20 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
+.genbench_venv
+.submission_venv
 .env
 .venv
+submission_
+genbench_venv/
+submission_venv/
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+genbench_venv.bak/
+submission_venv.bak/
 
 # Spyder project settings
 .spyderproject
