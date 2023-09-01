@@ -14,12 +14,7 @@ the other the MNLI-dataset (Wang et al., 2017).
 *Size*: Each subtask contains 57600 when using the full 600 data\_IDs. The user can choose to reduce the number of evaluated data\_IDs.
 
 ## Abstract
-Just like the previous generation of \textit{task-tuned} models (TT), LLMs that are adapted to tasks via prompt-based methods like _in-context-learning_ (ICL) or _instruction tuning_ (IT) perform well in some setups, but not in others.
-This lack of consistency in model predictions is a problem in prompt-based learning and hints at a lack of robust generalisation.
-We here introduce the ICL consistency test -- a contribution to the GenBench CBT -- which evaluates how consistent a model does predictions across many different setups while using the same data.
-The test is based on different established natural language inference tasks.
-It introduces a consistency metric to reliably estimate model consistency and provides insight into which properties of an evaluation setup render ICL predictions unstable.
-We conduct an empirical analysis of eight state-of-the-art models and our consistency metric reveals how LLMs lack robust generalisation.
+Just like the previous generation of _task-tuned models_ (TT), _large language models_ (LLMs) that are adapted to tasks via prompt-based meth- ods like _in-context-learning_ (ICL) or _instruction tuning_ (IT) perform well in some setups, but not in others. This lack of consistency in prompt-based learning hints at a lack of robust generalisation. We here introduce the ICL consistency test – a contribution to the GenBench CBT – which evaluates how consistent a model does predictions across many different setups while using the same data. The test is based on different established natural language inference tasks. We provide preprocessed data that constitutes 96 different ‘setups’ and a metric that estimates model consistency across these setups. The metric is provided on a fine-grained level, to understand what properties of a setup render predictions unstable and on an aggregated level to compare overall model consistency. We conduct an empirical analysis of eight state-of-the-art models and our consistency metric reveals how all tested LLMs lack robust generalisation.
 
 ## Examples
 The test evaluates the same datapoints across many different setups to determine the consistency of a model's predictions. Every datapoint has a data\_ID (specifying the original datapoint) and a setup\_ID (with each digit specifying the presence or absence of a factor).
