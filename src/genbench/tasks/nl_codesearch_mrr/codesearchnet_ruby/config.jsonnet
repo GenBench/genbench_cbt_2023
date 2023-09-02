@@ -14,14 +14,16 @@
     authors: [
         'Andor Diera',
         'Abdelhalim Dahou',
+		'Lukas Galke',
+		'Fabian Karl',
         'Florian Sihler',
-        
+		'Ansgar Scherp',   
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_ruby/test_sample_cbt.jsonl',
-        train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_adv/train_sample_cbt.jsonl',
+        test: 'https://zenodo.org/record/8310891/files/test_ruby.jsonl',
+        train:'https://zenodo.org/record/8310891/files/train_adv.jsonl',
     },
 
     has_validation_set: false,

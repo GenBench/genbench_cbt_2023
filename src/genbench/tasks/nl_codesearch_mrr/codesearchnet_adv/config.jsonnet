@@ -1,7 +1,7 @@
 {
     name: 'Natural Language Codesearch Ranking (codesearchnet_adv)',
 
-    description: 'Natural Language Codesearch Ranking (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness in covariate shift',
+    description: 'Natural Language Codesearch Ranking (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness against covariate shifts',
 
     keywords: [
         'codesearch',
@@ -15,14 +15,16 @@
     authors: [
         'Andor Diera',
         'Abdelhalim Dahou',
+		'Lukas Galke',
+		'Fabian Karl',
         'Florian Sihler',
-        
+		'Ansgar Scherp',
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_adv/test_sample_cbt.jsonl',
-        train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/mrr/codesearchnet_adv/train_sample_cbt.jsonl',
+        test: 'https://zenodo.org/record/8310891/files/test_adv.jsonl',
+        train:'https://zenodo.org/record/8310891/files/train_adv.jsonl',
     },
 
     has_validation_set: false,

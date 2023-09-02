@@ -8,7 +8,7 @@ from more_itertools import chunked
 from genbench import Task
 
 
-class NlCodesearchMrrWebquery(Task):
+class NlCodesearchMrrCosqa(Task):
     def get_dataset_raw(self, n_distractors) -> Dict[str, datasets.Dataset]:
         """Create the dataset adding n distractor pair (original comment, random code snippet) for ranking.
 

@@ -10,23 +10,25 @@ Given n number of code comment pairs (1 true pair and n-1 distractor pair where 
 ## Data Source
 **CodeSearchNet** : original dataset first published in https://arxiv.org/pdf/1909.09436.pdf , Java, Javascript, Go, Ruby, PHP subsets collected from huggingface-hub \
 **CodeSearchNet Adv** : a processed version of the CodeSearchNet Python dataset, introduced in the CodeXGLUE benchmark suite https://github.com/microsoft/CodeXGLUE \
-**WebQuery** : Python codesnippets from the CodeSearchNet dataset paired with real world user search engine queries, introduced in the CodeXGLUE benchmark suite: https://github.com/microsoft/CodeXGLUE \
+**CoSQA** : Python codesnippets from the CodeSearchNet dataset paired with real world user search engine queries, introduced in https://arxiv.org/pdf/2105.13239.pdf \
 **StatCodeSearch** : R code-comment pair snippets, scraped and extracted from public project on the Open Science Framework (OSF) by the submission authors
 
-During evaluation for each true code-comment pair we create n number of distractors where the comment is matched with a random code snippet. The distractor samples are sampled consistently by setting the random seed in the get_dataset_raw function
+For each comment in each subset we sampled randomly another code snippet from given subset, to create a fully balanced binary classification dataset. \
+For the dataset statistics we only consider the positive (matching) pairs. \
 
 **Dataset Size**:\
 *Finetuning set:* \
- -CodeSearchNet Adv train set 251k \
+ -CodeSearchNet Adv train set 251820 \
 *Test sets:* \
- -CodeSearchNet Adv test set 19k \
- -WebQuery test set 1k \
- -CodeSearchNet Ruby test set 2k \
- -CodeSearchNet Go test set 14k \
- -CodeSearchNet Java test set 26k \
- -CodeSearchNet Javascript test set 6k \
- -CodeSearchNet PHP test set 28k \
- -StatCodeSearch test set TBD 
+ -CodeSearchNet Adv test set 19210 \
+ -CoSQA 10293\
+ -CodeSearchNet Ruby 2279\
+ -CodeSearchNet Go 14291\
+ -CodeSearchNet Java 26909\
+ -CodeSearchNet Javascript 6483\
+ -CodeSearchNet PHP 29391\
+ -StatCodeSearch 1070 \
+ -Combined test set 109926
 ## Limitations and Bias
 TBD
 
@@ -37,3 +39,5 @@ TBD
 Husain, H., Wu, H. H., Gazit, T., Allamanis, M., & Brockschmidt, M. (2019). Codesearchnet challenge: Evaluating the state of semantic code search. arXiv preprint arXiv:1909.09436.
 
 Lu, S., Guo, D., Ren, S., Huang, J., Svyatkovskiy, A., Blanco, A., Shujie, L. I. U. (2021, June). CodeXGLUE: A Machine Learning Benchmark Dataset for Code Understanding and Generation. In Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 1).
+
+Huang J., Tang D., Shou L., Gong M., Xu K., Jiang D., Zhou M., Duan N. (2021) CoSQA: 20,000+ web queries for code search and question answering. In Proceedings of the 59th Annual Meeting of Association of Computational Linguistics and the 11th Internationaal Joint Conference on Natural Language Processing.
