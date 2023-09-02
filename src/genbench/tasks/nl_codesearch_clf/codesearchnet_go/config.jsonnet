@@ -14,14 +14,16 @@
     authors: [
         'Andor Diera',
         'Abdelhalim Dahou',
+		'Lukas Galke',
+		'Fabian Karl',
         'Florian Sihler',
-        
+		'Ansgar Scherp',
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_go/test_sample_cbt.jsonl',
-        train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
+        test: 'https://zenodo.org/record/8310891/files/test_go.jsonl',
+        train:'https://zenodo.org/record/8310891/files/train_adv.jsonl',
     },
 
     has_validation_set: false,
@@ -43,7 +45,7 @@
         },
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Given a code comment and a Go programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as: comment [SEP] code',
+                instruction_zero_shot: 'Given a code comment and a Go programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as comment [CODESPLIT] code',
                 input_prefix: '',
                 output_prefix: '',
                 choices_prefix: '',
