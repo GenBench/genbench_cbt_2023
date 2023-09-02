@@ -14,13 +14,16 @@
     authors: [
         'Andor Diera',
         'Abdelhalim Dahou',
+		'Lukas Galke',
+		'Fabian Karl',
         'Florian Sihler',
+		'Ansgar Scherp',
         
     ],
 
     subtasks_order: [
 	    'codesearchnet_adv',
-        'webquery',
+        'cosqa',
         'codesearchnet_ruby',
         'codesearchnet_go',
         'codesearchnet_java',

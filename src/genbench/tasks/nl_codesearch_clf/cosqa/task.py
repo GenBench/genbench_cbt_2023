@@ -4,7 +4,7 @@ from typing import Dict, List
 import datasets
 
 
-class NlCodesearchClfCodesearchnetAdv(Task):
+class NlCodesearchClfCosqa(Task):
     def get_dataset_raw(self) -> Dict[str, datasets.Dataset]:
         """Create the dataset adding a negative sample for each code comment/query
         
@@ -21,7 +21,7 @@ class NlCodesearchClfCodesearchnetAdv(Task):
         # Set random seed for consistency
         random.seed(42)
         for split, dataset in raw_datasets.items():
-            if split == "test" or split=="train":
+            if split == "test":
                 new_dataset = datasets.Dataset.from_dict({})
                 for item in dataset:
                     # Add comment-code pair to new dataset

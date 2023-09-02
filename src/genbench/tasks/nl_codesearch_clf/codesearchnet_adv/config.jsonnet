@@ -1,7 +1,7 @@
 {
     name: 'Natural Language Codesearch Classification (codesearchnet_adv)',
 
-    description: 'Natural Language Codesearch Classification (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness in covariate shift',
+    description: 'Natural Language Codesearch Classification (codesearchnet_adv) aims to measure the generalization capabilites of language models in code understanding. This subtasks measures robustness against covariate shifts',
 
     keywords: [
         'codesearch',
@@ -15,17 +15,19 @@
     authors: [
         'Andor Diera',
         'Abdelhalim Dahou',
+		'Lukas Galke',
+		'Fabian Karl',
         'Florian Sihler',
-        
+		'Ansgar Scherp',
     ],
 
     data_source: {
         type: 'manual',
-        test: 'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/test_sample_cbt.jsonl',
-        train:'https://raw.githubusercontent.com/drndr/genbench_ds/master/sample_data/clf/codesearchnet_adv/train_sample_cbt.jsonl',
+        test: 'https://zenodo.org/record/8310891/files/test_adv.jsonl',
+        train:'https://zenodo.org/record/8310891/files/train_adv.jsonl',
     },
 
-    has_validation_set: false,
+	has_validation_set: false,
     has_train_set: true,
 
     task_type: 'multiple_choice',
@@ -45,7 +47,7 @@
 		
         prompt_based_testing: {
             prompt_builder: {
-                instruction_zero_shot: 'Given a code comment and a Python programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as: comment [SEP] code',
+                instruction_zero_shot: 'Given a code comment and a Python programming language code snippet, determine if the comment accurately represents the function of the code. Respond with True if the code matches the comment and False if it does not. The input format is defined as comment [CODESPLIT] code',
                 input_prefix: '',
                 output_prefix: '',
                 choices_prefix: '',
