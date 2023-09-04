@@ -1,13 +1,15 @@
-from genbench import Task
 import random
-from typing import Dict, List
+from typing import Dict
+
 import datasets
+
+from genbench import Task
 
 
 class NlCodesearchClfCodesearchnetAdv(Task):
     def get_dataset_raw(self) -> Dict[str, datasets.Dataset]:
         """Create the dataset adding a negative sample for each code comment/query
-        
+
         Returns:
             A dictionary containing key-value pairs for the raw datasets.
             The keys are strings representing the name of the dataset split
@@ -21,14 +23,14 @@ class NlCodesearchClfCodesearchnetAdv(Task):
         # Set random seed for consistency
         random.seed(42)
         for split, dataset in raw_datasets.items():
-            if split == "test" or split=="train":
+            if split == "test" or split == "train":
                 new_dataset = datasets.Dataset.from_dict({})
                 for item in dataset:
                     # Add comment-code pair to new dataset
                     new_dataset = new_dataset.add_item(item)
                     other_items = [other_item for other_item in dataset if other_item != item]
-                    # Randomly select 49 other items
-                    random_items = random.sample(other_items, 1)
+                    # Randomly select other item
+                    random_item = random.sample(other_items, 1)
                     # Split input into comment and code
                     input_parts = item["input"].split("[CODESPLIT]")
                     # Split random input into comment and code
