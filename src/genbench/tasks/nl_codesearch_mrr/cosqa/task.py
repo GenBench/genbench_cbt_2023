@@ -1,32 +1,36 @@
 import random
 from typing import Dict, List
+
 import datasets
 import numpy as np
+
 from genbench import Task
 
+
 def chunked(iterable, chunk_size):
-        """
-        Split an iterable into chunks of a specified size.
+    """
+    Split an iterable into chunks of a specified size.
 
-        Args:
-            iterable: The iterable to be chunked.
-            chunk_size: The size of each chunk.
+    Args:
+        iterable: The iterable to be chunked.
+        chunk_size: The size of each chunk.
 
-        Returns:
-            A generator that yields chunks of the iterable.
-        """
-        if chunk_size <= 0:
-            raise ValueError("Chunk size must be greater than zero")
+    Returns:
+        A generator that yields chunks of the iterable.
+    """
+    if chunk_size <= 0:
+        raise ValueError("Chunk size must be greater than zero")
 
-        chunk = []
-        for item in iterable:
-            chunk.append(item)
-            if len(chunk) == chunk_size:
-                yield chunk
-                chunk = []
-        
-        if chunk:
+    chunk = []
+    for item in iterable:
+        chunk.append(item)
+        if len(chunk) == chunk_size:
             yield chunk
+            chunk = []
+
+    if chunk:
+        yield chunk
+
 
 class NlCodesearchMrrCosqa(Task):
     def get_dataset_raw(self, n_distractors) -> Dict[str, datasets.Dataset]:
@@ -59,7 +63,7 @@ class NlCodesearchMrrCosqa(Task):
                     new_data.append(item)
 
                     # Create other_items list once and then simply exclude the current item during sampling
-                    other_items = dataset_list[:idx] + dataset_list[idx+1:]
+                    other_items = dataset_list[:idx] + dataset_list[idx + 1 :]
                     random_items = random.sample(other_items, n_distractors)
 
                     input_parts = item["input"].split("[CODESPLIT]")
