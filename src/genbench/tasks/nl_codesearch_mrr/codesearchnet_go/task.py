@@ -1,12 +1,32 @@
 import random
 from typing import Dict, List
-
 import datasets
 import numpy as np
-from more_itertools import chunked
-
 from genbench import Task
 
+def chunked(iterable, chunk_size):
+        """
+        Split an iterable into chunks of a specified size.
+
+        Args:
+            iterable: The iterable to be chunked.
+            chunk_size: The size of each chunk.
+
+        Returns:
+            A generator that yields chunks of the iterable.
+        """
+        if chunk_size <= 0:
+            raise ValueError("Chunk size must be greater than zero")
+
+        chunk = []
+        for item in iterable:
+            chunk.append(item)
+            if len(chunk) == chunk_size:
+                yield chunk
+                chunk = []
+        
+        if chunk:
+            yield chunk
 
 class NlCodesearchMrrCodesearchnetGo(Task):
     def get_dataset_raw(self, n_distractors) -> Dict[str, datasets.Dataset]:
@@ -30,24 +50,28 @@ class NlCodesearchMrrCodesearchnetGo(Task):
         # Create 49 distractors for each item
         for split, dataset in raw_datasets.items():
             if split == "test":
-                new_dataset = datasets.Dataset.from_dict({})
-                for item in dataset:
-                    # Add comment-code pair to new dataset
-                    new_dataset = new_dataset.add_item(item)
-                    other_items = [other_item for other_item in dataset if other_item != item]
-                    # Randomly select 49 other items
+                # Convert dataset to list for easier manipulation
+                dataset_list = list(dataset)
+
+                new_data = []
+
+                for idx, item in enumerate(dataset_list):
+                    new_data.append(item)
+
+                    # Create other_items list once and then simply exclude the current item during sampling
+                    other_items = dataset_list[:idx] + dataset_list[idx+1:]
                     random_items = random.sample(other_items, n_distractors)
-                    # Split input into comment and code
-                    input_parts = item["input"].split("[SEP]")
+
+                    input_parts = item["input"].split("[CODESPLIT]")
+
                     for random_item in random_items:
-                        # Split random input into comment and code
-                        random_input_parts = random_item["input"].split("[SEP]")
-                        # Combine the "input" fields of the original and random items
-                        new_input = input_parts[0] + "[SEP]" + random_input_parts[1]
+                        random_input_parts = random_item["input"].split("[CODESPLIT]")
+                        new_input = input_parts[0] + "[CODESPLIT]" + random_input_parts[1]
                         new_item = {"input": new_input, "target": 0, "target_options": item["target_options"]}
-                        # Add distractor comment-code pair to new dataset
-                        new_dataset = new_dataset.add_item(new_item)
-                output[split] = new_dataset
+                        new_data.append(new_item)
+
+                # Convert list back to HuggingFace dataset
+                output[split] = datasets.Dataset.from_dict({k: [dic[k] for dic in new_data] for k in new_data[0]})
             else:
                 output[split] = dataset
         return output
