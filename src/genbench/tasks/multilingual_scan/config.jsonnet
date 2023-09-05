@@ -1,5 +1,5 @@
 {
-    name: 'Multilingual SCAN',
+    name: 'mSCAN',
 
     description: 'Multilingual SCAN aims to measure compositional and cross-lingual generalization in multilingual LLMs.',
 
@@ -14,29 +14,42 @@
         'Shane Steinert-Threlkeld',
     ],
 
-    data_source: {
-        type: 'manual',
-        test: 'https://somewebsite.com/path/to/test.jsonl',
-    },
-
-    # TODO: provide finetuning set
-    has_train_set: true,
-
-
-    task_type: 'free_form',
-
-    preparation_strategies: {
-        finetuning: {
-            objective: 'maximum_likelihood',
-        },
-    },
-
     subtasks_order: [
-        'fra',
-        'rus',
-        'cmn',
-        'tur',
-        'hin',
+        'cmn_add_prim_jump',
+        'cmn_add_prim_turn_left',
+        'cmn_length',
+        'cmn_mcd1',
+        'cmn_mcd2',
+        'cmn_mcd3',
+        'cmn_simple',
+        'eng_add_prim_jump',
+        'eng_add_prim_turn_left',
+        'eng_length',
+        'eng_mcd1',
+        'eng_mcd2',
+        'eng_mcd3',
+        'eng_simple',
+        'fra_add_prim_jump',
+        'fra_add_prim_turn_left',
+        'fra_length',
+        'fra_mcd1',
+        'fra_mcd2',
+        'fra_mcd3',
+        'fra_simple',
+        'hin_add_prim_jump',
+        'hin_add_prim_turn_left',
+        'hin_length',
+        'hin_mcd1',
+        'hin_mcd2',
+        'hin_mcd3',
+        'hin_simple',
+        'rus_add_prim_jump',
+        'rus_add_prim_turn_left',
+        'rus_length',
+        'rus_mcd1',
+        'rus_mcd2',
+        'rus_mcd3',
+        'rus_simple',
         
     ],
 }

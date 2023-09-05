@@ -1,5 +1,5 @@
 from genbench import TaskDict
 
 
-class MultilingualScan(TaskDict):
+class Mscan(TaskDict):
     pass
