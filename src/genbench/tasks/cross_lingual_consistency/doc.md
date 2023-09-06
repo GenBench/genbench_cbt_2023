@@ -21,12 +21,10 @@ We first probing the PLMs with same questions in all supported languages and rec
 Based on the ranking lists of two languages (e.g. en and es), we propose RankC metric to compute the cross-lingual consistency of factual knowledge between different language pairs.
 
 ## Usage
-We provided one example in "test.jsonl". For more recorded candidate rankings, see '<modelname>-Rankings-<lang>.txt' files in 'record17' and 'record53'.
-
-Using the "format\_example()" function, we show the sample data of candidate rankings when probing Bloom-3b with en and es queries in BMLAMA-17. 
-We also write the RankC metric in the same function to output the cross-lingual consistency of factual knowledge between these two languages.
-For full CLC results on BMLAMA-17 with Bloom-3b, see 'bloom\_3b\_CLC.png'.
-
+We provided several examples in "test.jsonl". 
+For each instance, the input is the name of two languages and the evaluated model name.
+The "format\_example()" function outputs how factual knowledge generalized across these two languages.
+'bloom\_3b\_CLC.png' illustrates the generalization of factual knowledge between all language pairs in BLOOM-3b.
 
 ## Limitations and Bias
 *Note any known limitations or biases that the Cross Lingual Consistency has, with links and references if possible.*
