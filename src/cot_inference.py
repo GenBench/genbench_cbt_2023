@@ -6,8 +6,6 @@ import warnings
 from argparse import ArgumentParser
 from typing import Dict, List
 
-import datasets
-import pandas as pd
 from huggingface_hub import InferenceClient
 from tqdm import tqdm
 
