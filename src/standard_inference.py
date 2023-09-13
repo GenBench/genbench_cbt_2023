@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from typing import Dict, List
 
 import datasets
-import openai
 import pandas as pd
 from huggingface_hub import InferenceClient
 from tqdm import tqdm
@@ -18,8 +17,6 @@ from genbench.api import PreparationStrategy
 
 
 warnings.filterwarnings("ignore", message="Unverified HTTPS request is being made to host*")
-
-os.environ["OPENAI_API_KEY"] = "OPENAI_KEY"
 
 os.environ["CURL_CA_BUNDLE"] = ""
 folder_path = final_inference_utils.get_folder_path("zeroshot")
@@ -91,68 +88,6 @@ def get_llama2_predictions(ds, model_name):
     return prediction
 
 
-def get_openai_chat_prediction(ds, model_name, sleep_time):
-    # First initialize the large language model
-    # https://platform.openai.com/docs/api-reference/chat/create
-    openai.api_key = os.environ["OPENAI_API_KEY"]
-
-    options = ["A", "B", "C", "D"]
-    prediction = []
-    ds_dataset = datasets.Dataset.from_pandas(pd.DataFrame(data=ds))
-
-    for ds_i in tqdm(ds_dataset):
-        output = openai.ChatCompletion.create(
-            temperature=0,
-            n=1,
-            model=model_name,
-            max_tokens=1,  # we only want one letter
-            messages=[{"role": "user", "content": ds_i["input"]}],
-        )["choices"]
-        # Out of range number that would be counted as incorrect
-        final_prediction = 9
-
-        for output_i in output:
-            pred_str = output_i["message"]["content"]
-            if pred_str in options:
-                final_prediction = ltr_to_idx(str(pred_str))
-                break
-
-        prediction.append({"target": final_prediction})
-        # GPT-4 timeout error
-        time.sleep(sleep_time)
-
-    return prediction
-
-
-def get_openai_prediction(ds, model_name):
-    options = ["A", "B", "C", "D"]
-    # First initialize the large language model
-    openai.api_key = os.environ["OPENAI_API_KEY"]
-
-    prediction = []
-    ds_dataset = datasets.Dataset.from_pandas(pd.DataFrame(data=ds))
-
-    for ds_i in tqdm(ds_dataset):
-        output = openai.Completion.create(
-            temperature=0, logprobs=1, engine=model_name, max_tokens=1, prompt=ds_i["input"]  # we only want one letter
-        )["choices"][0]["logprobs"]["top_logprobs"][0]
-
-        # Out of range number that would be counted as incorrect
-        final_prediction = 9
-        for output_i in output:
-            if output_i in options:
-                final_prediction = ltr_to_idx(str(output_i))
-                break
-
-        prediction.append({"target": final_prediction})
-
-    # Serializing json
-    json_object = json.dumps(prediction, indent=4)
-    print(json_object)
-
-    return prediction
-
-
 def generate_llm_prediction(ds, type, **kwargs) -> List[Dict]:
     """
     Return a list of dicts in the following format
@@ -162,14 +97,6 @@ def generate_llm_prediction(ds, type, **kwargs) -> List[Dict]:
 
     if type in llm_hf_dict:
         prediction = get_llama2_predictions(ds, llm_hf_dict[type])
-    elif type == "gpt-4":
-        prediction = get_openai_chat_prediction(ds, "gpt-4-0613", 30)
-    elif type == "gpt-3.5":
-        prediction = get_openai_chat_prediction(ds, "gpt-3.5-turbo-0613", 15)
-    elif type == "text-davinci-003":
-        prediction = get_openai_prediction(ds, "text-davinci-003")
-    elif type == "gpt-3":
-        prediction = get_openai_prediction(ds, "davinci")
     else:
         prediction = [{"target": random.randint(0, 3)} for i in range(len(ds))]
 
