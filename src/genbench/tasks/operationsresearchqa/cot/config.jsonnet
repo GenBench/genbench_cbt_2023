@@ -32,8 +32,8 @@
 
     data_source: {
         type: 'manual',
-        test: 'file:///home/samarendra/submission/data/test_dataset.jsonl', // link to our sample test set
-        validation: 'file:///home/samarendra/submission/data/val_dataset.jsonl', // link to our sample dev set
+        test: 'https://raw.githubusercontent.com/OpResearchQA/ORQA_data/main/test_dataset.jsonl', // link to our sample test set
+        validation: 'https://raw.githubusercontent.com/OpResearchQA/ORQA_data/main/val_dataset.jsonl', // link to our sample dev set
     },
 
     has_validation_set: true,
