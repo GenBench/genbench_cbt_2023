@@ -8,7 +8,7 @@ Running the following code:
 from genbench import load_task
 from genbench.api import PreparationStrategy
 
-task = load_task("operationsresearchqa")
+task = load_task("operationsresearchqa:standard")
 ds = task.get_prepared_datasets(
     PreparationStrategy.PROMPT_BASED_TESTING,
     shot_list=[0]

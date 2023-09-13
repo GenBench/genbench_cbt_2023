@@ -1,13 +1,87 @@
-from typing import Any, Dict
+from typing import Any, Dict, List, Mapping
+
+import numpy as np
+from datasets import Dataset
 
 from genbench import Task
+from genbench.api import EvaluationResult, TaskType
 
 
 def idx_to_ltr(idx):
     return chr(int(idx) + ord("A"))
 
 
+def ltr_to_idx(ltr):
+    return ord(ltr) - ord("A")
+
+
 class OperationsresearchqaStandard(Task):
+    def _format_example_for_in_context_learning(
+        self, example: Mapping[str, Any], random_seed: int
+    ) -> Mapping[str, Any]:
+        """
+        Format a given example for in-context learning.
+
+        Parameters:
+            example (Mapping[str, Any]): The input example to be formatted.
+            random_seed (int): The random seed for any randomness in the formatting process.
+
+        Returns:
+            Mapping[str, Any]: A dictionary containing the formatted input and target.
+
+        Raises:
+            ValueError: If the specified task type is not supported.
+        """
+        prompt_config = self.config.preparation_strategies.prompt_based_testing.prompt_builder
+
+        formatted_input = prompt_config.input_prefix + example["input"]
+
+        if self.config.task_type == TaskType.MULTIPLE_CHOICE:
+            choices = example["target_options"]
+
+            # Append permuted choices to input if specified in config
+            if prompt_config.append_choices_to_input:
+                input_choices = choices[:]
+                if prompt_config.permute_choices:
+                    # Initialize a random number generator for handling permutations if needed
+                    rng = np.random.RandomState(seed=random_seed + example["_genbench_idx"])
+                    input_choices = rng.permutation(sorted(input_choices))
+
+                formatted_input += prompt_config.choices_prefix + "".join(
+                    [
+                        f"{prompt_config.choice_item_prefix}{str(c)}{prompt_config.choice_item_postfix}"
+                        for c in input_choices
+                    ]
+                )
+
+            target = example["target"]
+
+            formatted_input += prompt_config.output_prefix
+            formatted_target = target
+
+            return {
+                "formatted_input": formatted_input,
+                "formatted_target": formatted_target,
+            }
+
+        else:
+            return super()._format_example_for_in_context_learning(example, random_seed)
+
+    def evaluate_predictions(
+        self, *, predictions: List[Mapping[str, Any]] = None, gold: Dataset = None
+    ) -> EvaluationResult:
+        refs_lst = [g["target"] for g in gold]
+        ref_type = type(refs_lst[0])
+
+        if ref_type == str:
+            ref_options = set(refs_lst)
+            if ref_options != {"A", "B", "C", "D"}:
+                raise ValueError("The reference answer contains options that are not among A,B,C,D")
+
+            gold = [{"target": ltr_to_idx(g["target"])} for g in gold]
+
+        return super().evaluate_predictions(predictions=predictions, gold=gold)
+
     def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
         """
         Perform preprocessing/formatting on an example-level.
@@ -21,10 +95,7 @@ class OperationsresearchqaStandard(Task):
         target_str = str(idx_to_ltr(example["target"]))
         print(target_str)
 
-        return {
-            "input": input_str,
-            "target": target_str,
-        }
+        return {"input": input_str, "target": target_str, "target_options": {"A": 0, "B": 2, "C": 3, "D": 4}}
 
     def get_input_string(self, example: Dict[str, Any]):
         """

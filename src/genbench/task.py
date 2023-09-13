@@ -15,14 +15,6 @@ from genbench.utils.tasks import get_task_dir
 logger = get_logger(__name__)
 
 
-def idx_to_ltr(idx):
-    return chr(int(idx) + ord("A"))
-
-
-def ltr_to_idx(ltr):
-    return ord(ltr) - ord("A")
-
-
 def get_data_split_name(split: str) -> str:
     """
     Transforms the name of a data split for standardization purposes.
@@ -160,7 +152,7 @@ def make_nshot_dataset(
 
     if DatasetSplit.TRAIN in formatted_dataset:
         fewshot_example_source = formatted_dataset[DatasetSplit.TRAIN.value]
-    elif "validation" in formatted_dataset:
+    elif DatasetSplit.VALIDATION in formatted_dataset:
         fewshot_example_source = formatted_dataset[DatasetSplit.VALIDATION.value]
         logger.warning("Using validation set as few-shot example source.")
     else:
@@ -197,9 +189,7 @@ def make_nshot_dataset(
     def create_fewshot_query(query, idx):
         rng = np.random.RandomState(random_seed + idx)
 
-        # num_shots+1 would give us one additional example in the ICL prompt
-        in_context_example_ids = rng.choice(len(fewshot_example_source), num_shots, replace=False).tolist()
-        # in_context_example_ids = rng.choice(len(fewshot_example_source), num_shots + 1, replace=False).tolist()
+        in_context_example_ids = rng.choice(len(fewshot_example_source), num_shots + 1, replace=False).tolist()
         in_context_examples = [
             fewshot_example_source[i] for i in in_context_example_ids if fewshot_example_source[i] != query
         ]
@@ -397,9 +387,7 @@ class Task(TaskInterface):
                     converted_refs = []
                     for pred, ref in zip(preds_lst, gold):
                         assert "target_options" in ref
-                        # Converting letters to index (int)
-                        converted_refs.append(ltr_to_idx(ref["target"]))
-                        # converted_refs.append(ref["target_options"].index(ref["target"]))
+                        converted_refs.append(ref["target_options"].index(ref["target"]))
                     refs_lst = converted_refs
             else:
                 if self.config.task_type == TaskType.MULTIPLE_CHOICE and pred_type != int:
@@ -517,10 +505,7 @@ class Task(TaskInterface):
                     ]
                 )
 
-            # target = choices[example["target"]]
-            # In ORQA, we are formatting it such that the output is A, B, C, or D
-            target = example["target"]
-
+            target = choices[example["target"]]
         elif self.config.task_type == TaskType.FREE_FORM:
             target = example["target"]
         elif self.config.task_type == TaskType.SEQUENCE_LABELING:
