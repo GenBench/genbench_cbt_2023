@@ -1,7 +1,7 @@
 {
-    name: 'Shifted Pauq (ru_pauq_target_length_split)',
+    name: 'Shifted Pauq (en_tsl_split)',
 
-    description: 'Shifted Pauq (en_pauq_target_length_split) aims to measure compositional generalization of on text2sql dataset with splits based on target length. Input language is Russian. Short queries are in test, while long queries are in train. Split was made on 30 percentile of dataset token length. To measure compostional distribution, it was made certain, that all of test tokens of target queries are present in train set.',
+    description: 'Shifted Pauq (en_tsl_split) aims to measure compositional generalization of on text2sql dataset with splits based on target length. Input language is English. Long query templates are in test, while short query templates are in train. To measure compostional distribution, it was made certain, that all of test tokens of target queries are present in train set.',
 
     keywords: [
         'text2sql',
@@ -17,8 +17,8 @@
 
     data_source: {
         type: 'hf',
-        hf_id: ['composite/pauq', 'ru_pauq_tl'],
-        git_commit_sha: 'ddb9c0830ad37b084304e712eaacf02145c656e5',
+        hf_id: ['composite/pauq', 'en_tsl'],
+        git_commit_sha: '63e3e9329f785d097f4746618737d69530d1cdb4',
     },
 
     has_validation_set: false,

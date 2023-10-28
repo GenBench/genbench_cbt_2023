@@ -1,10 +1,9 @@
-# Shifted PAUQ -- Text-to-SQL (ru_pauq_target_length_split)
+# Shifted PAUQ -- Text-to-SQL (ru_tsl_split)
 *A brief explaination of the task, its motivation and a description of the submssion data. Minimally, this should include: what generalisation property(ies) the task is testing for (GenBench taxonomy values); what assumptions are made about the training data; the size of the dataset; baseline scores. If it already contains this information, feel free to copy the abstract of the accompanying paper.*
 
 ## Abstract
 In this work, we propose a custom split of the Russian _Text-to-SQL_ dataset, PAUQ [1], that assesses compositional generalization in a _text-to-query_ models. 
-The proposed split, ru_pauq_target_length_split, is length-based split based on the token length, i.e. datasets' items are separated by length such that the test set contains examples of different lengths than those in the train set. In this setup, we measure generalization to more complex queries.
-Dataset is split between train and test based on 30th percentile.
+The proposed split, ru_tsl_split, is length-based split based on the token length, i.e. datasets' items are separated by length such that the test set contains examples of different lengths than those in the train set. In this setup, we measure generalization to more complex queries.
 In order to measure compositional generalization, we have verified that all SQL test tokens are present in train.
 
 * Baseline scores of a sequence-to-sequence model: TODO
@@ -82,18 +81,16 @@ For evaluation, we will use a sequence-to-sequence architecture. Evaluation metr
 
 
 ## Data Source
-*Describe the data source for this Shifted Pauq (ru_pauq_target_length_split).*
+*Describe the data source for this Shifted Pauq (ru_tsl_split).*
 
 The PAUQ statistics can be found in [1]
 
-Train/test data for the ru_pauq_target_length_split split is available at https://huggingface.co/datasets/composite/pauq/viewer/ru_pauq_tl
+Train/test data for the ru_tsl_split split is available at https://huggingface.co/datasets/composite/pauq
 
 ## Limitations and Bias
-*Note any known limitations or biases that the Shifted Pauq (ru_pauq_target_length_split) has, with links and references if possible.*
+*Note any known limitations or biases that the Shifted Pauq (ru_tsl_split) has, with links and references if possible.*
 
-Our research explores distribution shift, i.e. spurious correlation using ru_pauq_target_length_split, and investigates how they affect the model. Specifically, we examine the scenario where test tokens are present in the training set and do not explore the more challenging case of modeling unseen tokens.
-
-Another limitation concerns evaluation metric -- exact match, which is the most commonly used to evaluate text-to-SQL models performance. However, this metric is too strict and prone to false negative results [1].
+Our research explores distribution shift, i.e. data drift using ru_tsl_split, and investigates how they affect the model. Specifically, we examine the scenario where test tokens are present in the training set and do not explore the more challenging case of modeling unseen tokens.
 
 Big language models such as Codex, a 175B GPT model further fine-tuned on code, are out of the scope of this study.
 

@@ -1,12 +1,11 @@
 {
-    name: 'Shifted Pauq (ru_pauq_iid_split)',
+    name: 'Shifted Pauq (en_os_split)',
 
-    description: 'Shifted Pauq (en_pauq_iid_split) aims to measure model ability to generate SQL queries from Russian input with splits generated in i.i.d. strategy.',
+    description: 'Shifted Pauq in English (en_os_split) aims to measure model ability to generate SQL queries from English input with splits generated in i.i.d. strategy.',
 
     keywords: [
         'text2sql',
         'iid distribution',
-        'multilingual'
     ],
 
     authors: [
@@ -17,8 +16,8 @@
 
     data_source: {
         type: 'hf',
-        hf_id: ['composite/pauq', 'ru_pauq_iid'],
-        git_commit_sha: 'ddb9c0830ad37b084304e712eaacf02145c656e5',
+        hf_id: ['composite/pauq', 'en_os'],
+        git_commit_sha: '63e3e9329f785d097f4746618737d69530d1cdb4',
     },
 
     has_validation_set: false,
@@ -35,7 +34,7 @@
         {
             hf_id: 'evaluate-metric/exact_match',
             best_score: 1.0,
-            git_commit_sha: '8e612716f2b1b08d23b0b2d7aa667d2f38eb989e'
+            git_commit_sha: '8e612716f2b1b08d23b0b2d7aa667d2f38eb989e',
         }
     ],
 

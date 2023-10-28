@@ -1,7 +1,11 @@
-# Shifted PAUQ -- Text-to-SQL (en_pauq_iid_split)
+# # Shifted PAUQ -- Text-to-SQL (en_tsl_split)
 
 ## Abstract
-This is original split from Spider dataset in English [1]. We will use this split in addition to the **ru_pauq_iid_split** split to measure generalisation across languages. 
+This is length based split based on the token length of target query template in English. 
+
+We will use this split in addition to the **ru_tsl_split** split to measure generalisation across languages. 
+
+ In order to measure compositional generalization we have verified that all SQL test tokens are present in train.
 
 ## Examples
 ```
@@ -49,24 +53,24 @@ This is original split from Spider dataset in English [1]. We will use this spli
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
-Please refer to the **ru_pauq_iid_split** card.
+Please refer to the **ru_tsl_split** card.
 
 ## Data Source
-*Describe the data source for this Shifted PAUQ (en_pauq_iid_split).*
+*Describe the data source for this Shifted Pauq (en_tsl_split).*
 
-Please refer to the **ru_pauq_iid_split** card.
+Please refer to the **ru_tsl_split** card.
 
 ## Limitations and Bias
+*Note any known limitations or biases that the Shifted Pauq (en_tsl_split) has, with links and references if possible.*
 
-Please refer to the **ru_pauq_iid_split** card.
+Please refer to the **ru_tsl_split** card.
 
 ## GenBench Eval card
-*Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for 
-your task*.
+*Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
 
 **GenBench taxonomy values for the experiments:**
 
-Same as in the **ru_pauq_iid_split** card with addition:
+Same as in the **ru_tsl_split** card with addition:
 
 Generalisation type: generalisation across languages (from English to Russian)
 

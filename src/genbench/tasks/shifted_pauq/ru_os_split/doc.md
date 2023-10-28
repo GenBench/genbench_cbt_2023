@@ -1,7 +1,7 @@
 # Shifted PAUQ -- Text-to-SQL (ru_pauq_iid_split)
 
 ## Abstract
-This is an original split of the Russian _Text-to-SQL_ dataset, PAUQ [1], which is under the assumption of independency and identically (i.i.d) distributed train and test data. We provide this split in addition to the **ru_pauq_target_length_split** split.
+This is an original split of the Russian _Text-to-SQL_ dataset, PAUQ [1], which is under the assumption of independency and identically (i.i.d) distributed train and test data. We provide this split in addition to the **ru_trl_split** and **ru_tsl_split** splits.
 
 baseline scores of a sequence-to-sequence model such as BRIDGE: please refer to [1] for details
 
@@ -78,11 +78,11 @@ For evaluation, we will use a sequence-to-sequence architecture. Evaluation metr
 
 
 ## Data Source
-*Describe the data source for this Shifted Pauq (ru_pauq_target_length_split).*
+*Describe the data source for this Shifted Pauq (ru_os_split).*
 
 The PAUQ statistics can be found in [1]
 
-Train/test data for the ru_pauq_iid split is available at https://huggingface.co/datasets/composite/pauq/viewer/ru_pauq_iid
+Train/test data for the ru_os split is available at https://huggingface.co/datasets/composite/pauq
 
 ## Limitations and Bias
 *Note any known limitations or biases that the Shifted Pauq (ru_pauq_target_length_split) has, with links and references if possible.*

@@ -4,8 +4,8 @@ In this work, we propose a custom split of a _Text-to-SQL_ dataset in Russian (P
 PAUQ [1] is the Russian version of the Spider [2]. We have fixed the original queries and database content. 
 We have also translated both questions and queries to Russian language and updated database content with Russian entities.
 In this evaluation we want to explore the ability of finetuned language models to cope with distribution shift 
-in a field of semantic parsing on different generated splits - target query length (see **ru_pauq_target_length_split**, **en_pauq_target_length_split**), 
-target maximum compound divergence (will be submitted later) in contrast to i.i.d. generated split (see **ru_pauq_iid_split**, **en_pauq_iid_split**). 
+in a field of semantic parsing on different generated splits - target query length (see **ru_trl_split**, **en_trl_split**, **ru_tsl_split**, **en_tsl_split**), 
+target maximum compound divergence (will be submitted later) in contrast to i.i.d. generated split (see **ru_os_split**, **en_os_split**). 
 
 
 **GenBench taxonomy values for the experiments:**
@@ -14,7 +14,7 @@ Motivation: Practical
 
 Generalisation type: Compositional, Structural, Across language
 
-Shift type: Covariate
+Shift type: Full
 
 Shift source: Naturally occuring
 

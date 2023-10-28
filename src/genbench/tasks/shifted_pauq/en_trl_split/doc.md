@@ -1,12 +1,11 @@
-# # Shifted PAUQ -- Text-to-SQL (en_pauq_target_length_split)
+# # Shifted PAUQ -- Text-to-SQL (en_trl_split)
 
 ## Abstract
-This is length based split based on the token length of target query in English. 
+This is length based split based on the token length of target query template in English. 
 
-We will use this split in addition to the **ru_pauq_target_length_split** split to measure generalisation across languages. 
+We will use this split in addition to the **ru_trl_split** split to measure generalisation across languages. 
 
-Dataset is split between train and test based 
-on 30th percentile. In order to measure compositional generalization we have verified that all SQL test tokens are present in train.
+ In order to measure compositional generalization we have verified that all SQL test tokens are present in train.
 
 ## Examples
 ```
@@ -54,24 +53,24 @@ on 30th percentile. In order to measure compositional generalization we have ver
 ## Usage
 *Describe how to load your task and what is required for evaluation, if anything.*
 
-Please refer to the **ru_pauq_target_length_split** card.
+Please refer to the **ru_trl_split** card.
 
 ## Data Source
-*Describe the data source for this Shifted Pauq (en_pauq_target_length_split).*
+*Describe the data source for this Shifted Pauq (en_trl_split).*
 
-Please refer to the **ru_pauq_target_length_split** card.
+Please refer to the **ru_trl_split** card.
 
 ## Limitations and Bias
-*Note any known limitations or biases that the Shifted Pauq (en_pauq_target_length_split) has, with links and references if possible.*
+*Note any known limitations or biases that the Shifted Pauq (en_trl_split) has, with links and references if possible.*
 
-Please refer to the **ru_pauq_target_length_split** card.
+Please refer to the **ru_trl_split** card.
 
 ## GenBench Eval card
 *Describe what kind of generalisation your task is evaluating, and include a [genbench eval card](https://genbench.org/eval_cards/) for your task*.
 
 **GenBench taxonomy values for the experiments:**
 
-Same as in the **ru_pauq_target_length_split** card with addition:
+Same as in the **ru_trl_split** card with addition:
 
 Generalisation type: generalisation across languages (from English to Russian)
 
