@@ -2,13 +2,13 @@ import argparse
 import json
 import logging
 import random
-import numpy as np
-from tqdm import tqdm
-from torch.utils.data import DataLoader
 
+import numpy as np
 import torch
-from transformers import get_scheduler, AutoTokenizer, AutoModelForSequenceClassification, PreTrainedModel
 from torch.optim import AdamW
+from torch.utils.data import DataLoader
+from tqdm import tqdm
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, PreTrainedModel, get_scheduler
 
 
 ##########################################################
@@ -38,13 +38,22 @@ def _truncate_seq_pair(tokens_a, tokens_b, max_length):
             tokens_b.pop()
 
 
-def _convert_examples_to_features(comments, codes, labels, max_seq_length,
-                                  tokenizer,
-                                  cls_token='[CLS]', sep_token='[SEP]', pad_token=0,
-                                  eos_token='</s>',
-                                  sequence_a_segment_id=0, sequence_b_segment_id=1,
-                                  cls_token_segment_id=1, pad_token_segment_id=0,
-                                  mask_padding_with_zero=True):
+def _convert_examples_to_features(
+    comments,
+    codes,
+    labels,
+    max_seq_length,
+    tokenizer,
+    cls_token="[CLS]",
+    sep_token="[SEP]",
+    pad_token=0,
+    eos_token="</s>",
+    sequence_a_segment_id=0,
+    sequence_b_segment_id=1,
+    cls_token_segment_id=1,
+    pad_token_segment_id=0,
+    mask_padding_with_zero=True,
+):
     features = []
     for ex_index, (comment, code, label) in enumerate(zip(comments, codes, labels)):
         # As was done in CodeBERT
@@ -87,11 +96,7 @@ def _convert_examples_to_features(comments, codes, labels, max_seq_length,
         input_mask = torch.tensor(input_mask, dtype=torch.long)
         label = torch.tensor(label, dtype=torch.long)
 
-        features.append({
-            "input_ids": input_ids,
-            "attention_mask": input_mask,
-            "labels": label
-        })
+        features.append({"input_ids": input_ids, "attention_mask": input_mask, "labels": label})
     return features
 
 
@@ -107,42 +112,38 @@ def load_data(tokenizer, batch_size, seq_len, train_file):
     is_pad_token_set = tokenizer.pad_token is not None
     is_eos_token_set = tokenizer.eos_token is not None
 
-    with open(train_file, 'r', encoding='utf-8') as infile:
+    with open(train_file, "r", encoding="utf-8") as infile:
         for line in infile:
             try:
                 item = json.loads(line.strip())
-                input = item['input']
+                input = item["input"]
                 # split at [CODESPLIT] token
-                input = input.split('[CODESPLIT]')
+                input = input.split("[CODESPLIT]")
                 if len(input) != 2:
                     # skip cases with more than one [SEP] token
                     logging.warning(f"Input contains more than one [CODESPLIT] token: {input}")
                     skipped += 1
                     continue
                 # skip every sample that contains special tokens
-                if is_sep_token_set and (
-                        tokenizer.sep_token in input[0] or tokenizer.sep_token in input[1]):
+                if is_sep_token_set and (tokenizer.sep_token in input[0] or tokenizer.sep_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_cls_token_set and (
-                        tokenizer.cls_token in input[0] or tokenizer.cls_token in input[1]):
+                if is_cls_token_set and (tokenizer.cls_token in input[0] or tokenizer.cls_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_pad_token_set and (
-                        tokenizer.pad_token in input[0] or tokenizer.pad_token in input[1]):
+                if is_pad_token_set and (tokenizer.pad_token in input[0] or tokenizer.pad_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_eos_token_set and (
-                        tokenizer.eos_token in input[0] or tokenizer.eos_token in input[1]):
+                if is_eos_token_set and (tokenizer.eos_token in input[0] or tokenizer.eos_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
                 comments.append(input[0])
                 codes.append(input[1])
-                labels.append(item['target'])
+                labels.append(item["target"])
             except json.JSONDecodeError as e:
                 print(f"Error: JSON decoding failed - {e}")
                 continue
@@ -171,6 +172,7 @@ def load_data(tokenizer, batch_size, seq_len, train_file):
 # Fine-tune Model
 ##############################################################
 
+
 def train(model: PreTrainedModel, dataloader: DataLoader, args: argparse.Namespace):
     """
     Fine-tune the model.
@@ -192,7 +194,7 @@ def train(model: PreTrainedModel, dataloader: DataLoader, args: argparse.Namespa
         name="linear",
         optimizer=optimizer,
         num_warmup_steps=args.num_warmup_steps,
-        num_training_steps=num_training_steps
+        num_training_steps=num_training_steps,
     )
 
     for epoch in range(args.epochs):
@@ -207,9 +209,11 @@ def train(model: PreTrainedModel, dataloader: DataLoader, args: argparse.Namespa
             optimizer.zero_grad()
             progress_bar.update(1)
 
+
 ###########################################################
 # Evaluate Model
 ###########################################################
+
 
 def load_data_for_mrr(tokenizer, file):
     # create dataset
@@ -223,48 +227,45 @@ def load_data_for_mrr(tokenizer, file):
     is_pad_token_set = tokenizer.pad_token is not None
     is_eos_token_set = tokenizer.eos_token is not None
 
-    with open(file, 'r', encoding='utf-8') as infile:
+    with open(file, "r", encoding="utf-8") as infile:
         for line in infile:
             try:
                 item = json.loads(line.strip())
-                input = item['input']
+                input = item["input"]
                 # split at [CODESPLIT] token
-                input = input.split('[CODESPLIT]')
+                input = input.split("[CODESPLIT]")
                 if len(input) != 2:
                     # skip cases with more than one [SEP] token
                     logging.warning(f"Input contains more than one [CODESPLIT] token: {input}")
                     skipped += 1
                     continue
                 # skip every sample that contains special tokens
-                if is_sep_token_set and (
-                        tokenizer.sep_token in input[0] or tokenizer.sep_token in input[1]):
+                if is_sep_token_set and (tokenizer.sep_token in input[0] or tokenizer.sep_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_cls_token_set and (
-                        tokenizer.cls_token in input[0] or tokenizer.cls_token in input[1]):
+                if is_cls_token_set and (tokenizer.cls_token in input[0] or tokenizer.cls_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_pad_token_set and (
-                        tokenizer.pad_token in input[0] or tokenizer.pad_token in input[1]):
+                if is_pad_token_set and (tokenizer.pad_token in input[0] or tokenizer.pad_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
-                if is_eos_token_set and (
-                        tokenizer.eos_token in input[0] or tokenizer.eos_token in input[1]):
+                if is_eos_token_set and (tokenizer.eos_token in input[0] or tokenizer.eos_token in input[1]):
                     logging.warning(f"Input contains special tokens: {input}")
                     skipped += 1
                     continue
                 comments.append(input[0])
                 codes.append(input[1])
-                labels.append(item['target'])
+                labels.append(item["target"])
             except json.JSONDecodeError as e:
                 print(f"Error: JSON decoding failed - {e}")
                 continue
     logging.info(f"Skipped {skipped} samples due to special tokens")
 
     return comments, codes
+
 
 def mrr(model, tokenizer, file, args):
     random.seed(42)
@@ -277,7 +278,7 @@ def mrr(model, tokenizer, file, args):
     chunks = []
     for i, sample in enumerate(zip(comments, codes)):
         comment, code = sample
-        codes_without_sample = codes[:i] + codes[i + 1:]
+        codes_without_sample = codes[:i] + codes[i + 1 :]
         # select 99 random codes
         distractors = random.sample(codes_without_sample, args.distractors)
         # create samples
@@ -285,20 +286,24 @@ def mrr(model, tokenizer, file, args):
         comments = [comment] * len(codes)
         labels = [1] + [0] * len(distractors)
         # convert to features
-        features = _convert_examples_to_features(comments, codes, labels,
-                                                 tokenizer=tokenizer,
-                                                 max_seq_length=args.seq_len,
-                                                 cls_token=tokenizer.cls_token,
-                                                 sep_token=tokenizer.sep_token,
-                                                 cls_token_segment_id=tokenizer.cls_token_id,
-                                                 pad_token_segment_id=tokenizer.pad_token_id,
-                                                 eos_token=tokenizer.eos_token)
+        features = _convert_examples_to_features(
+            comments,
+            codes,
+            labels,
+            tokenizer=tokenizer,
+            max_seq_length=args.seq_len,
+            cls_token=tokenizer.cls_token,
+            sep_token=tokenizer.sep_token,
+            cls_token_segment_id=tokenizer.cls_token_id,
+            pad_token_segment_id=tokenizer.pad_token_id,
+            eos_token=tokenizer.eos_token,
+        )
 
         chunks.append(features)
 
     # make predictions for all chunks
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print('Using device:', device)
+    print("Using device:", device)
     model.to(device)
     model.eval()
 
@@ -306,9 +311,9 @@ def mrr(model, tokenizer, file, args):
     for chunk in tqdm(chunks):
         # calc correct sample (always the first one)
         correct = chunk[0]
-        input_ids = correct['input_ids'].unsqueeze(0).to(device)
-        attention_mask = correct['attention_mask'].unsqueeze(0).to(device)
-        labels = correct['labels'].unsqueeze(0).to(device)
+        input_ids = correct["input_ids"].unsqueeze(0).to(device)
+        attention_mask = correct["attention_mask"].unsqueeze(0).to(device)
+        labels = correct["labels"].unsqueeze(0).to(device)
         with torch.no_grad():
             outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
             logits = outputs.logits
@@ -321,10 +326,10 @@ def mrr(model, tokenizer, file, args):
         # create batches of size args.batch_size
         batch_size = args.batch_size
         for i in range(1, len(chunk), batch_size):
-            batch = chunk[i:i + batch_size]
-            input_ids = torch.stack([sample['input_ids'] for sample in batch]).to(device)
-            attention_mask = torch.stack([sample['attention_mask'] for sample in batch]).to(device)
-            labels = torch.stack([sample['labels'] for sample in batch]).to(device)
+            batch = chunk[i : i + batch_size]
+            input_ids = torch.stack([sample["input_ids"] for sample in batch]).to(device)
+            attention_mask = torch.stack([sample["attention_mask"] for sample in batch]).to(device)
+            labels = torch.stack([sample["labels"] for sample in batch]).to(device)
             with torch.no_grad():
                 outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
                 logits = outputs.logits
@@ -337,80 +342,77 @@ def mrr(model, tokenizer, file, args):
 
     return mean_mrr
 
+
 ##############################################################
 #  Run example
 ##############################################################
+
 
 def main():
     """Main function."""
     # args
     parser = argparse.ArgumentParser()
-    #parser.add_argument('--dataset', type=str, default='./codesearchnet_adv')
-    parser.add_argument('--model', default='roberta-base')
-    parser.add_argument('--epochs', type=int, default=5)
-    parser.add_argument('--batch_size', type=int, default=32)
-    parser.add_argument('--learning_rate', type=float, default=2e-5)
-    parser.add_argument('--weight_decay', type=float, default=0.01)
-    parser.add_argument('--num_warmup_steps', type=int, default=0)
-    parser.add_argument('--output_dir', type=str, default='models')
-    parser.add_argument('--seq_len', type=int, default=512, help='maximum sequence length')
-    parser.add_argument('--distractors', type=int, default=99, help='number of distractors per true pair')
-    parser.add_argument('--log_level', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], default='INFO')
+    # parser.add_argument('--dataset', type=str, default='./codesearchnet_adv')
+    parser.add_argument("--model", default="roberta-base")
+    parser.add_argument("--epochs", type=int, default=5)
+    parser.add_argument("--batch_size", type=int, default=32)
+    parser.add_argument("--learning_rate", type=float, default=2e-5)
+    parser.add_argument("--weight_decay", type=float, default=0.01)
+    parser.add_argument("--num_warmup_steps", type=int, default=0)
+    parser.add_argument("--output_dir", type=str, default="models")
+    parser.add_argument("--seq_len", type=int, default=512, help="maximum sequence length")
+    parser.add_argument("--distractors", type=int, default=99, help="number of distractors per true pair")
+    parser.add_argument("--log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO")
 
     args = parser.parse_args()
 
-    TRAIN_FILE = './codesearchnet_adv/train_adv_clf.jsonl'
+    TRAIN_FILE = "./codesearchnet_adv/train_adv_clf.jsonl"
 
     # logging
     logging.basicConfig(level=args.log_level)
 
     # load tokenizer
-    logging.info('Loading model...')
+    logging.info("Loading model...")
     tokenizer = AutoTokenizer.from_pretrained(args.model)
 
-     # load data
-    logging.info('Loading data...')
+    # load data
+    logging.info("Loading data...")
     dataloader = load_data(tokenizer, args.batch_size, args.seq_len, TRAIN_FILE)
 
     model = AutoModelForSequenceClassification.from_pretrained(args.model)
 
     # train
-    logging.info('Training...')
+    logging.info("Training...")
     train(model, dataloader, args)
 
     # save model
-    logging.info('Saving model...')
-    model.save_pretrained(f'{args.output_dir}/{args.model}')
+    logging.info("Saving model...")
+    model.save_pretrained(f"{args.output_dir}/{args.model}")
     # also soave tokenizer
-    tokenizer.save_pretrained(f'{args.output_dir}/{args.model}')
+    tokenizer.save_pretrained(f"{args.output_dir}/{args.model}")
 
-    DS_FOLDER = './'
+    DS_FOLDER = "./"
 
     FILES = [
-    ['statcodesearch', 'test_statcodesearch'],
-    ['codesearchnet_adv', 'test_adv'],
-    ['codesearchnet_go', 'test_go'],
-    ['codesearchnet_java', 'test_java'],
-    ['codesearchnet_javascript', 'test_javascript'],
-    ['codesearchnet_php', 'test_php'],
-    ['codesearchnet_ruby', 'test_ruby'],
-    ['cosqa', 'test_cosqa']
+        ["statcodesearch", "test_statcodesearch"],
+        ["codesearchnet_adv", "test_adv"],
+        ["codesearchnet_go", "test_go"],
+        ["codesearchnet_java", "test_java"],
+        ["codesearchnet_javascript", "test_javascript"],
+        ["codesearchnet_php", "test_php"],
+        ["codesearchnet_ruby", "test_ruby"],
+        ["cosqa", "test_cosqa"],
     ]
 
     results = {}
     for meta_data in FILES:
-        logging.info(f'Evaluating on {meta_data}...')
-        metrics = mrr(model, tokenizer, f'{DS_FOLDER}/mrr/{meta_data[0]}/{meta_data[1]}_mrr.jsonl', args)
+        logging.info(f"Evaluating on {meta_data}...")
+        metrics = mrr(model, tokenizer, f"{DS_FOLDER}/mrr/{meta_data[0]}/{meta_data[1]}_mrr.jsonl", args)
         results[meta_data[0]] = metrics
-        logging.info(f'Test results for {meta_data}: {metrics}')
+        logging.info(f"Test results for {meta_data}: {metrics}")
 
-    logging.info(f'Test results: {results}')
+    logging.info(f"Test results: {results}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
-
-
-
-
-
-
