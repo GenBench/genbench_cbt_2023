@@ -34,7 +34,7 @@ class NlCodesearchClfCosqa(Task):
                     # Split input into comment and code
                     input_parts = item["input"].split("[CODESPLIT]")
                     # Split random input into comment and code
-                    random_input_parts = random_item["input"].split("[CODESPLIT]")
+                    random_input_parts = random_item[0]["input"].split("[CODESPLIT]")
                     # Combine the "input" fields of the original and random items
                     new_input = input_parts[0] + "[CODESPLIT]" + random_input_parts[1]
                     new_item = {"input": new_input, "target": 0, "target_options": item["target_options"]}
