@@ -23,14 +23,22 @@
 
     data_source: {
         type: 'manual',
-		test: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/test_sample.jsonl',
+		BMLAMA17: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/BMLAMA17/',
+		BMLAMA53: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/BMLAMA53/',
+		test: 'https://placeholder'
     },
 	
 
     has_validation_set: false,
     has_train_set: false,
 
-    task_type: 'free_form',
+    task_type: 'multiple_choice',
+
+    field_mapping: {
+        input: 'Prompt',
+        target: 'Ans',
+		target_options: 'Candidate Ans',
+    },
 
     evaluation_metrics: [
     ],

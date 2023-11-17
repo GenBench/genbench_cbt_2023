@@ -1,327 +1,266 @@
+import json
+import os
+import pickle as pkl
+from collections import defaultdict
 from typing import Any, Dict, List
 
 import datasets
 import numpy as np
-
-import json
-import pickle as pkl
-import numpy as np
-import os
-
-from transformers import pipeline, AutoTokenizer, AutoModelForMaskedLM, AutoModelForCausalLM, XGLMTokenizer, T5ForConditionalGeneration, MT5ForConditionalGeneration, LlamaTokenizer
-from sklearn.metrics import f1_score, accuracy_score
-from tqdm import tqdm
 import torch
-
+from sklearn.metrics import accuracy_score, f1_score
+from tqdm import tqdm
+from transformers import (
+    AutoModelForCausalLM,
+    AutoModelForMaskedLM,
+    AutoTokenizer,
+    LlamaTokenizer,
+    MT5ForConditionalGeneration,
+    T5ForConditionalGeneration,
+    XGLMTokenizer,
+    pipeline,
+)
 
 from genbench import Task
 
 
 class CrossLingualConsistencyTask(Task):
+    def _load_data_source(
+        self,
+        mini,
+        lang1,
+        lang2,
+    ) -> Union[DatasetDict, Dataset, IterableDatasetDict, IterableDataset]:
+        """
+        Private method to load the data source based on the type specified in the configuration.
+
+        The data source can be of two types: 'manual' or 'hf'.
+        For 'manual' type, it loads JSON datasets from the specified test, validation, and train files.
+        For 'hf' type, it loads datasets from the HuggingFace datasets hub using the given HuggingFace dataset ID(s)
+        and the git commit SHA for the specified version of the dataset.
+
+        Returns:
+            Loaded dataset which can be any of the following types:
+            DatasetDict, Dataset, IterableDatasetDict, IterableDataset.
+
+        Raises:
+            ValueError: If the specified data source type is not supported.
+        """
+        if self.config.data_source.type == "manual":
+            if mini:
+                # langs = ['en', 'fr', 'nl', 'es', 'ru', 'ja', 'zh', 'ko', 'vi', 'el', 'hu', 'he', 'tr', 'ca', 'ar', 'uk', 'fa']
+                file_path = self.config.data_source.BMLAMA17
+            else:
+                # langs = ['ca', 'az', 'en', 'ar', 'uk', 'fa', 'tr', 'it', 'el', 'ru', 'hr', 'hi', 'sv', 'sq', 'fr', 'ga', 'eu', 'de', 'nl', 'et', 'he', 'es', 'bn', 'ms', 'sr', 'hy', 'ur', 'hu', 'la', 'sl', 'cs', 'af', 'gl', 'fi', 'ro', 'ko', 'cy', 'th', 'be', 'id', 'pt', 'vi', 'ka', 'ja', 'da', 'bg', 'zh', 'pl', 'lv', 'sk', 'lt', 'ta', 'ceb']
+                file_path = self.config.data_source.BMLAMA53
+
+            data_files = dict()
+            for lang in [lang1, lang2]:
+                data_files[lang] = file_path + lang + ".tsv"
+            """
+            data_files = {
+                "test": self.config.data_source.test,
+            }
+            """
+            if self.config.data_source.validation is not None:
+                data_files["validation"] = self.config.data_source.validation
+            if self.config.data_source.train is not None:
+                data_files["train"] = self.config.data_source.train
+
+            # Remove the "file:///" prefix if present
+            for split, split_url in data_files.items():
+                if split_url.startswith("file://"):
+                    logger.warning(
+                        f"Loading a local dataset from {split_url}. "
+                        f"This is not a intended use case. "
+                        f"Data should be loaded from a remote location."
+                    )
+                    data_files[split] = split_url[len("file://") :]
+            return load_dataset("csv", data_files=data_files, delimiter="\t")
+            # return load_dataset("json", data_files=data_files, field=None)
+        elif self.config.data_source.type == "hf":
+            hf_id = self.config.data_source.hf_id
+            if isinstance(hf_id, str):
+                hf_id = [hf_id]
+
+            return load_dataset(*hf_id, revision=self.config.data_source.git_commit_sha)
+        else:
+            raise ValueError(f"Unsupported data source type: {self.config.data_source.type}")
+
+    def get_datasets_raw(self, mini, lang1, lang2) -> Mapping[DatasetSplit, Dataset]:
+        data_source = self._load_data_source(mini=mini, lang1=lang1, lang2=lang2)
+
+        if self.config.split_file is not None:
+            split_file_path = get_task_dir(self.root_task_id, self.subtask_id) / self.config.split_file
+            splitting_info = load_jsonnet(split_file_path)
+            data_source = resplit_data_source(data_source, splitting_info)
+
+        output = {}
+        for split in sorted(data_source.keys()):
+            dataset = data_source[split]
+            output[split] = dataset.map(
+                self.format_example,
+                num_proc=self.dataset_format_num_proc,
+                batched=self.dataset_format_batched,
+                desc=f"Formatting `{split}` examples",
+            )
+            assert all([f in output[split].column_names for f in ["input", "target"]])
+
+        # Assign id to each example
+        for split in sorted(output.keys()):
+            output[split] = output[split].map(
+                lambda example, idx: {"_genbench_idx": idx},
+                with_indices=True,
+                num_proc=self.dataset_format_num_proc,
+                batched=False,
+                desc=f"Assigning id to `{split}` examples",
+            )
+
+        return output
+
+    def get_prepared_datasets(
+        self,
+        preparation_strategy: PreparationStrategy,
+        shot_list: Optional[List[int]] = None,
+        random_seed: int = 42,
+        mini=None,
+        lang1=None,
+        lang2=None,
+    ) -> Union[Mapping[DatasetSplit, Dataset], Mapping[int, Dataset]]:
+        if not mini:
+            raise ValueError("Value for 'mini=True/False' is required for this task")
+        if not lang1 or not lang2:
+            raise ValueError("Values for 'lang1=' and 'lang2=' are required for this task")
+
+        if preparation_strategy == PreparationStrategy.FINETUNING:
+            if self.config.preparation_strategies.finetuning is None:
+                raise ValueError("Finetuning preparation strategy is not supported for this task")
+
+        datasets = self.get_datasets_raw(mini=mini, lang1=lang1, lang2=lang2)
+
+        # datasets is a dict of language_id -> Dataset
+        lang1_ds = datasets[lang1]
+        lang2_ds = datasets[lang2]
+
+        # They all have the same length (i.e. they are translation of each other)
+        assert len(english_ds) == len(french_ds)
+
+        # Each of them contains instances of the form:
+        # {
+        #   "input": "The capital of Canada ",
+        #   "target": "Ottawa",
+        #   "target_options": [
+        #       "Beijing",
+        #       "Tokyo",
+        #       "Ottawa",
+        #   ],
+        #   "_genbnech_idx": <some index>
+        # }
+
+        # Add language identifier to each instance
+        lang1_ds = lang1_ds.map(lambda x: {"lang": lang1})
+        lang2_ds = lang2_ds.map(lambda x: {"lang": lang2})
+
+        # Concatenate the datasets
+        from datasets import concatenate_datasets
+
+        final_dataset = concatenate_datasets([lang1_ds, lang2_ds])
+
+        return final_dataset
+
     def evaluate_predictions(
         self,
         *,
-        predictions: List[Dict[str, Any]] = None,
+        predictions: List[Mapping[str, Any]] = None,
         gold: datasets.Dataset = None,
     ) -> Dict[str, float]:
-        pass
+        # Make sure that the predictions are in the same order as the gold dataset
+        assert len(predictions) == len(gold)
 
-    def format_example(self, example: Dict[str, Any]) -> Dict[str, Any]:
-        #{'input': 'tr fa bigscience/bloom-3b', 'target': '-}
-        def contain(answer_tokens, orig_text_tokens):
-            ans_len = len(answer_tokens)
+        # Just to make sure the gold dataset is the same as the one we generated in `get_prepared_datasets`
+        assert "lang" in gold.features
+        assert "_genbnech_idx" in gold.features
 
-            for i in range(len(orig_text_tokens)-ans_len+1):
-                if orig_text_tokens[i: i+ans_len] == answer_tokens:
-                    return True
+        # Also, make sure that predictions contain logprobs for each option
+        assert all(
+            "target_option_logprobs" in pred and len(pred["target_option_logprobs"]) == len(pred["target_options"])
+            for pred in predictions
+        )
 
-            return False
+        # Group the prediction and instances such that we have:
+        # _genbnech_idx -> {
+        #    "lang_id_1": { ...data_instance..., target_option_logprobs: ... }
+        #    "lang_id_2": { ...data_instance..., target_option_logprobs: ... }
+        # },
 
-        def nooverlap(a, b):
-            return len(a) + len(b) == len(list(set(a + b)))
+        grouped_examples = defaultdict(dict)
+        for pred, gold in zip(predictions, gold):
+            original_idx = gold["_genbnech_idx"]
+            lang = gold["lang"]
+            grouped_examples[original_idx][lang] = {
+                **gold,
+                **pred,
+            }
 
-        def predict_mask(answer_cand, prompt, mname):
-            answer_pred_probs = dict()
-            
-            for answer in answer_cand:
-                answer_cand_probs = []
-            
-                if "t5" not in mname and "xglm" not in mname and "opt" not in mname and "bloom" not in mname and "llama" not in mname and "gpt" not in mname:
-                    answer_tokens = tokenizer(answer)["input_ids"][1:-1]
-            
-                    if "xlm-roberta" in mname and answer_tokens[0] == 6 and lang == "zh":
-                        answer_tokens = answer_tokens[1:]
-            
-                    new_mask = ["<mask>"] * len(answer_tokens)
-            
-                    if lang == "zh":
-                        new_mask = "".join(new_mask)
-                    else:
-                        new_mask = " ".join(new_mask)
-            
-                    prompt_new = prompt.replace('<mask>', new_mask)
-                    prompt_new = prompt_new.replace('<mask>', tokenizer.mask_token)
-            
-                    for j, w_idx in enumerate(answer_tokens):
-                        model_inputs = tokenizer(prompt_new, return_tensors='pt').to(device)
-                        model_outputs = model(**model_inputs)
-                        input_ids = model_inputs["input_ids"][0]
-                        outputs = model_outputs["logits"]
-                        masked_index = torch.nonzero(input_ids == tokenizer.mask_token_id, as_tuple=False)
-                            
-                        logits = outputs[0, masked_index[0].item(), :]
-                        probs = logits.softmax(dim=-1).detach().cpu().numpy()
-                        answer_cand_probs.append(-np.log(probs[w_idx]))
-            
-                        pos = prompt_new.find(tokenizer.mask_token)
-                        prompt_new = prompt_new[:pos] + tokenizer.convert_ids_to_tokens(w_idx) + prompt_new[pos+len(tokenizer.mask_token):]
-            
-                    answer_pred_probs[answer] = np.mean(answer_cand_probs)
-            
-                elif "xglm" in mname or "opt" in mname or "bloom" in mname or "llama" in mname or "gpt" in mname:
-                    prompt_new = prompt.replace("<mask>", answer)
-                         
-                    model_input = tokenizer(prompt_new, return_tensors='pt').to(device)
-                    output = model(**model_input)
-                        
-                    if lang == 'zh':
-                        logits = output['logits'][0, :-1] 
-                        token_ids = model_input['input_ids'][0, 1:]
-                    else:
-                        logits = output['logits'][0, :-2] 
-                        token_ids = model_input['input_ids'][0, 1:-1]
-            
-                    answer_pred_probs[answer] = float(torch.nn.CrossEntropyLoss(reduction='mean')(logits, token_ids))
-                else:
-                    input_ids = tokenizer(prompt.replace('<mask>', '<extra_id_0>'), return_tensors='pt').input_ids.to(device)
-                    labels = tokenizer('<extra_id_0> ' + answer + ' <extra_id_1>', return_tensors='pt').input_ids.to(device)
-                    target_ids = labels[0][1:-2]
-            
-                    outputs = model(input_ids=input_ids, labels=labels).logits
-                    masked_index = torch.tensor(list(range(outputs.size()[1]))[1:-2])
-                    
-                    for idx, t_idx in zip(masked_index, target_ids):
-                        logits = outputs[0, idx.item(), :]
-                        probs = logits.softmax(dim=-1).detach().cpu().numpy()
-                        answer_cand_probs.append(-np.log(probs[t_idx]))
-            
-                    answer_pred_probs[answer] = np.mean(answer_cand_probs)
-            
-            return answer_pred_probs	
-	
+        CLC_score = 0
+        count = 0
+        langs = []
+        # Now, we compute the cross lingual consistency score
+        for idx, example in grouped_examples.items():
+            # Rerank the options based on the logprobs
+            for lang, data in example.items():
+                if len(langs) < 2:
+                    langs.append(lang)
 
-        input_text = eval(example["input"])
-        input_text = input_text.split(' ')
+                logprobs = data["target_option_logprobs"]
+                sorted_options = sorted(
+                    zip(data["target_options"], logprobs),
+                    key=lambda x: x[1],
+                    reverse=False,
+                )
+                sorted_options, logprobs = zip(*sorted_options)
+                grouped_examples[idx][lang]["target_options"] = list(sorted_options)
+                grouped_examples[idx][lang]["target_option_logprobs"] = list(logprobs)
 
-        lang1 = input_text[0]
-        lang2 = input_text[1]
-        mname = input_text[2]
-        mini = True
-        max_candidate_num = 10
-
-        for lang in [lang1, lang2]:
-            if mini:
-                fname = "BMLAMA17_" + str(max_candidate_num) + '/' + lang + ".tsv"
-            else:
-                fname = "BMLAMA53_" + str(max_candidate_num) + '/' + lang + ".tsv"
-            mname = args.mname
-
-
-            if "xglm" in mname or "opt" in mname or "bloom" in mname or "llama" in mname or "gpt" in mname:
-                model = AutoModelForCausalLM.from_pretrained(mname, device_map="auto", load_in_8bit=True)
-            elif "google/mt5" in mname or "google/mt0" in mname:
-                model = MT5ForConditionalGeneration.from_pretrained(mname, device_map="auto", load_in_8bit=True)
-            elif "t5" in mname:
-                model = T5ForConditionalGeneration.from_pretrained(mname, device_map="auto", load_in_8bit=True)
-            else:
-                model = AutoModelForMaskedLM.from_pretrained(mname, device_map="auto", load_in_8bit=True)
-            if "xglm" in mname:
-                tokenizer = XGLMTokenizer.from_pretrained(mname)
-            else:
-                tokenizer = AutoTokenizer.from_pretrained(mname)
-
-            device = "cuda:0" if torch.cuda.is_available() else "cpu"
-
-            print("Runing on:" + device)
-            print()
-            model = model.to(device)
-            #model = model
-
-            data = []
-
-            with open(fname) as f:
-                ans_cand = []
-
-                for line in f:
-                    d = line.strip().split('\t')
-                    if d[0] == "Prompt":
-                        continue
-
-                    if len(d) <= 1:
-                        continue
-                    else:
-                        d[1] = d[1].split(', ')
-                        d[2] = d[2].split(', ')
-                        
-                        data.append(d)
-
-            all_gold_ans = []
-            answer_pred_orig_probs = dict()
-
-            pred_corr = 0
-            pred_tot = 0
-
-            # (START) New added Knowledge Consistency
-            correct_index = []
-            answer_count = []
-
-            rank = []
-            score_full = []
-            # (END)
-
-
-            for i, d in tqdm(enumerate(data)):
-            #for i, d in enumerate(data):
-                #print(mname, lang, i, '/', len(data))
-                
-                prompt = d[0]
-                gold_ans_list = d[1]
-                answer_cand = d[2]
-                
-                all_gold_ans.append(gold_ans_list)
-
-                answer_pred_probs = predict_mask(answer_cand, prompt, mname)
-                sorted_probs = sorted(answer_pred_probs.items(), key=lambda x: x[1], reverse=False)
-                
-                ranked_keys = [x[0] for x in sorted_probs]
-                
-                #(START) New added
-                top_rankings = []
-                
-                for k in sorted_probs:
-                    top_rankings.append(ranked_keys[:])
-                
-                rank.append(top_rankings[:])
-
-                score_full.append(answer_pred_probs)
-                #(END)
-
-                corr = 0
-                tot = len(gold_ans_list)
-
-                correct_gold = [] # New added
-                for gold_ans in gold_ans_list:
-                    if gold_ans in ranked_keys[:tot]:
-                        corr += 1
-                        correct_gold.append(1) # New added
-                    else: # New added
-                        correct_gold.append(0) # New added
-                
-                #(START) New added Knowledge Consistency
-                correct_index.append(correct_gold)
-                answer_count.append(tot)
-                #(END)
-
-                pred_corr += corr
-                pred_tot += tot
-                    
-
-            #(START) New added Knowledge Consistency
-            #print(rank)
-            #print(score_full)
-
-            #print(correct_index)
-            #print(answer_count)
-            if mini:
-                folder_name = './record17/'
-            else:
-                folder_name = './record53/'
-            with open(folder_name + mname.replace('/', '-') + '_Rankings_' + lang + '.txt', 'w') as f:
-                json.dump(rank, f)
-
-            with open(folder_name + mname.replace('/', '-') + '_Scores_' + lang + '.txt', 'w') as f:
-                json.dump(str(score_full), f)
-
-            with open(folder_name + mname.replace('/', '-') + '_CorrectIndex_' + lang + '.txt', 'w') as f:
-                json.dump(correct_index, f)
-            with open(folder_name + mname.replace('/', '-') + '_AnswerCount_' + lang + '.txt', 'w') as f:
-                json.dump(answer_count, f)
-
-            #(END)
-
-            print(mname+'_'+lang+':', [pred_corr/pred_tot])
-            print(pred_corr)
-            print(pred_tot)
-	
-
-
-
-
-        fname1 = './record17/' + mname.replace('/','-') + '_Rankings_' + lang1 + '.txt'
-        fname2 = './record17/' + mname.replace('/','-') + '_Rankings_' + lang2 + '.txt'
-
-        fcand1 = './record17/' + mname.replace('/', '-') + '_Scores_' + lang1 + '.txt'
-        fcand2 = './record17/' + mname.replace('/', '-') + '_Scores_' + lang2 + '.txt'
-
-
-        with open(fname1, 'r') as f1:
-            lang1_rankings = json.load(f1)
-        with open(fname2, 'r') as f2:
-            lang2_rankings = json.load(f2)
-        with open(fcand1, 'r') as f3:
-            cand1 = json.load(f3)
-            cand1 = eval(cand1)
-        with open(fcand2, 'r') as f4:
-            cand2 = json.load(f4)
-            cand2 = eval(cand2)
-
-        def softmax(x):
-            # Compute softmax values for each sets of scores in x.
-            return np.exp(x) / np.sum(np.exp(x), axis=0)
-
-        weight_metric = "softmax"  # softmax norm1 norm2
-
-        cand_list1 = [[j for j in list(i.keys())] for i in cand1]
-        cand_list2 = [[j for j in list(i.keys())] for i in cand2]
-
-        num_consistent = 0
-
-        for i in range(len(lang1_rankings)):
-            ranking1 = lang1_rankings[i][0]
-            ranking2 = lang2_rankings[i][0]
-
-            candidate1 = cand_list1[i]
-            candidate2 = cand_list2[i]
+            # Compute the cross lingual consistency score
+            ranking1 = grouped_examples[idx][langs[0]]["target_options"]
+            ranking2 = grouped_examples[idx][langs[1]]["target_options"]
 
             order = [len(ranking1) - i for i in range(len(ranking1))]
             order = np.array(order)
-
-            if weight_metric == "softmax":
-                weight = softmax(order)
-            elif weight_metric == "norm1":
-                weight = order / np.sum(order)
-            else:
-                weight = np.power(order, 2) / np.sum(np.power(order, 2))
+            weight = softmax(order)
 
             for j in range(len(ranking1)):
-                set1 = {candidate1.index(i) for i in ranking1[: j + 1]}
-                set2 = {candidate2.index(i) for i in ranking2[: j + 1]}
+                set1 = {ranking1.index(i) for i in ranking1[: j + 1]}
+                set2 = {ranking2.index(i) for i in ranking2[: j + 1]}
 
                 cover = set1.intersection(set2)
-                num_consistent += weight[j] * (len(cover) / len(set1))
+                CLC_score += weight[j] * (len(cover) / len(set1))
 
-        """
-        return {
-            "rankings of candidates when probing Bloom-3b with en factual queries in BMLAMA:": str(lang1_rankings),
-            "rankings of candidates when probing Bloom-3b with es factual queries in BMLAMA:": str(lang2_rankings),
-            "CLC computed with our proposed RankC metric": str(num_consistent / len(lang1_rankings)),
+            count += 1
+        CLC_score /= count
+
+        # Compute the final score
+        result = {
+            "cross_lingual_consistency": CLC_score,
         }
-        """
-        input_tmp = []
-        target_tmp = []
-        input_tmp = str(lang1_rankings) + str(lang2_rankings)
-        target_tmp = str(num_consistent / len(lang1_rankings))
-        return {
-            "input": input_tmp,
-            "target": target_tmp,
-        }
+
+        return result
+
+    def format_example(self, example: Mapping[str, Any]) -> Mapping[str, Any]:
+        if self.config.field_mapping is None:
+            assert "input" in example
+            assert "target" in example
+            output = {}
+        else:
+            assert "input" in self.config.field_mapping
+            assert "target" in self.config.field_mapping
+
+            output = {
+                "input": example[self.config.field_mapping["input"]],
+                "target": example[self.config.field_mapping["target"]],
+            }
+
+            if "target_options" in self.config.field_mapping:
+                output["target_options"] = example[self.config.field_mapping["target_options"]]
+
+        return output
