@@ -23,9 +23,7 @@
 
     data_source: {
         type: 'manual',
-		BMLAMA17: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/BMLAMA17/',
-		BMLAMA53: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/BMLAMA53/',
-		test: 'https://placeholder'
+		test: 'https://raw.githubusercontent.com/Betswish/genbench_cbt/BMLAMA/src/genbench/tasks/cross_lingual_consistency/',
     },
 	
 
