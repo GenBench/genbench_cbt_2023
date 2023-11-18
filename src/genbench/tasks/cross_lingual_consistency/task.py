@@ -2,11 +2,12 @@ import json
 import os
 import pickle as pkl
 from collections import defaultdict
-from typing import Any, Callable, List, Mapping, Optional, Union, Dict
+from typing import Any, Callable, Dict, List, Mapping, Optional, Union
 
 import datasets
 import numpy as np
 import torch
+from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict, load_dataset
 from sklearn.metrics import accuracy_score, f1_score
 from tqdm import tqdm
 from transformers import (
@@ -20,15 +21,13 @@ from transformers import (
     pipeline,
 )
 
-from datasets import Dataset, DatasetDict, IterableDataset, IterableDatasetDict, load_dataset
-
 from genbench import Task
-
 from genbench.api import DatasetSplit, EvaluationResult, PreparationStrategy, TaskInterface, TaskType
 from genbench.task_config import PromptBuilderConfig, TaskConfig
 from genbench.utils.file import load_jsonnet
 from genbench.utils.logging import get_logger
 from genbench.utils.tasks import get_task_dir
+
 
 class CrossLingualConsistencyTask(Task):
     def _load_data_source(
@@ -54,11 +53,9 @@ class CrossLingualConsistencyTask(Task):
         """
         if self.config.data_source.type == "manual":
             if mini:
-                # langs = ['en', 'fr', 'nl', 'es', 'ru', 'ja', 'zh', 'ko', 'vi', 'el', 'hu', 'he', 'tr', 'ca', 'ar', 'uk', 'fa']
-                file_path = self.config.data_source.test + 'BMLAMA17/'
+                file_path = self.config.data_source.test + "BMLAMA17/"
             else:
-                # langs = ['ca', 'az', 'en', 'ar', 'uk', 'fa', 'tr', 'it', 'el', 'ru', 'hr', 'hi', 'sv', 'sq', 'fr', 'ga', 'eu', 'de', 'nl', 'et', 'he', 'es', 'bn', 'ms', 'sr', 'hy', 'ur', 'hu', 'la', 'sl', 'cs', 'af', 'gl', 'fi', 'ro', 'ko', 'cy', 'th', 'be', 'id', 'pt', 'vi', 'ka', 'ja', 'da', 'bg', 'zh', 'pl', 'lv', 'sk', 'lt', 'ta', 'ceb']
-                file_path = self.config.data_source.test + 'BMLAMA53/'
+                file_path = self.config.data_source.test + "BMLAMA53/"
 
             data_files = dict()
             for lang in [lang1, lang2]:
@@ -73,15 +70,6 @@ class CrossLingualConsistencyTask(Task):
             if self.config.data_source.train is not None:
                 data_files["train"] = self.config.data_source.train
 
-            # Remove the "file:///" prefix if present
-            for split, split_url in data_files.items():
-                if split_url.startswith("file://"):
-                    logger.warning(
-                        f"Loading a local dataset from {split_url}. "
-                        f"This is not a intended use case. "
-                        f"Data should be loaded from a remote location."
-                    )
-                    data_files[split] = split_url[len("file://") :]
             return load_dataset("csv", data_files=data_files, delimiter="\t")
             # return load_dataset("json", data_files=data_files, field=None)
         elif self.config.data_source.type == "hf":
@@ -93,13 +81,15 @@ class CrossLingualConsistencyTask(Task):
         else:
             raise ValueError(f"Unsupported data source type: {self.config.data_source.type}")
 
-    def get_datasets_raw(self, mini=True, lang1='en', lang2='es'):
+    def get_datasets_raw(self, mini=True, lang1="en", lang2="es"):
         data_source = self._load_data_source(mini=mini, lang1=lang1, lang2=lang2)
 
+        """
         if self.config.split_file is not None:
             split_file_path = get_task_dir(self.root_task_id, self.subtask_id) / self.config.split_file
             splitting_info = load_jsonnet(split_file_path)
             data_source = resplit_data_source(data_source, splitting_info)
+        """
 
         output = {}
         for split in sorted(data_source.keys()):
@@ -149,7 +139,7 @@ class CrossLingualConsistencyTask(Task):
         lang2_ds = datasets[lang2]
 
         # They all have the same length (i.e. they are translation of each other)
-        assert len(english_ds) == len(french_ds)
+        assert len(lang1_ds) == len(lang2_ds)
 
         # Each of them contains instances of the form:
         # {
@@ -180,6 +170,10 @@ class CrossLingualConsistencyTask(Task):
         predictions: List[Mapping[str, Any]] = None,
         gold: datasets.Dataset = None,
     ) -> Dict[str, float]:
+        def softmax(x):
+            """Compute softmax values for each sets of scores in x."""
+            return np.exp(x) / np.sum(np.exp(x), axis=0)
+
         # Make sure that the predictions are in the same order as the gold dataset
         assert len(predictions) == len(gold)
 
