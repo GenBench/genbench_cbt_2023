@@ -1,21 +1,25 @@
-from datasets import load_dataset, DatasetDict, Dataset
-from transformers import AutoTokenizer, DataCollatorWithPadding, \
-    Trainer, TrainingArguments,  AutoModelForSequenceClassification
-import numpy as np
+import os
+
 import evaluate
+import numpy as np
+from datasets import DatasetDict
+from transformers import (
+    AutoModelForSequenceClassification,
+    AutoTokenizer,
+    DataCollatorWithPadding,
+    Trainer,
+    TrainingArguments,
+)
+
 from genbench import load_task
 from genbench.api import PreparationStrategy
-import os
-from sklearn.model_selection import train_test_split
+
 
 def compute_metrics(eval_preds):
     metric = evaluate.load("f1")
     logits, labels = eval_preds
     predictions = np.argmax(logits, axis=-1)
-    return metric.compute(
-        predictions=predictions,
-        references=labels,
-        average="macro")
+    return metric.compute(predictions=predictions, references=labels, average="macro")
 
 
 def main(split_name, num_labels, bsz, lr, epochs, checkpoint):
@@ -31,36 +35,31 @@ def main(split_name, num_labels, bsz, lr, epochs, checkpoint):
     """
 
     def tokenize_function(example):
-        return tokenizer(
-            example["input"])
+        return tokenizer(example["input"])
 
     # Convert GenBench format to HF dataset format, get devset, preview dataset
     task = load_task(f"latent_feature_splits:{split_name}")
     ds = task.get_prepared_datasets(PreparationStrategy.FINETUNING)
     ds_split = ds["train"].train_test_split(0.1)
-    ds = DatasetDict({
-        "train": ds_split["train"],
-        "validation": ds_split["test"],
-        "test": ds["test"]})
+    ds = DatasetDict({"train": ds_split["train"], "validation": ds_split["test"], "test": ds["test"]})
     ds = ds.rename_column("target", "label")
     print(ds)
 
     # Load and preprocess data
     tokenizer = AutoTokenizer.from_pretrained(checkpoint)
-    tokenized_datasets = ds.map(
-        tokenize_function, batch_size=bsz, batched=True)
+    tokenized_datasets = ds.map(tokenize_function, batch_size=bsz, batched=True)
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer)
 
     # Load model and HF trainer, WITH evaluation during training
-    model = AutoModelForSequenceClassification.from_pretrained(
-        checkpoint, num_labels=num_labels)
+    model = AutoModelForSequenceClassification.from_pretrained(checkpoint, num_labels=num_labels)
     training_args = TrainingArguments(
         "test-trainer",
         learning_rate=lr,
         num_train_epochs=epochs,
         per_device_train_batch_size=bsz,
         per_device_eval_batch_size=bsz,
-        evaluation_strategy="epoch")
+        evaluation_strategy="epoch",
+    )
     trainer = Trainer(
         model,
         training_args,
@@ -78,7 +77,6 @@ def main(split_name, num_labels, bsz, lr, epochs, checkpoint):
     predictions = trainer.predict(tokenized_datasets["test"])
     f1_post = compute_metrics((predictions.predictions, predictions.label_ids))
     print(f"Random f1: {f1_pre}, f1 post-training: {f1_post}")
-
 
 
 if __name__ == "__main__":
