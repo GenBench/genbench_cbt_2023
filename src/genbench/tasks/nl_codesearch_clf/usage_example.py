@@ -1,7 +1,6 @@
 import argparse
 import json
 import logging
-from pathlib import Path
 
 import torch
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score
@@ -10,15 +9,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, PreTrainedModel, get_scheduler
 
-from genbench import TaskConfig
-from genbench.tasks.nl_codesearch_clf.codesearchnet_adv.task import NlCodesearchClfCodesearchnetAdv
-from genbench.tasks.nl_codesearch_clf.codesearchnet_go.task import NlCodesearchClfCodesearchnetGo
-from genbench.tasks.nl_codesearch_clf.codesearchnet_java.task import NlCodesearchClfCodesearchnetJava
-from genbench.tasks.nl_codesearch_clf.codesearchnet_javascript.task import NlCodesearchClfCodesearchnetJavascript
-from genbench.tasks.nl_codesearch_clf.codesearchnet_php.task import NlCodesearchClfCodesearchnetPhp
-from genbench.tasks.nl_codesearch_clf.codesearchnet_ruby.task import NlCodesearchClfCodesearchnetRuby
-from genbench.tasks.nl_codesearch_clf.cosqa.task import NlCodesearchClfCosqa
-from genbench.tasks.nl_codesearch_clf.statcodesearch.task import NlCodesearchClfStatcodesearch
+from genbench import load_task
 
 
 ##########################################################
@@ -161,7 +152,6 @@ def load_data(tokenizer, batch_size, seq_len, train_file, is_train):
                 print(f"Error: JSON decoding failed - {e}")
                 continue
     logging.info(f"Skipped {skipped} samples due to special tokens")
-    print("siker")
     # tokenize
     features = _convert_examples_to_features(
         comments,
@@ -197,6 +187,7 @@ def train(model: PreTrainedModel, dataloader: DataLoader, args: argparse.Namespa
     """
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = "cpu"
     model.to(device)
     model.train()
 
@@ -289,13 +280,7 @@ def main():
 
     args = parser.parse_args()
 
-    # TRAIN_FILE = "./codesearchnet_adv/train_adv_clf.jsonl"
-
-    TRAIN_FILE = NlCodesearchClfCodesearchnetAdv(
-        TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_adv/config.jsonnet")),
-        "nl_codesearch",
-        "codesearchnet_adv",
-    ).get_dataset_raw()
+    TRAIN_FILE = load_task("nl_codesearch_clf:codesearchnet_adv").get_dataset_raw()
 
     # logging
     logging.basicConfig(level=args.log_level)
@@ -312,7 +297,7 @@ def main():
 
     # train
     logging.info("Training...")
-    train(model, dataloader, args)
+    # train(model, dataloader, args)
 
     # save model
     logging.info("Saving model...")
@@ -321,68 +306,14 @@ def main():
     tokenizer.save_pretrained(f"{args.output_dir}/{args.model}")
 
     TEST_FILES = [
-        [
-            "codesearchnetadv",
-            NlCodesearchClfCodesearchnetAdv(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_adv/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_adv",
-            ).get_dataset_raw(),
-        ],
-        [
-            "codesearchnet_ruby",
-            NlCodesearchClfCodesearchnetRuby(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_ruby/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_ruby",
-            ).get_dataset_raw(),
-        ],
-        [
-            "codesearchnet_go",
-            NlCodesearchClfCodesearchnetGo(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_go/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_go",
-            ).get_dataset_raw(),
-        ],
-        [
-            "codesearchnet_java",
-            NlCodesearchClfCodesearchnetJava(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_java/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_java",
-            ).get_dataset_raw(),
-        ],
-        [
-            "codesearchnet_javascript",
-            NlCodesearchClfCodesearchnetJavascript(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_javascript/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_javascript",
-            ).get_dataset_raw(),
-        ],
-        [
-            "codesearchnet_php",
-            NlCodesearchClfCodesearchnetPhp(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./codesearchnet_php/config.jsonnet")),
-                "nl_codesearch",
-                "codesearchnet_php",
-            ).get_dataset_raw(),
-        ],
-        [
-            "cosqa",
-            NlCodesearchClfCosqa(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./cosqa/config.jsonnet")), "nl_codesearch", "cosqa"
-            ).get_dataset_raw(),
-        ],
-        [
-            "statcodesearch",
-            NlCodesearchClfStatcodesearch(
-                TaskConfig.from_jsonnet(jsonnet_path=Path("./statcodesearch/config.jsonnet")),
-                "nl_codesearch",
-                "statcodesearch",
-            ).get_dataset_raw(),
-        ],
+        ["codesearchnetadv", load_task("nl_codesearch_clf:codesearchnet_adv").get_dataset_raw()],
+        ["codesearchnet_ruby", load_task("nl_codesearch_clf:codesearchnet_ruby").get_dataset_raw()],
+        ["codesearchnet_go", load_task("nl_codesearch_clf:codesearchnet_go").get_dataset_raw()],
+        ["codesearchnet_java", load_task("nl_codesearch_clf:codesearchnet_java").get_dataset_raw()],
+        ["codesearchnet_javascript", load_task("nl_codesearch_clf:codesearchnet_javascript").get_dataset_raw()],
+        ["codesearchnet_php", load_task("nl_codesearch_clf:codesearchnet_php").get_dataset_raw()],
+        ["cosqa", load_task("nl_codesearch_clf:cosqa").get_dataset_raw()],
+        ["statcodesearch", load_task("nl_codesearch_clf:statcodesearch").get_dataset_raw()],
     ]
 
     results = {}
