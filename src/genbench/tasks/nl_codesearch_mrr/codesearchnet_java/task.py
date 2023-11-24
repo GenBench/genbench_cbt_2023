@@ -80,16 +80,13 @@ class NlCodesearchMrrCodesearchnetJava(Task):
                 output[split] = dataset
         return output
 
-    def evaluate_predictions(
-        self, predictions: List[Dict[str, float]], gold: datasets.Dataset, n_distractors
-    ) -> Dict[str, float]:
+    def evaluate_predictions(self, predictions: List[Dict[str, float]], n_distractors) -> Dict[str, float]:
         """Calculate the MRR score in chunks. One chunk consist of a true comment-code pair and n number of distractors
         This function assumes that the predictions were made and passed onto this function unshuffled.
         The test data is ordered with each true pair followed by n number of distractors
          Args:
              predictions: A list of dictionaries, where each dictionary contains the predicted values for an example.
                           The keys are strings and the values are floats (logit scores or similarity values).
-             gold: A HuggingFace `datasets.Dataset` object containing the ground truth data for the task.
              n_distractors:  Number of distractor comment-code pair for each true pair.
                              Must be the same number as in the get_dataset_raw function
 

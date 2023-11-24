@@ -73,7 +73,6 @@ class NlCodesearchMrrCodesearchnetAdv(Task):
                         new_input = input_parts[0] + "[CODESPLIT]" + random_input_parts[1]
                         new_item = {"input": new_input, "target": 0, "target_options": item["target_options"]}
                         new_data.append(new_item)
-
                 # Convert list back to HuggingFace dataset
                 output[split] = datasets.Dataset.from_dict({k: [dic[k] for dic in new_data] for k in new_data[0]})
             # Create negative samples for training
@@ -84,11 +83,11 @@ class NlCodesearchMrrCodesearchnetAdv(Task):
                     new_dataset = new_dataset.add_item(item)
                     other_items = [other_item for other_item in dataset if other_item != item]
                     # Randomly select 49 other items
-                    random_items = random.sample(other_items, 1)
+                    random_item = random.sample(other_items, 1)
                     # Split input into comment and code
                     input_parts = item["input"].split("[CODESPLIT]")
                     # Split random input into comment and code
-                    random_input_parts = random_item["input"].split("[CODESPLIT]")
+                    random_input_parts = random_item[0]["input"].split("[CODESPLIT]")
                     # Combine the "input" fields of the original and random items
                     new_input = input_parts[0] + "[CODESPLIT]" + random_input_parts[1]
                     new_item = {"input": new_input, "target": 0, "target_options": item["target_options"]}
@@ -99,16 +98,13 @@ class NlCodesearchMrrCodesearchnetAdv(Task):
                 output[split] = dataset
         return output
 
-    def evaluate_predictions(
-        self, predictions: List[Dict[str, float]], gold: datasets.Dataset, n_distractors
-    ) -> Dict[str, float]:
+    def evaluate_predictions(self, predictions: List[Dict[str, float]], n_distractors) -> Dict[str, float]:
         """Calculate the MRR score in chunks. One chunk consist of a true comment-code pair and n number of distractors
         This function assumes that the predictions were made and passed onto this function unshuffled.
         The test data is ordered with each true pair followed by n number of distractors
          Args:
              predictions: A list of dictionaries, where each dictionary contains the predicted values for an example.
                           The keys are strings and the values are floats (logit scores or similarity values).
-             gold: A HuggingFace `datasets.Dataset` object containing the ground truth data for the task.
              n_distractors:  Number of distractor comment-code pair for each true pair.
                              Must be the same number as in the get_dataset_raw function
 

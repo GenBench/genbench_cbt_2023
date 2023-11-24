@@ -3,12 +3,13 @@ import json
 import logging
 import random
 
-import numpy as np
 import torch
 from torch.optim import AdamW
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, PreTrainedModel, get_scheduler
+
+from genbench import load_task
 
 
 ##########################################################
@@ -100,23 +101,30 @@ def _convert_examples_to_features(
     return features
 
 
-def load_data(tokenizer, batch_size, seq_len, train_file):
+def load_data(tokenizer, batch_size, seq_len, train_file, is_train):
     # create dataset
     comments = []
     codes = []
     labels = []
     skipped = 0
+    if is_train:
+        do_shuffle = True
+    else:
+        do_shuffle = False
 
     is_sep_token_set = tokenizer.sep_token is not None
     is_cls_token_set = tokenizer.cls_token is not None
     is_pad_token_set = tokenizer.pad_token is not None
     is_eos_token_set = tokenizer.eos_token is not None
 
-    with open(train_file, "r", encoding="utf-8") as infile:
-        for line in infile:
+    for split, dataset in train_file.items():
+        if is_train and split == "test":
+            continue
+        if not is_train and split == "train":
+            continue
+        for sample in dataset:
             try:
-                item = json.loads(line.strip())
-                input = item["input"]
+                input = sample["input"]
                 # split at [CODESPLIT] token
                 input = input.split("[CODESPLIT]")
                 if len(input) != 2:
@@ -143,7 +151,8 @@ def load_data(tokenizer, batch_size, seq_len, train_file):
                     continue
                 comments.append(input[0])
                 codes.append(input[1])
-                labels.append(item["target"])
+                labels.append(sample["target"])
+
             except json.JSONDecodeError as e:
                 print(f"Error: JSON decoding failed - {e}")
                 continue
@@ -165,7 +174,7 @@ def load_data(tokenizer, batch_size, seq_len, train_file):
     # Convert to Dataset
     features = Dataset(features)
 
-    return DataLoader(features, batch_size=batch_size, shuffle=True)
+    return DataLoader(features, batch_size=batch_size, shuffle=do_shuffle)
 
 
 ##############################################################
@@ -215,132 +224,24 @@ def train(model: PreTrainedModel, dataloader: DataLoader, args: argparse.Namespa
 ###########################################################
 
 
-def load_data_for_mrr(tokenizer, file):
-    # create dataset
-    comments = []
-    codes = []
-    labels = []
-    skipped = 0
-
-    is_sep_token_set = tokenizer.sep_token is not None
-    is_cls_token_set = tokenizer.cls_token is not None
-    is_pad_token_set = tokenizer.pad_token is not None
-    is_eos_token_set = tokenizer.eos_token is not None
-
-    with open(file, "r", encoding="utf-8") as infile:
-        for line in infile:
-            try:
-                item = json.loads(line.strip())
-                input = item["input"]
-                # split at [CODESPLIT] token
-                input = input.split("[CODESPLIT]")
-                if len(input) != 2:
-                    # skip cases with more than one [SEP] token
-                    logging.warning(f"Input contains more than one [CODESPLIT] token: {input}")
-                    skipped += 1
-                    continue
-                # skip every sample that contains special tokens
-                if is_sep_token_set and (tokenizer.sep_token in input[0] or tokenizer.sep_token in input[1]):
-                    logging.warning(f"Input contains special tokens: {input}")
-                    skipped += 1
-                    continue
-                if is_cls_token_set and (tokenizer.cls_token in input[0] or tokenizer.cls_token in input[1]):
-                    logging.warning(f"Input contains special tokens: {input}")
-                    skipped += 1
-                    continue
-                if is_pad_token_set and (tokenizer.pad_token in input[0] or tokenizer.pad_token in input[1]):
-                    logging.warning(f"Input contains special tokens: {input}")
-                    skipped += 1
-                    continue
-                if is_eos_token_set and (tokenizer.eos_token in input[0] or tokenizer.eos_token in input[1]):
-                    logging.warning(f"Input contains special tokens: {input}")
-                    skipped += 1
-                    continue
-                comments.append(input[0])
-                codes.append(input[1])
-                labels.append(item["target"])
-            except json.JSONDecodeError as e:
-                print(f"Error: JSON decoding failed - {e}")
-                continue
-    logging.info(f"Skipped {skipped} samples due to special tokens")
-
-    return comments, codes
-
-
-def mrr(model, tokenizer, file, args):
+def get_scores(model, dataloader):
     random.seed(42)
-
-    # load data
-    comments, codes = load_data_for_mrr(tokenizer, file)
-
-    # create mrr chunks with (default 99) distractors
-
-    chunks = []
-    for i, sample in enumerate(zip(comments, codes)):
-        comment, code = sample
-        codes_without_sample = codes[:i] + codes[i + 1 :]
-        # select 99 random codes
-        distractors = random.sample(codes_without_sample, args.distractors)
-        # create samples
-        codes = [code] + distractors
-        comments = [comment] * len(codes)
-        labels = [1] + [0] * len(distractors)
-        # convert to features
-        features = _convert_examples_to_features(
-            comments,
-            codes,
-            labels,
-            tokenizer=tokenizer,
-            max_seq_length=args.seq_len,
-            cls_token=tokenizer.cls_token,
-            sep_token=tokenizer.sep_token,
-            cls_token_segment_id=tokenizer.cls_token_id,
-            pad_token_segment_id=tokenizer.pad_token_id,
-            eos_token=tokenizer.eos_token,
-        )
-
-        chunks.append(features)
-
     # make predictions for all chunks
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
     model.to(device)
     model.eval()
 
-    ranks = []
-    for chunk in tqdm(chunks):
-        # calc correct sample (always the first one)
-        correct = chunk[0]
-        input_ids = correct["input_ids"].unsqueeze(0).to(device)
-        attention_mask = correct["attention_mask"].unsqueeze(0).to(device)
-        labels = correct["labels"].unsqueeze(0).to(device)
+    score_list = []
+    for batch in tqdm(dataloader):
+        batch = {k: v.to(device) for k, v in batch.items()}
         with torch.no_grad():
-            outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-            logits = outputs.logits
-            correct_score = logits[0][0].item()
+            outputs = model(**batch)
+            score_dict = dict.fromkeys(["score"])
+            score_dict["score"] = outputs.logits.cpu().numpy()
+            score_list.append(score_dict)
 
-        # calc scores for the rest of the samples
-        scores = []
-        # add correct score to scores
-        scores.append(correct_score)
-        # create batches of size args.batch_size
-        batch_size = args.batch_size
-        for i in range(1, len(chunk), batch_size):
-            batch = chunk[i : i + batch_size]
-            input_ids = torch.stack([sample["input_ids"] for sample in batch]).to(device)
-            attention_mask = torch.stack([sample["attention_mask"] for sample in batch]).to(device)
-            labels = torch.stack([sample["labels"] for sample in batch]).to(device)
-            with torch.no_grad():
-                outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
-                logits = outputs.logits
-                scores.extend(logits[:, 1].cpu().numpy().tolist())
-
-        rank = np.sum(np.array(scores) >= correct_score)
-        ranks.append(rank)
-
-    mean_mrr = np.mean(1.0 / np.array(ranks))
-
-    return mean_mrr
+    return score_list
 
 
 ##############################################################
@@ -361,12 +262,12 @@ def main():
     parser.add_argument("--num_warmup_steps", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="models")
     parser.add_argument("--seq_len", type=int, default=512, help="maximum sequence length")
-    parser.add_argument("--distractors", type=int, default=99, help="number of distractors per true pair")
+    parser.add_argument("--distractors", type=int, default=2, help="number of distractors per true pair")
     parser.add_argument("--log_level", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], default="INFO")
 
     args = parser.parse_args()
 
-    TRAIN_FILE = "./codesearchnet_adv/train_adv_clf.jsonl"
+    TRAIN_FILE = load_task("nl_codesearch_mrr:codesearchnet_adv").get_dataset_raw(args.distractors)
 
     # logging
     logging.basicConfig(level=args.log_level)
@@ -377,7 +278,7 @@ def main():
 
     # load data
     logging.info("Loading data...")
-    dataloader = load_data(tokenizer, args.batch_size, args.seq_len, TRAIN_FILE)
+    dataloader = load_data(tokenizer, args.batch_size, args.seq_len, TRAIN_FILE, True)
 
     model = AutoModelForSequenceClassification.from_pretrained(args.model)
 
@@ -391,25 +292,25 @@ def main():
     # also soave tokenizer
     tokenizer.save_pretrained(f"{args.output_dir}/{args.model}")
 
-    DS_FOLDER = "./"
-
-    FILES = [
-        ["statcodesearch", "test_statcodesearch"],
-        ["codesearchnet_adv", "test_adv"],
-        ["codesearchnet_go", "test_go"],
-        ["codesearchnet_java", "test_java"],
-        ["codesearchnet_javascript", "test_javascript"],
-        ["codesearchnet_php", "test_php"],
-        ["codesearchnet_ruby", "test_ruby"],
-        ["cosqa", "test_cosqa"],
+    TEST_TASKS = [
+        ["codesearchnetadv", load_task("nl_codesearch_mrr:codesearchnet_adv")],
+        ["codesearchnet_ruby", load_task("nl_codesearch_mrr:codesearchnet_ruby")],
+        ["codesearchnet_go", load_task("nl_codesearch_mrr:codesearchnet_go")],
+        ["codesearchnet_java", load_task("nl_codesearch_mrr:codesearchnet_java")],
+        ["codesearchnet_javascript", load_task("nl_codesearch_mrr:codesearchnet_javascript")],
+        ["codesearchnet_php", load_task("nl_codesearch_mrr:codesearchnet_php")],
+        ["cosqa", load_task("nl_codesearch_mrr:cosqa")],
+        ["statcodesearch", load_task("nl_codesearch_mrr:statcodesearch")],
     ]
 
     results = {}
-    for meta_data in FILES:
-        logging.info(f"Evaluating on {meta_data}...")
-        metrics = mrr(model, tokenizer, f"{DS_FOLDER}/mrr/{meta_data[0]}/{meta_data[1]}_mrr.jsonl", args)
-        results[meta_data[0]] = metrics
-        logging.info(f"Test results for {meta_data}: {metrics}")
+    for task in TEST_TASKS:
+        logging.info(f"Calculating Logits for MRR {task[0]}...")
+        dataloader = load_data(tokenizer, 1, args.seq_len, task[1].get_dataset_raw(args.distractors), False)
+        scores = get_scores(model, dataloader)
+        mrr_value = task[1].evaluate_predictions(scores, args.distractors)
+        logging.info(f"Test results for {task[0]}: {mrr_value}")
+        results[task[0]] = mrr_value
 
     logging.info(f"Test results: {results}")
 
