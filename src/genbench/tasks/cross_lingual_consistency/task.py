@@ -1,4 +1,3 @@
-from collections import defaultdict
 from typing import Any, Dict, List, Mapping, Optional
 
 import datasets
@@ -7,6 +6,7 @@ from datasets import load_dataset
 
 from genbench import Task
 from genbench.api import PreparationStrategy
+
 
 class CrossLingualConsistencyTask(Task):
     def _load_data_source(
@@ -146,80 +146,43 @@ class CrossLingualConsistencyTask(Task):
     def evaluate_predictions(
         self,
         *,
-        predictions: List[Mapping[str, Any]] = None,
+        ranked=None,
+        origin=None,
         gold: datasets.Dataset = None,
     ) -> Dict[str, float]:
         def softmax(x):
             """Compute softmax values for each sets of scores in x."""
             return np.exp(x) / np.sum(np.exp(x), axis=0)
 
-        # Make sure that the predictions are in the same order as the gold dataset
-        assert len(predictions) == len(gold)
+        # Split candidates of the two langs
+        lang1_rankings = ranked[: len(ranked) / 2]
+        lang2_rankings = ranked[len(ranked) / 2 :]
+        cand_list1 = [[j for j in list(i.keys())] for i in origin[: len(origin) / 2]]
+        cand_list2 = [[j for j in list(i.keys())] for i in origin[len(origin) / 2 :]]
 
-        # Just to make sure the gold dataset is the same as the one we generated in `get_prepared_datasets`
-        assert "lang" in gold.features
-        assert "_genbnech_idx" in gold.features
+        num_consistent = 0
 
-        # Also, make sure that predictions contain logprobs for each option
-        assert all(
-            "target_option_logprobs" in pred and len(pred["target_option_logprobs"]) == len(pred["target_options"])
-            for pred in predictions
-        )
+        for i in range(len(lang1_rankings)):
+            ranking1 = lang1_rankings[i]
+            ranking2 = lang2_rankings[i]
 
-        # Group the prediction and instances such that we have:
-        # _genbnech_idx -> {
-        #    "lang_id_1": { ...data_instance..., target_option_logprobs: ... }
-        #    "lang_id_2": { ...data_instance..., target_option_logprobs: ... }
-        # },
-
-        grouped_examples = defaultdict(dict)
-        for pred, gold in zip(predictions, gold):
-            original_idx = gold["_genbnech_idx"]
-            lang = gold["lang"]
-            grouped_examples[original_idx][lang] = {
-                **gold,
-                **pred,
-            }
-
-        CLC_score = 0
-        count = 0
-        langs = []
-        # Now, we compute the cross lingual consistency score
-        for idx, example in grouped_examples.items():
-            # Rerank the options based on the logprobs
-            for lang, data in example.items():
-                if len(langs) < 2:
-                    langs.append(lang)
-
-                logprobs = data["target_option_logprobs"]
-                sorted_options = sorted(
-                    zip(data["target_options"], logprobs),
-                    key=lambda x: x[1],
-                    reverse=False,
-                )
-                sorted_options, logprobs = zip(*sorted_options)
-                grouped_examples[idx][lang]["target_options"] = list(sorted_options)
-                grouped_examples[idx][lang]["target_option_logprobs"] = list(logprobs)
-
-            # Compute the cross lingual consistency score
-            ranking1 = grouped_examples[idx][langs[0]]["target_options"]
-            ranking2 = grouped_examples[idx][langs[1]]["target_options"]
+            candidate1 = cand_list1[i]
+            candidate2 = cand_list2[i]
 
             order = [len(ranking1) - i for i in range(len(ranking1))]
             order = np.array(order)
+
             weight = softmax(order)
 
             for j in range(len(ranking1)):
-                set1 = {ranking1.index(i) for i in ranking1[: j + 1]}
-                set2 = {ranking2.index(i) for i in ranking2[: j + 1]}
+                set1 = {candidate1.index(i) for i in ranking1[: j + 1]}
+                set2 = {candidate2.index(i) for i in ranking2[: j + 1]}
 
                 cover = set1.intersection(set2)
-                CLC_score += weight[j] * (len(cover) / len(set1))
-
-            count += 1
-        CLC_score /= count
+                num_consistent += weight[j] * (len(cover) / len(set1))
 
         # Compute the final score
+        CLC_score = num_consistent / len(lang1_rankings)
         result = {
             "cross_lingual_consistency": CLC_score,
         }
