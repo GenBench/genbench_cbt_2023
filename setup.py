@@ -19,6 +19,7 @@ REQUIRED_PKGS = [
     # Numpy is needed for some of HF's metrics
     "numpy",
     "typing_extensions>=4.6",
+    "statsmodels>=0.14",
 ]
 
 
