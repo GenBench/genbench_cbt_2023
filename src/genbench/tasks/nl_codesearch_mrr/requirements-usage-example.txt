@@ -1,0 +1,4 @@
+torch v. 2.1.0
+numpy v. 1.25.1
+tqdm v. 4.65.0
+transformers v. 4.32.0
