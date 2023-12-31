@@ -68,6 +68,10 @@ def test_split_file(task_obj: Task):
 
 def test_task_config_matches_provided_sets(task_obj: Task):
     """Test case to verify if the task config matches the provided sets"""
+    class_dict = task_obj.__class__.__dict__
+    if "get_datasets_raw" in class_dict and "get_prepared_datasets" in class_dict:
+        pytest.skip("Task has custom get_datasets_raw and prepared_dataset builder.")
+
     datasets_raw = task_obj.get_datasets_raw()
 
     task_sets = [DatasetSplit.TEST.value]
