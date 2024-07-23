@@ -1,4 +1,9 @@
-# GenBench Collaborative Benchmarking Task
+# ⚠️ Important Update
+
+Please note that this repository is outdated. The updated tasks and guidelines for the GenBench Collaborative Benchmarking Task (CBT) for 2024 are available in the new repository. Access the latest information and submit your tasks at the [new GenBench CBT repository](https://github.com/GenBench/genbench_cbt).
+
+---
+# GenBench Collaborative Benchmarking Task 2023
 
 **Table of Contents**
 * [GenBench workshop and publication of tasks](#genbench-workshop-and-publication-of-tasks)
